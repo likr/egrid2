@@ -1,0 +1,44 @@
+{
+  "name": "egrid",
+  "version": "0.0.0",
+  "description": "A visual analytics system for the evaluation grid method",
+  "main": "src/index.jsx",
+  "scripts": {
+    "watch": "watchify src/index.jsx -o app/bundle.js -d -t [ babelify --stage 0 ] -v --extension=.jsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/likr/egrid2.git"
+  },
+  "author": "Yosuke Onoue <onoue@likr-lab.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/likr/egrid2/issues"
+  },
+  "homepage": "https://github.com/likr/egrid2#readme",
+  "dependencies": {
+    "dexie": "^1.2.0",
+    "firebase": "^2.3.1",
+    "material-ui": "^0.13.0",
+    "react": "^0.14.0",
+    "react-addons-create-fragment": "^0.14.0",
+    "react-addons-pure-render-mixin": "^0.14.0",
+    "react-addons-transition-group": "^0.14.0",
+    "react-addons-update": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-redux": "^4.0.0",
+    "react-router": "^1.0.0-rc3",
+    "react-tap-event-plugin": "^0.2.1",
+    "redux": "^3.0.2",
+    "redux-devtools": "^2.1.5",
+    "redux-router": "^1.0.0-beta3",
+    "redux-thunk": "^1.0.0"
+  },
+  "devDependencies": {
+    "babelify": "^6.3.0",
+    "browserify": "^11.2.0",
+    "firebase-tools": "^2.0.1",
+    "watchify": "^3.4.0"
+  }
+}
