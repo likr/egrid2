@@ -1,6 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
+import Card from 'material-ui/lib/card/card'
+import CardActions from 'material-ui/lib/card/card-actions'
+import CardTitle from 'material-ui/lib/card/card-title'
+import FlatButton from 'material-ui/lib/flat-button'
+import TextField from 'material-ui/lib/text-field'
 import {
   addProject,
   deleteProject,
@@ -27,17 +32,23 @@ class ProjectList extends React.Component {
       <div>
         <div>
           <form onSubmit={::this.handleSubmit}>
-            <input type="text" value={this.state.projectName} onChange={::this.handleChangeProjectName}/>
-            <button type="submit">Add</button>
+            <TextField value={this.state.projectName} onChange={::this.handleChangeProjectName}/>
+            <FlatButton type="submit">Add</FlatButton>
           </form>
         </div>
         <div>
-          {this.props.projects.map((project) => (
-            <div key={project.id}>
-              <Link to={`/projects/${project.id}/participants`}>{project.name}</Link>
-              <button onClick={this.handleClickDeleteButton.bind(this, project.id)}>Delete</button>
-            </div>
-          ))}
+          {Object.keys(this.props.projects).map((id) => {
+            const project = this.props.projects[id];
+            return (
+              <Card key={project.id}>
+                <CardTitle title={project.name}/>
+                <CardActions>
+                  <FlatButton containerElement={<Link to={`/projects/${project.id}/participants`}/>} linkButton={true} label="Open"/>
+                  <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
+                </CardActions>
+              </Card>
+            )
+          })}
         </div>
       </div>
     );
@@ -49,7 +60,8 @@ class ProjectList extends React.Component {
     });
   }
 
-  handleSubmit() {
+  handleSubmit(event) {
+    event.preventDefault();
     this.props.dispatch(addProject(this.state.projectName));
   }
 

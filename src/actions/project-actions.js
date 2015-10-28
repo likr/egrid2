@@ -8,7 +8,11 @@ import db from '../db'
 const queryAll = () => {
   return new Promise((resolve) => {
     db.projects.toArray((projects) => {
-      resolve(projects);
+      const result = {};
+      for (const project of projects) {
+        result[project.id] = project;
+      }
+      resolve(result);
     });
   });
 };

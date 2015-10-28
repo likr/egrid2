@@ -16,7 +16,7 @@ const loadProjects = (state, {projects}) => {
   return projects;
 };
 
-const projectReducer = (state=[], action) => {
+const projectReducer = (state={}, action) => {
   switch (action.type) {
     case ADD_PROJECT:
       return addProject(state, action);

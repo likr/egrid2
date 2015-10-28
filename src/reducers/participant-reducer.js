@@ -1,32 +1,32 @@
 import {
-  ADD_PROJECT,
-  DELETE_PROJECT,
-  LOAD_PROJECTS
+  ADD_PARTICIPANT,
+  DELETE_PARTICIPANT,
+  LOAD_PARTICIPANTS
 } from '../action-types'
 
-const addProject = (state, {projects}) => {
-  return projects;
+const addParticipant = (state, {participants}) => {
+  return participants;
 };
 
-const deleteProject = (state, {projects}) => {
-  return projects;
+const deleteParticipant = (state, {participants}) => {
+  return participants;
 };
 
-const loadProjects = (state, {projects}) => {
-  return projects;
+const loadParticipants = (state, {participants}) => {
+  return participants;
 };
 
-const projectReducer = (state, action) => {
+const participantReducer = (state={}, action) => {
   switch (action.type) {
-    case ADD_PROJECT:
-      return addProject(state, action);
-    case DELETE_PROJECT:
-      return deleteProject(state, action);
-    case LOAD_PROJECTS:
-      return loadProjects(state, action);
+    case ADD_PARTICIPANT:
+      return addParticipant(state, action);
+    case DELETE_PARTICIPANT:
+      return deleteParticipant(state, action);
+    case LOAD_PARTICIPANTS:
+      return loadParticipants(state, action);
     default:
       return state;
   }
 };
 
-export default projectReducer
+export default participantReducer
