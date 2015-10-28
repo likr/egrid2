@@ -11,11 +11,13 @@ import createHistory from 'history/lib/createBrowserHistory';
 import injectTapEventPlugin from "react-tap-event-plugin"
 
 import App from './components/app'
-import Top from './components/top'
-import ProjectList from './components/project-list'
-import ProjectDetail from './components/project-detail'
+import ParticipantInterview from './components/participant-interview'
 import ParticipantList from './components/participant-list'
+import ProjectDetail from './components/project-detail'
+import ProjectList from './components/project-list'
+import Top from './components/top'
 
+import graphReducer from './reducers/graph-reducer'
 import participantReducer from './reducers/participant-reducer'
 import projectReducer from './reducers/project-reducer'
 
@@ -23,6 +25,7 @@ injectTapEventPlugin();
 
 
 const reducer = combineReducers({
+  graph: graphReducer,
   participants: participantReducer,
   projects: projectReducer,
   router: routerStateReducer
@@ -43,10 +46,10 @@ class Root extends React.Component {
           <ReduxRouter>
             <Route path="/" component={App}>
               <IndexRoute component={Top}/>
-              <Route path="projects" component={ProjectList}>
-              </Route>
+              <Route path="projects" component={ProjectList}/>
               <Route path="projects/:projectId" component={ProjectDetail}>
                 <Route path="participants" component={ParticipantList}/>
+                <Route path="participants/:participantId/interview" component={ParticipantInterview}/>
               </Route>
             </Route>
           </ReduxRouter>

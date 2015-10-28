@@ -48,7 +48,7 @@ class ParticipantList extends React.Component {
               <Card key={participant.id}>
                 <CardTitle title={participant.name}/>
                 <CardActions>
-                  <FlatButton containerElement={<Link to={`/projects/${project.id}/participants/${participant.id}`}/>} linkButton={true} label="Open"/>
+                  <FlatButton containerElement={<Link to={`/projects/${project.id}/participants/${participant.id}/interview`}/>} linkButton={true} label="Interview"/>
                   <FlatButton onClick={this.handleClickDeleteButton.bind(this, participant.id)} label="Delete"/>
                 </CardActions>
               </Card>
