@@ -28,7 +28,7 @@ class ZoomableSVG extends React.Component {
   render() {
     const {x, y, scale} = this.state;
     return (
-      <svg width="600" height="450" style={{cursor: 'move'}}>
+      <svg width="100%" height="100%" style={{cursor: 'move'}}>
         <g transform={`translate(${x},${y})scale(${scale})`}>
           {this.props.children}
         </g>

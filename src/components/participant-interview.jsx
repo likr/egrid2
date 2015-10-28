@@ -1,5 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import IconButton from 'material-ui/lib/icon-button'
+import FontIcon from 'material-ui/lib/font-icon'
+import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import {
   addVertex,
   addVertexWithEdge,
@@ -8,6 +11,7 @@ import {
 } from '../actions/graph-actions'
 import layoutGraph from '../utils/layout-graph'
 import ZoomableSVG from './zoomable-svg'
+import ConstructDialog from './construct-dialog'
 
 const startFrom = (x, y) => {
   return `M${x} ${y}`;
@@ -56,12 +60,14 @@ class ParticipantInterview extends React.Component {
     const layout = layoutGraph(this.props.graph);
     return (
       <div>
-        <div>
-          <button onClick={::this.handleAddVertex}>Add</button>
-          <button disabled={!this.props.canUndo} onClick={::this.handleUndo}>Undo</button>
-          <button disabled={!this.props.canRedo} onClick={::this.handleRedo}>Redo</button>
-        </div>
-        <div>
+        <div
+            style={{
+              position: 'absolute',
+              left: 5,
+              right: 5,
+              top: 5,
+              bottom: 5
+            }}>
           <ZoomableSVG>
             <g>
               {layout.edges.map(({u, v, points}) => (
@@ -76,69 +82,110 @@ class ParticipantInterview extends React.Component {
             </g>
             <g>
               {layout.vertices.map(({u, text, x, y, width, height}) => (
-                <g key={u} style={{cursor: 'pointer'}} transform={`translate(${x},${y})`}>
-                  <rect
-                      x={-width / 2}
-                      y={-height / 2}
-                      rx="0"
-                      width={width}
-                      height={height}
-                      stroke="black"
-                      fill="none"/>
-                  <text
-                      style={{
-                        userSelect: 'none',
-                        MozUserSelect: 'none',
-                        WebkitUserSelect: 'none',
-                        MsUserSelect: 'none'
-                      }}
-                      x="0"
-                      y="5"
-                      textAnchor="middle"
-                      fontSize="10pt">
-                    {text}
-                  </text>
-                  <foreignObject width="100" height="100">
-                    <button onClick={this.handleLadderUp.bind(this, u)}>Up</button>
-                    <button onClick={this.handleLadderDown.bind(this, u)}>Down</button>
-                  </foreignObject>
+                <g key={u} transform={`translate(${x},${y})`}>
+                  <g style={{cursor: 'pointer'}}>
+                    <rect
+                        x={-width / 2}
+                        y={-height / 2}
+                        rx="0"
+                        width={width}
+                        height={height}
+                        stroke="black"
+                        fill="none"/>
+                    <text
+                        style={{
+                          userSelect: 'none',
+                          MozUserSelect: 'none',
+                          WebkitUserSelect: 'none',
+                          MsUserSelect: 'none'
+                        }}
+                        x="0"
+                        y="5"
+                        textAnchor="middle"
+                        fontSize="10pt">
+                      {text}
+                    </text>
+                  </g>
+                  <g transform="translate(-48,0)">
+                    <foreignObject width="98" height="48">
+                      <IconButton
+                          iconClassName="material-icons"
+                          onClick={this.handleLadderUp.bind(this, u)}>
+                        arrow_back
+                      </IconButton>
+                      <IconButton
+                          iconClassName="material-icons"
+                          onClick={this.handleLadderDown.bind(this, u)}>
+                        arrow_forward
+                      </IconButton>
+                    </foreignObject>
+                  </g>
                 </g>
               ))}
             </g>
           </ZoomableSVG>
         </div>
+        <div
+            style={{
+              position: 'absolute',
+              left: 10,
+              bottom: 10
+            }}>
+          <IconButton
+              iconClassName="material-icons"
+              disabled={!this.props.canUndo}
+              onClick={::this.handleUndo}>
+            undo
+          </IconButton>
+          <IconButton
+              iconClassName="material-icons"
+              disabled={!this.props.canRedo}
+              onClick={::this.handleRedo}>
+            redo
+          </IconButton>
+        </div>
+        <div
+            style={{
+              position: 'absolute',
+              right: 10,
+              bottom: 10
+            }}>
+          <FloatingActionButton
+              onClick={::this.handleAddVertex}>
+              <FontIcon className="material-icons">add</FontIcon>
+          </FloatingActionButton>
+        </div>
+        <ConstructDialog ref="dialog"/>
       </div>
     );
   }
 
   handleAddVertex() {
-    this.props.dispatch(addVertex(i++, {
-      text: 'hello'
-    }));
+    this.refs.dialog.show((text) => {
+      this.props.dispatch(addVertex(i++, {text}));
+    });
   }
 
   handleLadderUp(v) {
-    this.props.dispatch(addVertexWithEdge({
-      u: i++,
-      v,
-      ud: {
-        text: 'up'
-      },
-      d: {
-      }
-    }));
+    this.refs.dialog.show((text) => {
+      this.props.dispatch(addVertexWithEdge({
+        u: i++,
+        v,
+        ud: {text},
+        d: {}
+      }));
+    });
   }
 
   handleLadderDown(u) {
-    this.props.dispatch(addVertexWithEdge({
-      u,
-      v: i++,
-      vd: {
-        text: 'down'
-      },
-      d: {
-      }
-    }));
+    this.refs.dialog.show((text) => {
+      this.props.dispatch(addVertexWithEdge({
+        u,
+        v: i++,
+        vd: {text},
+        d: {}
+      }));
+    });
   }
 
   handleUndo() {

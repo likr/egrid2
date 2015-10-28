@@ -25,7 +25,7 @@ const layouter = new Layouter()
   .layerMargin(140)
   .vertexWidth(({d}) => d.width)
   .vertexHeight(({d}) => d.height)
-  .vertexMargin(30)
+  .vertexMargin(60)
   .edgeWidth(() => 3)
   .edgeMargin(5);
 
