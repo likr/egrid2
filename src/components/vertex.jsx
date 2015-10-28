@@ -1,10 +1,42 @@
 import React from 'react'
+import {findDOMNode} from 'react-dom'
+import {animateTransform} from '../utils/shinsekai';
 
 class Vertex extends React.Component {
+  componentDidMount() {
+    const {x, y, x0, y0} = this.props;
+    animateTransform(findDOMNode(this), {
+      type: 'translate',
+      from: `${x0} ${y0}`,
+      to: `${x} ${y}`,
+      dur: this.props.dur,
+      delay: this.props.delay
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    const {x, y, x0, y0} = this.props;
+    if (x !== prevProps.x || y !== prevProps.y) {
+      const element = findDOMNode(this);
+      for (const child of element.children) {
+        if (child.tagName === 'animateTransform') {
+          element.removeChild(child);
+        }
+      }
+      animateTransform(element, {
+        type: 'translate',
+        from: `${x0} ${y0}`,
+        to: `${x} ${y}`,
+        dur: this.props.dur,
+        delay: this.props.delay
+      });
+    }
+  }
+
   render() {
-    const {text, x, y, width, height} = this.props;
+    const {text, x0, y0, width, height} = this.props;
     return (
-      <g transform={`translate(${x},${y})`}>
+      <g transform={`translate(${x0},${y0})`}>
         <g style={{cursor: 'pointer'}}>
           <rect
               x={-width / 2}

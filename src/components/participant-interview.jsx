@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {pushState} from 'redux-router';
 import IconButton from 'material-ui/lib/icon-button'
 import FontIcon from 'material-ui/lib/font-icon'
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
@@ -25,6 +26,7 @@ let i = 0;
 class ParticipantInterview extends React.Component {
   render() {
     const layout = layoutGraph(this.props.graph);
+    const dur = 0.3, delay = 0.2;
     return (
       <div>
         <div
@@ -37,11 +39,13 @@ class ParticipantInterview extends React.Component {
             }}>
           <ZoomableSVG>
             <g>
-              {layout.edges.map(({u, v, points}) => <Edge key={`${u}:${v}`} points={points}/>)}
+              {layout.edges.map(({u, v, points, points0}) => (
+                <Edge key={`${u}:${v}`} dur={dur} delay={delay} points={points} points0={points0}/>
+              ))}
             </g>
             <g>
-              {layout.vertices.map(({u, text, x, y, width, height}) => (
-                <Vertex key={u} text={text} x={x} y={y} width={width} height={height}>
+              {layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
+                <Vertex key={u} dur={dur} delay={delay} text={text} x={x} y={y} x0={x0} y0={y0} width={width} height={height}>
                   <g transform="translate(-48,0)">
                     <foreignObject width="98" height="48">
                       <IconButton
@@ -110,7 +114,11 @@ class ParticipantInterview extends React.Component {
 
   handleAddVertex() {
     this.refs.dialog.show((text) => {
-      this.props.dispatch(addVertex(i++, {text}));
+      this.props.dispatch(addVertex(i++, {
+        text,
+        x: null,
+        y: null
+      }));
     });
   }
 
@@ -119,8 +127,14 @@ class ParticipantInterview extends React.Component {
       this.props.dispatch(addVertexWithEdge({
         u: i++,
         v,
-        ud: {text},
-        d: {}
+        ud: {
+          text,
+          x: null,
+          y: null
+        },
+        d: {
+          points: null
+        }
       }));
     });
   }
@@ -130,8 +144,14 @@ class ParticipantInterview extends React.Component {
       this.props.dispatch(addVertexWithEdge({
         u,
         v: i++,
-        vd: {text},
-        d: {}
+        vd: {
+          text,
+          x: null,
+          y: null
+        },
+        d: {
+          points: null
+        }
       }));
     });
   }
@@ -145,6 +165,7 @@ class ParticipantInterview extends React.Component {
   }
 
   handleSave() {
+    this.props.dispatch(pushState(null, '/'));
   }
 }
 

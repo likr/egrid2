@@ -1,4 +1,6 @@
 import React from 'react'
+import {findDOMNode} from 'react-dom'
+import {animate} from '../utils/shinsekai';
 
 const startFrom = (x, y) => {
   return `M${x} ${y}`;
@@ -36,12 +38,36 @@ const svgPath = (points) => {
 };
 
 class Edge extends React.Component {
+  componentDidMount() {
+    animate(findDOMNode(this).firstChild, {
+      attributeName: 'd',
+      to: svgPath(this.props.points),
+      dur: this.props.dur,
+      delay: this.props.delay
+    });
+  }
+
+  componentDidUpdate() {
+    const element = findDOMNode(this).firstChild;
+    for (const child of element.children) {
+      if (child.tagName === 'animate') {
+        element.removeChild(child);
+      }
+    }
+    animate(element, {
+      attributeName: 'd',
+      to: svgPath(this.props.points),
+      dur: this.props.dur,
+      delay: this.props.delay
+    });
+  }
+
   render() {
-    const {points} = this.props;
+    const {points0} = this.props;
     return (
       <g>
         <path
-            d={svgPath(points)}
+            d={svgPath(points0)}
             fill="none"
             stroke="black"
             strokeWidth="1"/>
