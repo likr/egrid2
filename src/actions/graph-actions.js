@@ -28,6 +28,13 @@ export const addVertexWithEdge = ({u, v, ud, vd, d}) => {
   };
 }
 
+export const loadGraph = (data) => {
+  return {
+    type: LOAD_GRAPH,
+    data
+  };
+};
+
 export const redo = () => {
   return {
     type: REDO_GRAPH

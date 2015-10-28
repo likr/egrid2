@@ -1,7 +1,8 @@
 import {
   ADD_PROJECT,
   DELETE_PROJECT,
-  LOAD_PROJECTS
+  LOAD_PROJECTS,
+  UPDATE_PROJECT
 } from '../action-types'
 import db from '../db'
 
@@ -32,7 +33,7 @@ export const addProject = (name) => {
 
 export const deleteProject = (id) => {
   return (dispatch) => {
-    db.projects.delete(id)
+    db.projects.delete(+id)
       .then(() => queryAll())
       .then((projects) => {
         dispatch({
@@ -51,5 +52,18 @@ export const loadProjects = () => {
         projects
       });
     });
+  };
+};
+
+export const updateProject = (id, attrs) => {
+  return (dispatch) => {
+    db.projects.update(+id, attrs)
+      .then(() => queryAll())
+      .then((projects) => {
+        dispatch({
+          type: UPDATE_PROJECT,
+          projects
+        });
+      });
   };
 };

@@ -17,9 +17,9 @@ const queryAll = () => {
   });
 };
 
-export const addParticipant = (name) => {
+export const addParticipant = (data) => {
   return (dispatch) => {
-    db.participants.add({name})
+    db.participants.add(data)
       .then(() => queryAll())
       .then((participants) => {
         dispatch({

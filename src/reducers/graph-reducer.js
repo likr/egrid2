@@ -32,7 +32,6 @@ const addVertex = (prev, {u, d}) => {
 };
 
 const addVertexWithEdge = (prev, {u, v, ud, vd, d}) => {
-
   const graph = copy(prev.graph);
   if (ud) {
     graph.addVertex(u, ud);
@@ -44,6 +43,21 @@ const addVertexWithEdge = (prev, {u, v, ud, vd, d}) => {
   return {
     graph,
     prev,
+    next: null
+  };
+};
+
+const loadGraph = (prev, {data}) => {
+  const graph = new Graph();
+  for (const {u, d} of data.vertices) {
+    graph.addVertex(u, d);
+  }
+  for (const {u, v, d} of data.edges) {
+    graph.addEdge(u, v, d);
+  }
+  return {
+    graph,
+    prev: null,
     next: null
   };
 };
@@ -76,6 +90,7 @@ const graphReducer = (state=null, action) => {
     case DELETE_VERTEX:
     case DELETE_EDGE:
     case LOAD_GRAPH:
+      return loadGraph(state, action);
     case REDO_GRAPH:
       return redo(state);
     case UNDO_GRAPH:

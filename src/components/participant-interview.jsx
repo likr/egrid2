@@ -7,23 +7,37 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import {
   addVertex,
   addVertexWithEdge,
+  loadGraph,
   redo,
   undo
 } from '../actions/graph-actions'
+import {updateProject} from '../actions/project-actions'
 import layoutGraph from '../utils/layout-graph'
 import ZoomableSVG from './zoomable-svg'
 import ConstructDialog from './construct-dialog'
 import Vertex from './vertex'
 import Edge from './edge'
 
-let i = 0;
+const nextVertexId = (graph) => {
+  let maxId = -Infinity;
+  for (const u of graph.vertices()) {
+    maxId = Math.max(+u, maxId);
+  }
+  return maxId + 1;
+};
 
 @connect((state) => ({
+  projects: state.projects,
   graph: state.graph.graph,
   canUndo: state.graph.prev !== null,
   canRedo: state.graph.next !== null
 }))
 class ParticipantInterview extends React.Component {
+  componentDidMount() {
+    const data = this.props.project.evaluationStructure || '{"vertices":[], "edges":[]}';
+    this.props.dispatch(loadGraph(JSON.parse(data)));
+  }
+
   render() {
     const layout = layoutGraph(this.props.graph);
     const dur = 0.3, delay = 0.2;
@@ -114,7 +128,7 @@ class ParticipantInterview extends React.Component {
 
   handleAddVertex() {
     this.refs.dialog.show((text) => {
-      this.props.dispatch(addVertex(i++, {
+      this.props.dispatch(addVertex(nextVertexId(this.props.graph), {
         text,
         x: null,
         y: null
@@ -125,7 +139,7 @@ class ParticipantInterview extends React.Component {
   handleLadderUp(v) {
     this.refs.dialog.show((text) => {
       this.props.dispatch(addVertexWithEdge({
-        u: i++,
+        u: nextVertexId(this.props.graph),
         v,
         ud: {
           text,
@@ -143,7 +157,7 @@ class ParticipantInterview extends React.Component {
     this.refs.dialog.show((text) => {
       this.props.dispatch(addVertexWithEdge({
         u,
-        v: i++,
+        v: nextVertexId(this.props.graph),
         vd: {
           text,
           x: null,
@@ -165,8 +179,23 @@ class ParticipantInterview extends React.Component {
   }
 
   handleSave() {
-    this.props.dispatch(pushState(null, '/'));
+    const {projectId} = this.props.params;
+    this.props.dispatch(updateProject(projectId, {
+      evaluationStructure: this.props.graph.toString()
+    }));
+    this.props.dispatch(pushState(null, `/projects/${projectId}/participants`));
   }
 }
 
-export default ParticipantInterview
+@connect((state) => ({
+  projects: state.projects
+}))
+class ParticipantInterviewWrapper extends React.Component {
+  render() {
+    const {projectId} = this.props.params;
+    const project = this.props.projects[projectId];
+    return project ? <ParticipantInterview params={this.props.params} project={project}/> : <div/>;
+  }
+}
+
+export default ParticipantInterviewWrapper

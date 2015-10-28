@@ -8,8 +8,7 @@ import FlatButton from 'material-ui/lib/flat-button'
 import TextField from 'material-ui/lib/text-field'
 import {
   addProject,
-  deleteProject,
-  loadProjects
+  deleteProject
 } from '../actions/project-actions'
 
 @connect((state) => ({
@@ -21,10 +20,6 @@ class ProjectList extends React.Component {
     this.state = {
       projectName: ''
     };
-  }
-
-  componentDidMount() {
-    this.props.dispatch(loadProjects());
   }
 
   render() {
