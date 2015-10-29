@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Link} from 'react-router'
+import {pushState} from 'redux-router';
 import Card from 'material-ui/lib/card/card'
 import CardActions from 'material-ui/lib/card/card-actions'
 import CardTitle from 'material-ui/lib/card/card-title'
@@ -38,7 +38,7 @@ class ProjectList extends React.Component {
               <Card key={project.id}>
                 <CardTitle title={project.name}/>
                 <CardActions>
-                  <FlatButton containerElement={<Link to={`/projects/${project.id}/participants`}/>} linkButton={true} label="Open"/>
+                  <FlatButton onClick={this.handleNavigateToDetail.bind(this, project.id)} label="Open"/>
                   <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
                 </CardActions>
               </Card>
@@ -62,6 +62,11 @@ class ProjectList extends React.Component {
 
   handleClickDeleteButton(id) {
     this.props.dispatch(deleteProject(id));
+  }
+
+  handleNavigateToDetail(projectId) {
+    const path = `/projects/${projectId}/participants`;
+    this.props.dispatch(pushState(null, path));
   }
 }
 

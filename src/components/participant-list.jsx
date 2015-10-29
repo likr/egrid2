@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Link} from 'react-router'
 import {pushState} from 'redux-router';
 import Card from 'material-ui/lib/card/card'
 import CardActions from 'material-ui/lib/card/card-actions'
@@ -38,7 +37,11 @@ class ParticipantList extends React.Component {
               onClick={::this.handleBack}>
             arrow_back
           </IconButton>
-
+          <IconButton
+              iconClassName="material-icons"
+              onClick={::this.handleNavigateToAnalysis}>
+            open_in_new
+          </IconButton>
         </div>
         <div>
           <form onSubmit={::this.handleSubmit}>
@@ -56,7 +59,7 @@ class ParticipantList extends React.Component {
                   <Card key={participant.id}>
                     <CardTitle title={participant.name}/>
                     <CardActions>
-                      <FlatButton containerElement={<Link to={`/projects/${project.id}/participants/${participant.id}/interview`}/>} linkButton={true} label="Interview"/>
+                      <FlatButton onClick={this.handleNavigateToInterview.bind(this, participant.id)} label="Interview"/>
                       <FlatButton onClick={this.handleClickDeleteButton.bind(this, participant.id)} label="Delete"/>
                     </CardActions>
                   </Card>
@@ -88,6 +91,16 @@ class ParticipantList extends React.Component {
 
   handleBack() {
     this.props.dispatch(pushState(null, `/projects`));
+  }
+
+  handleNavigateToAnalysis() {
+    const path = `/projects/${this.props.params.projectId}/analysis`;
+    this.props.dispatch(pushState(null, path));
+  }
+
+  handleNavigateToInterview(participantId) {
+    const path = `/projects/${this.props.params.projectId}/participants/${participantId}/interview`;
+    this.props.dispatch(pushState(null, path));
   }
 }
 

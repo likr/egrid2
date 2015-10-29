@@ -14,6 +14,7 @@ import injectTapEventPlugin from "react-tap-event-plugin"
 import App from './components/app'
 import ParticipantInterview from './components/participant-interview'
 import ParticipantList from './components/participant-list'
+import ProjectAnalysis from './components/project-analysis'
 import ProjectDetail from './components/project-detail'
 import ProjectList from './components/project-list'
 import Top from './components/top'
@@ -49,6 +50,7 @@ class Root extends React.Component {
               <IndexRoute component={Top}/>
               <Route path="projects" component={ProjectList}/>
               <Route path="projects/:projectId" component={ProjectDetail}>
+                <Route path="analysis" component={ProjectAnalysis}/>
                 <Route path="participants" component={ParticipantList}/>
                 <Route path="participants/:participantId/interview" component={ParticipantInterview}/>
               </Route>
