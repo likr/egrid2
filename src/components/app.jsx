@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import AppBar from 'material-ui/lib/app-bar'
 import {loadProjects} from '../actions/project-actions'
 import {loadParticipants} from '../actions/participant-actions'
 
@@ -14,7 +15,26 @@ class App extends React.Component {
   }
 
   render() {
-    return <div>{this.props.children}</div>;
+    return (
+      <div>
+        <AppBar
+          style={{
+            position: 'fixed',
+            top: 0
+          }}
+          title="E-Grid"
+          showMenuIconButton={false}
+        />
+        <div style={{
+          marginTop: '80px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          maxWidth: '1280px'
+        }}>
+          {this.props.children}
+        </div>
+      </div>
+    );
   }
 }
 
