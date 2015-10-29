@@ -17,12 +17,8 @@ class Vertex extends React.Component {
   componentDidUpdate(prevProps) {
     const {x, y, x0, y0} = this.props;
     if (x !== prevProps.x || y !== prevProps.y) {
+      this.clearAnimateElements();
       const element = findDOMNode(this);
-      for (const child of element.children) {
-        if (child.tagName === 'animateTransform') {
-          element.removeChild(child);
-        }
-      }
       animateTransform(element, {
         type: 'translate',
         from: `${x0} ${y0}`,
@@ -31,6 +27,10 @@ class Vertex extends React.Component {
         delay: this.props.delay
       });
     }
+  }
+
+  componentWillUnMount() {
+    this.clearAnimateElements();
   }
 
   render() {
@@ -63,6 +63,16 @@ class Vertex extends React.Component {
         {this.props.children}
       </g>
     );
+  }
+
+  clearAnimateElements() {
+    const element = findDOMNode(this);
+    for (let i = 0; i < element.children.length; ++i) {
+      const child = element.children[i];
+      if (child.tagName === 'animate') {
+        element.removeChild(child);
+      }
+    }
   }
 }
 

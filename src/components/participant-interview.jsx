@@ -4,12 +4,15 @@ import {pushState} from 'redux-router';
 import IconButton from 'material-ui/lib/icon-button'
 import FontIcon from 'material-ui/lib/font-icon'
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
+import Graph from 'egraph/lib/graph'
 import {
   addVertex,
   addVertexWithEdge,
+  clearGraph,
   loadGraph,
   redo,
-  undo
+  undo,
+  updateVertex
 } from '../actions/graph-actions'
 import {updateProject} from '../actions/project-actions'
 import layoutGraph from '../utils/layout-graph'
@@ -18,29 +21,91 @@ import ConstructDialog from './construct-dialog'
 import Vertex from './vertex'
 import Edge from './edge'
 
+class SvgButton extends React.Component {
+  render() {
+    return (
+      <g style={{cursor: 'pointer'}} transform={this.props.transform} onClick={this.props.onClick}>
+        <rect
+            width="24"
+            height="24"
+            fill="#ccc"/>
+        <text y="24" className="material-icons">{this.props.icon}</text>
+      </g>
+    );
+  }
+}
+
 const nextVertexId = (graph) => {
-  let maxId = -Infinity;
+  let maxId = -1;
   for (const u of graph.vertices()) {
     maxId = Math.max(+u, maxId);
   }
   return maxId + 1;
 };
 
+const findVertexByText = (graph, text) => {
+  for (const u of graph.vertices()) {
+    if (graph.vertex(u).text === text) {
+      return u;
+    }
+  }
+  return null;
+};
+
+const filterGraphByParticipant = (g, participantId) => {
+  const graph = new Graph();
+  for (const u of g.vertices()) {
+    const d = g.vertex(u);
+    if (d.participants.indexOf(participantId) > -1) {
+      graph.addVertex(u, Object.assign({}, d));
+    }
+  }
+  for (const [u, v] of g.edges()) {
+    const d = g.edge(u, v);
+    if (d.participants.indexOf(participantId) > -1) {
+      graph.addEdge(u, v, Object.assign({}, d));
+    }
+  }
+  return graph;
+};
+
 @connect((state) => ({
-  projects: state.projects,
   graph: state.graph.graph,
   canUndo: state.graph.prev !== null,
   canRedo: state.graph.next !== null
 }))
 class ParticipantInterview extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
+    this.layout = {
+      vertices: [],
+      edges: []
+    };
     const data = this.props.project.evaluationStructure || '{"vertices":[], "edges":[]}';
     this.props.dispatch(loadGraph(JSON.parse(data)));
   }
 
+  componentWillUnmount() {
+    this.props.dispatch(clearGraph());
+  }
+
   render() {
-    const layout = layoutGraph(this.props.graph);
-    const dur = 0.3, delay = 0.2;
+    const participantId = +this.props.params.participantId;
+    const graph = filterGraphByParticipant(this.props.graph, participantId);
+    for (const {u, x, y} of this.layout.vertices) {
+      const d = graph.vertex(u);
+      if (d) {
+        d.x = x;
+        d.y = y;
+      }
+    }
+    for (const {u, v, points} of this.layout.vertices) {
+      const d = graph.edge(u, v);
+      if (d) {
+        d.points = points
+      }
+    }
+    this.layout = layoutGraph(graph);
+    const dur = 1, delay = 1;
     return (
       <div>
         <div
@@ -53,26 +118,26 @@ class ParticipantInterview extends React.Component {
             }}>
           <ZoomableSVG>
             <g>
-              {layout.edges.map(({u, v, points, points0}) => (
+              {this.layout.edges.map(({u, v, points, points0}) => (
                 <Edge key={`${u}:${v}`} dur={dur} delay={delay} points={points} points0={points0}/>
               ))}
             </g>
             <g>
-              {layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
+              {this.layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
                 <Vertex key={u} dur={dur} delay={delay} text={text} x={x} y={y} x0={x0} y0={y0} width={width} height={height}>
-                  <g transform="translate(-48,0)">
-                    <foreignObject width="98" height="48">
-                      <IconButton
-                          iconClassName="material-icons"
-                          onClick={this.handleLadderUp.bind(this, u)}>
-                        arrow_back
-                      </IconButton>
-                      <IconButton
-                          iconClassName="material-icons"
-                          onClick={this.handleLadderDown.bind(this, u)}>
-                        arrow_forward
-                      </IconButton>
-                    </foreignObject>
+                  <g className="buttons" transform="translate(-42,0)">
+                    <SvgButton
+                        transform="translate(0,10)"
+                        icon="arrow_back"
+                        onClick={this.handleLadderUp.bind(this, u)}/>
+                    <SvgButton
+                        transform="translate(30,10)"
+                        icon="edit"
+                        onClick={this.handleEditVertex.bind(this, u)}/>
+                    <SvgButton
+                        transform="translate(60,10)"
+                        icon="arrow_forward"
+                        onClick={this.handleLadderDown.bind(this, u)}/>
                   </g>
                 </Vertex>
               ))}
@@ -128,46 +193,79 @@ class ParticipantInterview extends React.Component {
 
   handleAddVertex() {
     this.refs.dialog.show((text) => {
-      this.props.dispatch(addVertex(nextVertexId(this.props.graph), {
-        text,
-        x: null,
-        y: null
-      }));
+      const graph = this.props.graph;
+      const participantId = +this.props.params.participantId;
+      const u = findVertexByText(graph, text);
+      if (u === null) {
+        this.props.dispatch(addVertex(nextVertexId(this.props.graph), {
+          text,
+          participants: [participantId]
+        }));
+      } else {
+        const participants = Array.from(graph.vertex(u).participants);
+        if (participants.indexOf(participantId) === -1) {
+          participants.push(participantId);
+          this.props.dispatch(updateVertex(u, {
+            participants
+          }));
+        }
+      }
     });
   }
 
   handleLadderUp(v) {
     this.refs.dialog.show((text) => {
-      this.props.dispatch(addVertexWithEdge({
-        u: nextVertexId(this.props.graph),
-        v,
-        ud: {
-          text,
-          x: null,
-          y: null
-        },
-        d: {
-          points: null
+      const graph = this.props.graph;
+      const participantId = +this.props.params.participantId;
+      const u = findVertexByText(graph, text);
+      if (u === null) {
+        this.props.dispatch(addVertexWithEdge({
+          u: nextVertexId(this.props.graph),
+          v,
+          ud: {
+            text,
+            participants: [participantId]
+          },
+          d: {
+            participants: [participantId]
+          }
+        }));
+      } else {
+        const participants = Array.from(graph.vertex(u).participants);
+        if (participants.indexOf(participantId) === -1) {
+          participants.push(participantId);
         }
-      }));
+      }
     });
   }
 
   handleLadderDown(u) {
     this.refs.dialog.show((text) => {
-      this.props.dispatch(addVertexWithEdge({
-        u,
-        v: nextVertexId(this.props.graph),
-        vd: {
-          text,
-          x: null,
-          y: null
-        },
-        d: {
-          points: null
+      const graph = this.props.graph;
+      const participantId = +this.props.params.participantId;
+      const v = findVertexByText(graph, text);
+      if (v === null) {
+        this.props.dispatch(addVertexWithEdge({
+          u,
+          v: nextVertexId(this.props.graph),
+          vd: {
+            text,
+            participants: [participantId]
+          },
+          d: {
+            participants: [participantId]
+          }
+        }));
+      } else {
+        const participants = Array.from(graph.vertex(v).participants);
+        if (participants.indexOf(participantId) === -1) {
+          participants.push(participantId);
         }
-      }));
+      }
     });
+  }
+
+  handleEditVertex() {
   }
 
   handleUndo() {

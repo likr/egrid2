@@ -23,7 +23,8 @@ class ParticipantList extends React.Component {
   }
 
   render() {
-    const project = this.props.projects[this.props.params.projectId];
+    const {projectId} = this.props.params;
+    const project = this.props.projects[projectId];
     if (!project) {
       return <div/>;
     }

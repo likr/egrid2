@@ -53,8 +53,8 @@ const layout = (graph) => {
     const {x, y, width, height} = positions.vertices[u];
     const textWidth = sizes[u].width;
     const textHeight = sizes[u].height;
-    const x0 = d.x === null ? x : d.x;
-    const y0 = d.y === null ? 0 : d.y;
+    const x0 = d.x === undefined ? x : d.x;
+    const y0 = d.y === undefined ? 0 : d.y;
     vertices.push({
       u, selected, x, y, x0, y0, width, height,
       textWidth, textHeight, community, text,
@@ -65,10 +65,10 @@ const layout = (graph) => {
   const enterPoints = (u, v) => {
     const uD = graph.vertex(u),
       vD = graph.vertex(v),
-      ux0 = uD.x === null ? positions.vertices[u].x : uD.x,
-      uy0 = uD.y === null ? 0 : uD.y,
-      vx0 = vD.x === null ? positions.vertices[v].x : vD.x,
-      vy0 = vD.y === null ? 0 : vD.y;
+      ux0 = uD.x === undefined ? positions.vertices[u].x : uD.x,
+      uy0 = uD.y === undefined ? 0 : uD.y,
+      vx0 = vD.x === undefined ? positions.vertices[v].x : vD.x,
+      vy0 = vD.y === undefined ? 0 : vD.y;
     return [[ux0, uy0], [ux0, uy0], [vx0, vy0], [vx0, vy0], [vx0, vy0], [vx0, vy0]];
   };
   const edges = [];
@@ -79,7 +79,7 @@ const layout = (graph) => {
     while (points.length < 6) {
       points.push(points[points.length - 1]);
     }
-    const points0 = d.points === null ? enterPoints(u, v) : d.points;
+    const points0 = d.points === undefined ? enterPoints(u, v) : d.points;
     edges.push({u, v, points, points0, reversed, upper, lower});
   }
 

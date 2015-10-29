@@ -48,18 +48,18 @@ class Edge extends React.Component {
   }
 
   componentDidUpdate() {
+    this.clearAnimateElements();
     const element = findDOMNode(this).firstChild;
-    for (const child of element.children) {
-      if (child.tagName === 'animate') {
-        element.removeChild(child);
-      }
-    }
     animate(element, {
       attributeName: 'd',
       to: svgPath(this.props.points),
       dur: this.props.dur,
       delay: this.props.delay
     });
+  }
+
+  componentWillUnMount() {
+    this.clearAnimateElements();
   }
 
   render() {
@@ -73,6 +73,16 @@ class Edge extends React.Component {
             strokeWidth="1"/>
       </g>
     );
+  }
+
+  clearAnimateElements() {
+    const element = findDOMNode(this).firstChild;
+    for (let i = 0; i < element.children.length; ++i) {
+      const child = element.children[i];
+      if (child.tagName === 'animate') {
+        element.removeChild(child);
+      }
+    }
   }
 }
 

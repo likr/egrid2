@@ -1,5 +1,6 @@
 /* global document */
 
+import 'web-animations-js'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {applyMiddleware, createStore, compose, combineReducers} from 'redux';
