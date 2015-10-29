@@ -4,7 +4,10 @@ import {pushState} from 'redux-router';
 import Card from 'material-ui/lib/card/card'
 import CardActions from 'material-ui/lib/card/card-actions'
 import CardTitle from 'material-ui/lib/card/card-title'
+import Dialog from 'material-ui/lib/dialog'
 import FlatButton from 'material-ui/lib/flat-button'
+import FloatingActionButton from 'material-ui/lib/floating-action-button'
+import FontIcon from 'material-ui/lib/font-icon'
 import TextField from 'material-ui/lib/text-field'
 import {
   addProject,
@@ -23,41 +26,72 @@ class ProjectList extends React.Component {
   }
 
   render() {
+    const projects = Object.keys(this.props.projects).
+      map((id) => this.props.projects[id]);
+    projects.sort((p1, p2) => p2.updated - p1.updated);
     return (
       <div>
         <div>
-          <form onSubmit={::this.handleSubmit}>
-            <TextField value={this.state.projectName} onChange={::this.handleChangeProjectName}/>
-            <FlatButton type="submit">Add</FlatButton>
-          </form>
+          <FloatingActionButton
+              onClick={::this.handleOpenDialog}>
+              <FontIcon className="material-icons">add</FontIcon>
+          </FloatingActionButton>
         </div>
         <div>
-          {Object.keys(this.props.projects).map((id) => {
-            const project = this.props.projects[id];
-            return (
-              <Card key={project.id}>
-                <CardTitle title={project.name}/>
-                <CardActions>
-                  <FlatButton onClick={this.handleNavigateToDetail.bind(this, project.id)} label="Open"/>
-                  <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
-                </CardActions>
-              </Card>
-            )
-          })}
+          {projects.map((project) => (
+            <Card key={project.id}>
+              <CardTitle title={project.name}/>
+              <CardActions>
+                <FlatButton onClick={this.handleNavigateToDetail.bind(this, project.id)} label="Open"/>
+                <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
+              </CardActions>
+            </Card>
+          ))}
         </div>
+        <Dialog
+            title="Create Project"
+            ref="dialog"
+            onShow={::this.handleShowDialog}
+            actions={[
+              {
+                text: 'Cancel'
+              },
+              {
+                text: 'Submit',
+                onTouchTap: ::this.handleSubmit
+              }
+            ]}>
+          <form onSubmit={::this.handleSubmit}>
+            <TextField
+              ref="name"
+              fullWidth={true}
+              floatingLabelText="Project Name"/>
+            <TextField
+              ref="note"
+              fullWidth={true}
+              floatingLabelText="Note"
+              multiLine={true}
+              rows={3}/>
+          </form>
+        </Dialog>
       </div>
     );
   }
 
-  handleChangeProjectName(event) {
-    this.setState({
-      projectName: event.target.value
-    });
+  handleOpenDialog() {
+    this.refs.dialog.show();
   }
 
   handleSubmit(event) {
-    event.preventDefault();
-    this.props.dispatch(addProject(this.state.projectName));
+    if (event) {
+      event.preventDefault();
+    }
+    const name = this.refs.name.getValue();
+    const note = this.refs.note.getValue();
+    if (name) {
+      this.props.dispatch(addProject({name, note}));
+    }
+    this.refs.dialog.dismiss();
   }
 
   handleClickDeleteButton(id) {
@@ -67,6 +101,10 @@ class ProjectList extends React.Component {
   handleNavigateToDetail(projectId) {
     const path = `/projects/${projectId}/participants`;
     this.props.dispatch(pushState(null, path));
+  }
+
+  handleShowDialog() {
+    this.refs.name.focus();
   }
 }
 

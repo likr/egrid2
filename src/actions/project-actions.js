@@ -18,9 +18,14 @@ const queryAll = () => {
   });
 };
 
-export const addProject = (name) => {
+export const addProject = (d) => {
+  const now = new Date();
+  const data = Object.assign({}, d, {
+    created: now,
+    updated: now
+  });
   return (dispatch) => {
-    db.projects.add({name})
+    db.projects.add(data)
       .then(() => queryAll())
       .then((projects) => {
         dispatch({
