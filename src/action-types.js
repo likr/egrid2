@@ -16,4 +16,5 @@ export const DELETE_EDGE = Symbol('delete-edge');
 export const LOAD_GRAPH = Symbol('load-graph');
 export const REDO_GRAPH = Symbol('redo-graph');
 export const UNDO_GRAPH = Symbol('undo-graph');
+export const UPDATE_EDGE_WITH_VERTICES = Symbol('update-edge-with-vertices');
 export const UPDATE_VERTEX = Symbol('update-vertex');

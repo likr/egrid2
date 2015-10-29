@@ -8,6 +8,7 @@ import {
   LOAD_GRAPH,
   REDO_GRAPH,
   UNDO_GRAPH,
+  UPDATE_EDGE_WITH_VERTICES,
   UPDATE_VERTEX
 } from '../action-types'
 
@@ -50,6 +51,17 @@ export const redo = () => {
 export const undo = () => {
   return {
     type: UNDO_GRAPH
+  };
+}
+
+export const updateEdgeWithVertices = ({u, v, ud, vd, d}) => {
+  return {
+    type: UPDATE_EDGE_WITH_VERTICES,
+    u,
+    v,
+    ud,
+    vd,
+    d
   };
 }
 

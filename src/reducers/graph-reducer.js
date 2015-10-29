@@ -10,8 +10,37 @@ import {
   LOAD_GRAPH,
   REDO_GRAPH,
   UNDO_GRAPH,
+  UPDATE_EDGE_WITH_VERTICES,
   UPDATE_VERTEX
 } from '../action-types'
+
+const updateVertexData = (graph, u, d) => {
+  const old = graph.vertex(u);
+  if (old === null) {
+    graph.addVertex(u, d);
+    return;
+  }
+  const inVertices = graph.inVertices(u).map((v) => [v, graph.edge(v, u)]);
+  const outVertices = graph.outVertices(u).map((v) => [v, graph.edge(u, v)]);
+  graph.removeVertex(u);
+  graph.addVertex(u, Object.assign({}, old, d));
+  for (const [v, e] of inVertices) {
+    graph.addEdge(v, u, e);
+  }
+  for (const [v, e] of outVertices) {
+    graph.addEdge(u, v, e);
+  }
+};
+
+const updateEdgeData = (graph, u, v, d) => {
+  const old = graph.edge(u, v);
+  if (old === null) {
+    graph.addEdge(u, v, d);
+    return;
+  }
+  graph.removeEdge(u, v);
+  graph.addEdge(u, v, Object.assign({}, old, d));
+};
 
 const addEdge = (prev, {u, v, d}) => {
   const graph = copy(prev.graph);
@@ -83,19 +112,21 @@ const redo = (state) => {
   return state.next
 };
 
+const updateEdgeWithVertices = (prev, {u, v, ud, vd, d}) => {
+  const graph = copy(prev.graph);
+  updateVertexData(graph, u, ud);
+  updateVertexData(graph, v, vd);
+  updateEdgeData(graph, u, v, d);
+  return {
+    graph,
+    prev,
+    next: null
+  };
+};
+
 const updateVertex = (prev, {u, d}) => {
   const graph = copy(prev.graph);
-  const inVertices = graph.inVertices(u).map((v) => [v, graph.edge(v, u)]);
-  const outVertices = graph.outVertices(u).map((v) => [v, graph.edge(u, v)]);
-  const old = graph.vertex(u);
-  graph.removeVertex(u);
-  graph.addVertex(u, Object.assign({}, old, d));
-  for (const [v, e] of inVertices) {
-    graph.addEdge(v, u, e);
-  }
-  for (const [v, e] of outVertices) {
-    graph.addEdge(u, v, e);
-  }
+  updateVertexData(graph, u, d);
   return {
     graph,
     prev,
@@ -128,6 +159,8 @@ const graphReducer = (state=null, action) => {
       return redo(state);
     case UNDO_GRAPH:
       return undo(state);
+    case UPDATE_EDGE_WITH_VERTICES:
+      return updateEdgeWithVertices(state, action);
     case UPDATE_VERTEX:
       return updateVertex(state, action);
     default:

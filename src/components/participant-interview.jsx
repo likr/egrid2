@@ -7,11 +7,11 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button'
 import Graph from 'egraph/lib/graph'
 import {
   addVertex,
-  addVertexWithEdge,
   clearGraph,
   loadGraph,
   redo,
   undo,
+  updateEdgeWithVertices,
   updateVertex
 } from '../actions/graph-actions'
 import {updateProject} from '../actions/project-actions'
@@ -105,7 +105,7 @@ class ParticipantInterview extends React.Component {
       }
     }
     this.layout = layoutGraph(graph);
-    const dur = 1, delay = 1;
+    const dur = 0.3, delay = 0.2;
     return (
       <div>
         <div
@@ -217,25 +217,17 @@ class ParticipantInterview extends React.Component {
     this.refs.dialog.show((text) => {
       const graph = this.props.graph;
       const participantId = +this.props.params.participantId;
-      const u = findVertexByText(graph, text);
-      if (u === null) {
-        this.props.dispatch(addVertexWithEdge({
-          u: nextVertexId(this.props.graph),
-          v,
-          ud: {
-            text,
-            participants: [participantId]
-          },
-          d: {
-            participants: [participantId]
-          }
-        }));
-      } else {
-        const participants = Array.from(graph.vertex(u).participants);
-        if (participants.indexOf(participantId) === -1) {
-          participants.push(participantId);
-        }
+      const u = findVertexByText(graph, text) || nextVertexId(graph);
+      const ud = graph.vertex(u) || {text, participants: []};
+      const vd = graph.vertex(v);
+      const d = graph.edge(u, v) || {participants: []};
+      if (ud.participants.indexOf(participantId) === -1) {
+        ud.participants.push(participantId);
       }
+      if (d.participants.indexOf(participantId) === -1) {
+        d.participants.push(participantId);
+      }
+      this.props.dispatch(updateEdgeWithVertices({u, v, ud, vd, d}));
     });
   }
 
@@ -243,25 +235,17 @@ class ParticipantInterview extends React.Component {
     this.refs.dialog.show((text) => {
       const graph = this.props.graph;
       const participantId = +this.props.params.participantId;
-      const v = findVertexByText(graph, text);
-      if (v === null) {
-        this.props.dispatch(addVertexWithEdge({
-          u,
-          v: nextVertexId(this.props.graph),
-          vd: {
-            text,
-            participants: [participantId]
-          },
-          d: {
-            participants: [participantId]
-          }
-        }));
-      } else {
-        const participants = Array.from(graph.vertex(v).participants);
-        if (participants.indexOf(participantId) === -1) {
-          participants.push(participantId);
-        }
+      const v = findVertexByText(graph, text) || nextVertexId(graph);
+      const vd = graph.vertex(v) || {text, participants: []};
+      const ud = graph.vertex(u);
+      const d = graph.edge(u, v) || {participants: []};
+      if (vd.participants.indexOf(participantId) === -1) {
+        vd.participants.push(participantId);
       }
+      if (d.participants.indexOf(participantId) === -1) {
+        d.participants.push(participantId);
+      }
+      this.props.dispatch(updateEdgeWithVertices({u, v, ud, vd, d}));
     });
   }
 
