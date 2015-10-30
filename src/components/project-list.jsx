@@ -7,8 +7,7 @@ import CardText from 'material-ui/lib/card/card-text'
 import CardTitle from 'material-ui/lib/card/card-title'
 import Dialog from 'material-ui/lib/dialog'
 import FlatButton from 'material-ui/lib/flat-button'
-import FloatingActionButton from 'material-ui/lib/floating-action-button'
-import FontIcon from 'material-ui/lib/font-icon'
+import RaisedButton from 'material-ui/lib/raised-button'
 import TextField from 'material-ui/lib/text-field'
 import {
   addProject,
@@ -16,6 +15,9 @@ import {
 } from '../actions/project-actions'
 
 const formatDate = (date) => {
+  if (!date) {
+    return '';
+  }
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDay();
@@ -41,33 +43,12 @@ class ProjectList extends React.Component {
     projects.sort((p1, p2) => p2.updated - p1.updated);
     return (
       <div>
-        <div
-          style={{
-            marginBottom: '10px'
-          }}>
-          <FloatingActionButton
-              onClick={::this.handleOpenDialog}>
-              <FontIcon className="material-icons">add</FontIcon>
-          </FloatingActionButton>
+        <h3>Your Projects</h3>
+        <div style={{marginBottom: '16px'}}>
+          <RaisedButton onClick={::this.handleOpenDialog} label="New" primary={true}/>
         </div>
-        <div>
-          {projects.map((project) => (
-            <Card
-              key={project.id}
-              style={{
-                marginBottom: '20px'
-              }}>
-              <CardTitle
-                title={project.name}
-                subtitle={`Updated: ${formatDate(project.updated)}`}
-              />
-              <CardText>{project.note}</CardText>
-              <CardActions>
-                <FlatButton onClick={this.handleNavigateToDetail.bind(this, project.id)} label="Open"/>
-                <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
-              </CardActions>
-            </Card>
-          ))}
+        <div className="row">
+          {this.alignedProjects(projects)}
         </div>
         <Dialog
             title="Create Project"
@@ -126,6 +107,39 @@ class ProjectList extends React.Component {
 
   handleShowDialog() {
     this.refs.name.focus();
+  }
+
+  alignedProjects(projects) {
+    const result = [];
+    projects.forEach((project, i) => {
+      result.push((
+        <div
+          key={project.id}
+          className="col-xs-12 col-sm-6 col-md-4">
+          <Card
+            style={{
+              marginBottom: '20px'
+            }}>
+            <CardTitle
+              title={project.name}
+              subtitle={`Updated: ${formatDate(project.updated)}`}
+            />
+            <CardText>{project.note}</CardText>
+            <CardActions>
+              <FlatButton onClick={this.handleNavigateToDetail.bind(this, project.id)} label="Open"/>
+              <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
+            </CardActions>
+          </Card>
+        </div>
+      ));
+      if (i % 3 === 2) {
+        result.push(<div key={`clearfix-md-${i}`} className="clearfix visible-md-block visible-lg-block"/>);
+      }
+      if (i % 2 === 1) {
+        result.push(<div key={`clearfix-sm-${i}`} className="clearfix visible-sm-block"/>);
+      }
+    });
+    return result;
   }
 }
 

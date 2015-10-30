@@ -113,7 +113,7 @@ class ParticipantInterview extends React.Component {
               position: 'absolute',
               left: 0,
               right: 0,
-              top: 0,
+              top: 64,
               bottom: 10
             }}>
           <ZoomableSVG>
@@ -167,7 +167,7 @@ class ParticipantInterview extends React.Component {
             style={{
               position: 'absolute',
               right: 10,
-              top: 10
+              top: 74
             }}>
           <FloatingActionButton
               secondary={true}

@@ -25,13 +25,10 @@ class App extends React.Component {
           title="E-Grid"
           showMenuIconButton={false}
         />
-        <div style={{
-          marginTop: '80px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          maxWidth: '1280px'
-        }}>
-          {this.props.children}
+        <div className="container">
+          <div style={{marginTop: '80px'}}>
+            {this.props.children}
+          </div>
         </div>
       </div>
     );
