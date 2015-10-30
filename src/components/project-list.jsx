@@ -13,18 +13,7 @@ import {
   addProject,
   deleteProject
 } from '../actions/project-actions'
-
-const formatDate = (date) => {
-  if (!date) {
-    return '';
-  }
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDay();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
+import formatDate from '../utils/format-date'
 
 @connect((state) => ({
   projects: state.projects
@@ -51,7 +40,7 @@ class ProjectList extends React.Component {
           {this.alignedProjects(projects)}
         </div>
         <Dialog
-            title="Create Project"
+            title="New Project"
             ref="dialog"
             onShow={::this.handleShowDialog}
             actions={[
@@ -118,7 +107,7 @@ class ProjectList extends React.Component {
           className="col-xs-12 col-sm-6 col-md-4">
           <Card
             style={{
-              marginBottom: '20px'
+              marginBottom: '16px'
             }}>
             <CardTitle
               title={project.name}

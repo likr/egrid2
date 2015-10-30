@@ -17,7 +17,12 @@ const queryAll = () => {
   });
 };
 
-export const addParticipant = (data) => {
+export const addParticipant = (d) => {
+  const now = new Date();
+  const data = Object.assign({}, d, {
+    created: now,
+    updated: now
+  });
   return (dispatch) => {
     db.participants.add(data)
       .then(() => queryAll())

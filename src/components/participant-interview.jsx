@@ -4,7 +4,6 @@ import {pushState} from 'redux-router';
 import IconButton from 'material-ui/lib/icon-button'
 import FontIcon from 'material-ui/lib/font-icon'
 import FloatingActionButton from 'material-ui/lib/floating-action-button'
-import Graph from 'egraph/lib/graph'
 import {
   addVertex,
   clearGraph,
@@ -15,6 +14,7 @@ import {
   updateVertex
 } from '../actions/graph-actions'
 import {updateProject} from '../actions/project-actions'
+import filterGraphByParticipant from '../utils/filter-graph-by-participant'
 import layoutGraph from '../utils/layout-graph'
 import ZoomableSVG from './zoomable-svg'
 import ConstructDialog from './construct-dialog'
@@ -50,23 +50,6 @@ const findVertexByText = (graph, text) => {
     }
   }
   return null;
-};
-
-const filterGraphByParticipant = (g, participantId) => {
-  const graph = new Graph();
-  for (const u of g.vertices()) {
-    const d = g.vertex(u);
-    if (d.participants.indexOf(participantId) > -1) {
-      graph.addVertex(u, Object.assign({}, d));
-    }
-  }
-  for (const [u, v] of g.edges()) {
-    const d = g.edge(u, v);
-    if (d.participants.indexOf(participantId) > -1) {
-      graph.addEdge(u, v, Object.assign({}, d));
-    }
-  }
-  return graph;
 };
 
 @connect((state) => ({

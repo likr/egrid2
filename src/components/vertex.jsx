@@ -4,27 +4,28 @@ import {animateTransform} from '../utils/shinsekai';
 
 class Vertex extends React.Component {
   componentDidMount() {
-    const {x, y, x0, y0} = this.props;
-    animateTransform(findDOMNode(this), {
-      type: 'translate',
-      from: `${x0} ${y0}`,
-      to: `${x} ${y}`,
-      dur: this.props.dur,
-      delay: this.props.delay
-    });
-  }
-
-  componentDidUpdate(prevProps) {
-    const {x, y, x0, y0} = this.props;
-    if (x !== prevProps.x || y !== prevProps.y) {
-      this.clearAnimateElements();
-      const element = findDOMNode(this);
-      animateTransform(element, {
+    const {x, y, x0, y0, dur, delay} = this.props;
+    if (dur > 0 && delay > 0) {
+      animateTransform(findDOMNode(this), {
         type: 'translate',
         from: `${x0} ${y0}`,
         to: `${x} ${y}`,
-        dur: this.props.dur,
-        delay: this.props.delay
+        dur,
+        delay
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const {x, y, x0, y0, dur, delay} = this.props;
+    if (dur > 0 && delay > 0 && x !== prevProps.x || y !== prevProps.y) {
+      this.clearAnimateElements();
+      animateTransform(findDOMNode(this), {
+        type: 'translate',
+        from: `${x0} ${y0}`,
+        to: `${x} ${y}`,
+        dur,
+        delay
       });
     }
   }
@@ -34,9 +35,10 @@ class Vertex extends React.Component {
   }
 
   render() {
-    const {text, x0, y0, width, height} = this.props;
+    const {text, x, y, x0, y0, width, height, dur, delay} = this.props;
+    const useAnimate = dur > 0 && delay > 0;
     return (
-      <g transform={`translate(${x0},${y0})`}>
+      <g transform={`translate(${useAnimate ? x0 : x},${useAnimate ? y0 : y})`}>
         <g style={{cursor: 'pointer'}}>
           <rect
               x={-width / 2}

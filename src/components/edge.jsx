@@ -39,23 +39,28 @@ const svgPath = (points) => {
 
 class Edge extends React.Component {
   componentDidMount() {
-    animate(findDOMNode(this).firstChild, {
-      attributeName: 'd',
-      to: svgPath(this.props.points),
-      dur: this.props.dur,
-      delay: this.props.delay
-    });
+    const {points, dur, delay} = this.props;
+    if (dur > 0 && delay > 0) {
+      animate(findDOMNode(this).firstChild, {
+        attributeName: 'd',
+        to: svgPath(points),
+        dur,
+        delay
+      });
+    }
   }
 
   componentDidUpdate() {
-    this.clearAnimateElements();
-    const element = findDOMNode(this).firstChild;
-    animate(element, {
-      attributeName: 'd',
-      to: svgPath(this.props.points),
-      dur: this.props.dur,
-      delay: this.props.delay
-    });
+    const {points, dur, delay} = this.props;
+    if (dur > 0 && delay > 0) {
+      this.clearAnimateElements();
+      animate(findDOMNode(this).firstChild, {
+        attributeName: 'd',
+        to: svgPath(points),
+        dur,
+        delay
+      });
+    }
   }
 
   componentWillUnMount() {
@@ -63,11 +68,12 @@ class Edge extends React.Component {
   }
 
   render() {
-    const {points0} = this.props;
+    const {points, points0, dur, delay} = this.props;
+    const useAnimate = dur > 0 && delay > 0;
     return (
       <g>
         <path
-            d={svgPath(points0)}
+            d={svgPath(useAnimate ? points0 : points)}
             fill="none"
             stroke="black"
             strokeWidth="1"/>
