@@ -27,7 +27,9 @@ class ConstructDialog extends React.Component {
   }
 
   handleSubmit(event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     this.refs.dialog.dismiss();
   }
 
