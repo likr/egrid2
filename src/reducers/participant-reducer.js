@@ -1,7 +1,8 @@
 import {
   ADD_PARTICIPANT,
   DELETE_PARTICIPANT,
-  LOAD_PARTICIPANTS
+  LOAD_PARTICIPANTS,
+  UPDATE_PARTICIPANT
 } from '../action-types'
 
 const addParticipant = (state, {participants}) => {
@@ -16,6 +17,10 @@ const loadParticipants = (state, {participants}) => {
   return participants;
 };
 
+const updateParticipant = (state, {participants}) => {
+  return participants;
+};
+
 const participantReducer = (state={}, action) => {
   switch (action.type) {
     case ADD_PARTICIPANT:
@@ -24,6 +29,8 @@ const participantReducer = (state={}, action) => {
       return deleteParticipant(state, action);
     case LOAD_PARTICIPANTS:
       return loadParticipants(state, action);
+    case UPDATE_PARTICIPANT:
+      return updateParticipant(state, action);
     default:
       return state;
   }

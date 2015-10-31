@@ -6,18 +6,21 @@ import CardActions from 'material-ui/lib/card/card-actions'
 import CardText from 'material-ui/lib/card/card-text'
 import CardMedia from 'material-ui/lib/card/card-media'
 import CardTitle from 'material-ui/lib/card/card-title'
-import Dialog from 'material-ui/lib/dialog'
 import FlatButton from 'material-ui/lib/flat-button'
 import IconButton from 'material-ui/lib/icon-button'
 import RaisedButton from 'material-ui/lib/raised-button'
-import TextField from 'material-ui/lib/text-field'
 import Graph from 'egraph/lib/graph'
-import {addParticipant, deleteParticipant} from '../actions/participant-actions'
+import {
+  addParticipant,
+  deleteParticipant,
+  updateParticipant
+} from '../actions/participant-actions'
 import filterGraphByParticipant from '../utils/filter-graph-by-participant'
 import formatDate from '../utils/format-date'
 import layoutGraph from '../utils/layout-graph'
 import Vertex from './vertex'
 import Edge from './edge'
+import ParticipantDialog from './participant-dialog'
 
 class ParticipantEvaluationStructure extends React.Component {
   render() {
@@ -87,94 +90,94 @@ class ParticipantList extends React.Component {
           </IconButton>
           <IconButton
               iconClassName="material-icons"
+              >
+            edit
+          </IconButton>
+          <IconButton
+              iconClassName="material-icons"
+              >
+            delete
+          </IconButton>
+          <IconButton
+              iconClassName="material-icons"
               onClick={::this.handleNavigateToAnalysis}>
             open_in_new
           </IconButton>
         </div>
         <div style={{marginBottom: '16px'}}>
-          <RaisedButton onClick={::this.handleOpenDialog} label="New" primary={true}/>
+          <RaisedButton onClick={::this.showNewParticipantDialog} label="New" primary={true}/>
         </div>
         <div>
           {
             participants.map((participant) => {
               return (
-                <Card
-                  key={participant.id}
-                  style={{
-                    marginBottom: '16px'
-                  }}>
-                  <CardTitle
-                    title={participant.name}
-                    subtitle={`Updated: ${formatDate(participant.updated)}`}/>
-                  <CardText>{participant.note}</CardText>
-                  <CardMedia>
-                    <ParticipantEvaluationStructure graph={graph} participantId={participant.id}/>
-                  </CardMedia>
-                  <CardActions>
-                    <FlatButton onClick={this.handleNavigateToInterview.bind(this, participant.id)} label="Interview"/>
-                    <FlatButton onClick={this.handleClickDeleteButton.bind(this, participant.id)} label="Delete"/>
-                  </CardActions>
-                </Card>
-                )
+                <div key={participant.id}>
+                  <Card
+                    style={{
+                      marginBottom: '16px'
+                    }}>
+                    <CardTitle
+                      title={participant.name}
+                      subtitle={`Updated: ${formatDate(participant.updated)}`}/>
+                    <CardText>{participant.note}</CardText>
+                    <CardMedia>
+                      <ParticipantEvaluationStructure graph={graph} participantId={participant.id}/>
+                    </CardMedia>
+                    <CardActions>
+                      <FlatButton onClick={this.handleNavigateToInterview.bind(this, participant.id)} label="Interview"/>
+                      <FlatButton onClick={this.handleClickDeleteButton.bind(this, participant.id)} label="Delete"/>
+                      <FlatButton onClick={this.showEditParticipantDialog.bind(this, participant.id)} label="Edit"/>
+                    </CardActions>
+                  </Card>
+                  <ParticipantDialog
+                    ref={`editParticipantDialog${participant.id}`}
+                    title="Edit Participant"
+                    participantId={participant.id}
+                    name={participant.name}
+                    note={participant.note}
+                    onSubmit={::this.updateParticipant}/>
+                </div>
+              )
             })
           }
         </div>
-        <Dialog
-            title="New Participant"
-            ref="dialog"
-            onShow={::this.handleShowDialog}
-            actions={[
-              {
-                text: 'Cancel'
-              },
-              {
-                text: 'Submit',
-                onTouchTap: ::this.handleSubmit
-              }
-            ]}>
-          <form onSubmit={::this.handleSubmit}>
-            <TextField
-              ref="name"
-              fullWidth={true}
-              floatingLabelText="Participant Name"/>
-            <TextField
-              ref="note"
-              fullWidth={true}
-              floatingLabelText="Note"
-              multiLine={true}
-              rows={3}/>
-          </form>
-        </Dialog>
+        <ParticipantDialog
+          ref="newParticipantDialog"
+          title="New Participant"
+          onSubmit={::this.submitParticipant}/>
       </div>
     );
   }
 
-  handleOpenDialog() {
-    this.refs.dialog.show();
+  showNewParticipantDialog() {
+    this.refs.newParticipantDialog.show();
   }
 
-  handleSubmit(event) {
-    if (event) {
-      event.preventDefault();
-    }
-    const name = this.refs.name.getValue();
-    const note = this.refs.note.getValue();
-    if (name) {
-      this.props.dispatch(addParticipant({
-        projectId: +this.props.params.projectId,
-        name,
-        note
-      }));
-    }
-    this.refs.dialog.dismiss();
+  submitParticipant({name, note}) {
+    this.props.dispatch(addParticipant({
+      projectId: +this.props.params.projectId,
+      name,
+      note
+    }));
   }
 
-  handleShowDialog() {
-    this.refs.name.focus();
+  showEditParticipantDialog(participantId) {
+    this.refs[`editParticipantDialog${participantId}`].show();
+  }
+
+  updateParticipant({participantId, name, note}) {
+    this.props.dispatch(updateParticipant(participantId, {
+      name,
+      note
+    }));
   }
 
   handleClickDeleteButton(id) {
     this.props.dispatch(deleteParticipant(id));
+  }
+
+  handleClickEditParticipantButton() {
+    this.refs.editParticipantDialog();
   }
 
   handleBack() {

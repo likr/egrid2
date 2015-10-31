@@ -1,7 +1,8 @@
 import {
   ADD_PARTICIPANT,
   DELETE_PARTICIPANT,
-  LOAD_PARTICIPANTS
+  LOAD_PARTICIPANTS,
+  UPDATE_PARTICIPANT
 } from '../action-types'
 import db from '../db'
 
@@ -56,5 +57,21 @@ export const loadParticipants = () => {
         participants
       });
     });
+  };
+};
+
+export const updateParticipant = (id, d) => {
+  const data = Object.assign({}, d, {
+    updated: new Date()
+  });
+  return (dispatch) => {
+    db.participants.update(+id, data)
+      .then(() => queryAll())
+      .then((participants) => {
+        dispatch({
+          type: UPDATE_PARTICIPANT,
+          participants
+        });
+      });
   };
 };

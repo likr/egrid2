@@ -6,6 +6,7 @@ export const UPDATE_PROJECT = Symbol('update-project');
 export const ADD_PARTICIPANT = Symbol('add-participant');
 export const DELETE_PARTICIPANT = Symbol('delete-participant');
 export const LOAD_PARTICIPANTS = Symbol('load-participants');
+export const UPDATE_PARTICIPANT = Symbol('update-participant');
 
 export const ADD_EDGE = Symbol('add-edge');
 export const ADD_VERTEX = Symbol('add-vertex');
