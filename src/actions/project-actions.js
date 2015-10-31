@@ -21,6 +21,10 @@ const queryAll = () => {
 export const addProject = (d) => {
   const now = new Date();
   const data = Object.assign({}, d, {
+    evaluationStructure: JSON.stringify({
+      vertices: [],
+      edges: []
+    }),
     created: now,
     updated: now
   });
