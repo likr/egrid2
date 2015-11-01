@@ -5,15 +5,16 @@ import Card from 'material-ui/lib/card/card'
 import CardActions from 'material-ui/lib/card/card-actions'
 import CardText from 'material-ui/lib/card/card-text'
 import CardTitle from 'material-ui/lib/card/card-title'
-import Dialog from 'material-ui/lib/dialog'
 import FlatButton from 'material-ui/lib/flat-button'
 import RaisedButton from 'material-ui/lib/raised-button'
-import TextField from 'material-ui/lib/text-field'
 import {
   addProject,
-  deleteProject
+  deleteProject,
+  updateProject
 } from '../actions/project-actions'
 import formatDate from '../utils/format-date'
+import ConfirmDialog from './confirm-dialog'
+import ProjectDialog from './project-dialog'
 
 @connect((state) => ({
   projects: state.projects
@@ -34,68 +35,43 @@ class ProjectList extends React.Component {
       <div>
         <h3>Your Projects</h3>
         <div style={{marginBottom: '16px'}}>
-          <RaisedButton onClick={::this.handleOpenDialog} label="New" primary={true}/>
+          <RaisedButton onClick={::this.newProject} label="New" primary={true}/>
         </div>
         <div className="row">
           {this.alignedProjects(projects)}
         </div>
-        <Dialog
-            title="New Project"
-            ref="dialog"
-            onShow={::this.handleShowDialog}
-            actions={[
-              {
-                text: 'Cancel'
-              },
-              {
-                text: 'Submit',
-                onTouchTap: ::this.handleSubmit
-              }
-            ]}>
-          <form onSubmit={::this.handleSubmit}>
-            <TextField
-              ref="name"
-              fullWidth={true}
-              floatingLabelText="Project Name"/>
-            <TextField
-              ref="note"
-              fullWidth={true}
-              floatingLabelText="Note"
-              multiLine={true}
-              rows={3}/>
-          </form>
-        </Dialog>
+        <ConfirmDialog
+          ref="deleteConfirmDialog"
+          title="Delete project"/>
+        <ProjectDialog
+          ref="newProjectDialog"
+          title="New Project"
+          onSubmit={({name, note}) => {
+            this.props.dispatch(addProject({name, note}));
+          }}/>
       </div>
     );
   }
 
-  handleOpenDialog() {
-    this.refs.dialog.show();
+  newProject() {
+    this.refs.newProjectDialog.show();
   }
 
-  handleSubmit(event) {
-    if (event) {
-      event.preventDefault();
-    }
-    const name = this.refs.name.getValue();
-    const note = this.refs.note.getValue();
-    if (name) {
-      this.props.dispatch(addProject({name, note}));
-    }
-    this.refs.dialog.dismiss();
+  deleteProject(id) {
+    this.refs.deleteConfirmDialog.show().
+      then(() => {
+        this.props.dispatch(deleteProject(id));
+      }, () => {
+      });
   }
 
-  handleClickDeleteButton(id) {
-    this.props.dispatch(deleteProject(id));
+  editProject(id) {
+    this.refs[`editProjectDialog${id}`].show();
   }
 
-  handleNavigateToDetail(projectId) {
+  navigateToDetail(projectId) {
     const path = `/projects/${projectId}/participants`;
     this.props.dispatch(pushState(null, path));
-  }
-
-  handleShowDialog() {
-    this.refs.name.focus();
   }
 
   alignedProjects(projects) {
@@ -115,10 +91,20 @@ class ProjectList extends React.Component {
             />
             <CardText>{project.note}</CardText>
             <CardActions>
-              <FlatButton onClick={this.handleNavigateToDetail.bind(this, project.id)} label="Open"/>
-              <FlatButton onClick={this.handleClickDeleteButton.bind(this, project.id)} label="Delete"/>
+              <FlatButton onClick={this.navigateToDetail.bind(this, project.id)} label="Open"/>
+              <FlatButton onClick={this.deleteProject.bind(this, project.id)} label="Delete"/>
+              <FlatButton onClick={this.editProject.bind(this, project.id)} label="Edit"/>
             </CardActions>
           </Card>
+          <ProjectDialog
+            ref={`editProjectDialog${project.id}`}
+            title="Edit Project"
+            projectId={project.id}
+            name={project.name}
+            note={project.note}
+            onSubmit={({name, note}) => {
+              this.props.dispatch(updateProject(project.id, {name, note}));
+            }}/>
         </div>
       ));
       if (i % 3 === 2) {

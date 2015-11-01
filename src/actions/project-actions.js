@@ -64,9 +64,12 @@ export const loadProjects = () => {
   };
 };
 
-export const updateProject = (id, attrs) => {
+export const updateProject = (id, d) => {
+  const data = Object.assign({}, d, {
+    updated: new Date()
+  });
   return (dispatch) => {
-    db.projects.update(+id, attrs)
+    db.projects.update(+id, data)
       .then(() => queryAll())
       .then((projects) => {
         dispatch({
