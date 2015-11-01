@@ -20,6 +20,7 @@ import formatDate from '../utils/format-date'
 import layoutGraph from '../utils/layout-graph'
 import Vertex from './vertex'
 import Edge from './edge'
+import ConfirmDialog from './confirm-dialog'
 import ParticipantDialog from './participant-dialog'
 
 class ParticipantEvaluationStructure extends React.Component {
@@ -145,6 +146,9 @@ class ParticipantList extends React.Component {
           ref="newParticipantDialog"
           title="New Participant"
           onSubmit={::this.submitParticipant}/>
+        <ConfirmDialog
+          ref="deleteConfirmDialog"
+          title="Delete participant"/>
       </div>
     );
   }
@@ -173,7 +177,11 @@ class ParticipantList extends React.Component {
   }
 
   handleClickDeleteButton(id) {
-    this.props.dispatch(deleteParticipant(id));
+    this.refs.deleteConfirmDialog.show().
+      then(() => {
+        this.props.dispatch(deleteParticipant(id));
+      }, () => {
+      });
   }
 
   handleClickEditParticipantButton() {
