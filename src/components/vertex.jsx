@@ -39,7 +39,7 @@ class Vertex extends React.Component {
     const useAnimate = dur > 0 && delay > 0;
     return (
       <g transform={`translate(${useAnimate ? x0 : x},${useAnimate ? y0 : y})`}>
-        <g style={{cursor: 'pointer'}}>
+        <g style={{cursor: this.props.cursor || 'default'}}>
           <rect
               x={-width / 2}
               y={-height / 2}
