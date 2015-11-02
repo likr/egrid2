@@ -16,21 +16,50 @@ import {
 import {updateProject} from '../actions/project-actions'
 import filterGraphByParticipant from '../utils/filter-graph-by-participant'
 import layoutGraph from '../utils/layout-graph'
-import ZoomableSVG from './zoomable-svg'
+import layoutRegion from '../utils/layout-region'
 import ConstructDialog from './construct-dialog'
 import Vertex from './vertex'
 import Edge from './edge'
+import SvgButton from './svg-button'
+import zoom from './zoom'
+import injectBBox from './inject-bbox'
 
-class SvgButton extends React.Component {
+@injectBBox
+@zoom
+class ParticipantInterviewSvg extends React.Component {
   render() {
+    const dur = 0.3, delay = 0.2;
+    const {x, y, scale} = this.props;
     return (
-      <g style={{cursor: 'pointer'}} transform={this.props.transform} onClick={this.props.onClick}>
-        <rect
-            width="24"
-            height="24"
-            fill="#ccc"/>
-        <text y="24" className="material-icons">{this.props.icon}</text>
-      </g>
+      <svg width="100%" height="100%" style={{cursor: 'move'}}>
+        <g transform={`translate(${x},${y})scale(${scale})`}>
+          <g>
+            {this.props.layout.edges.map(({u, v, points, points0}) => (
+              <Edge key={`${u}:${v}`} dur={dur} delay={delay} points={points} points0={points0}/>
+            ))}
+          </g>
+          <g>
+            {this.props.layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
+              <Vertex key={u} dur={dur} delay={delay} text={text} x={x} y={y} x0={x0} y0={y0} width={width} height={height}>
+                <g className="buttons" transform="translate(-42,0)">
+                  <SvgButton
+                    transform="translate(0,10)"
+                    icon="arrow_back"
+                    onClick={() => this.props.onLadderUp(u)}/>
+                  <SvgButton
+                    transform="translate(30,10)"
+                    icon="edit"
+                    onClick={() => this.props.onEditVertex(u)}/>
+                  <SvgButton
+                    transform="translate(60,10)"
+                    icon="arrow_forward"
+                    onClick={() => this.props.onLadderDown(u)}/>
+                </g>
+              </Vertex>
+            ))}
+          </g>
+        </g>
+      </svg>
     );
   }
 }
@@ -88,44 +117,25 @@ class ParticipantInterview extends React.Component {
       }
     }
     this.layout = layoutGraph(graph);
-    const dur = 0.3, delay = 0.2;
+    const region = layoutRegion(this.layout);
+
     return (
       <div>
         <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 64,
-              bottom: 10
-            }}>
-          <ZoomableSVG>
-            <g>
-              {this.layout.edges.map(({u, v, points, points0}) => (
-                <Edge key={`${u}:${v}`} dur={dur} delay={delay} points={points} points0={points0}/>
-              ))}
-            </g>
-            <g>
-              {this.layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
-                <Vertex key={u} dur={dur} delay={delay} text={text} x={x} y={y} x0={x0} y0={y0} width={width} height={height}>
-                  <g className="buttons" transform="translate(-42,0)">
-                    <SvgButton
-                        transform="translate(0,10)"
-                        icon="arrow_back"
-                        onClick={this.handleLadderUp.bind(this, u)}/>
-                    <SvgButton
-                        transform="translate(30,10)"
-                        icon="edit"
-                        onClick={this.handleEditVertex.bind(this, u)}/>
-                    <SvgButton
-                        transform="translate(60,10)"
-                        icon="arrow_forward"
-                        onClick={this.handleLadderDown.bind(this, u)}/>
-                  </g>
-                </Vertex>
-              ))}
-            </g>
-          </ZoomableSVG>
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 64,
+            bottom: 10
+          }}>
+          <ParticipantInterviewSvg
+            layout={this.layout}
+            contentWidth={region.width}
+            contentHeight={region.height}
+            onLadderUp={::this.handleLadderUp}
+            onLadderDown={::this.handleLadderDown}
+            onEditVertex={::this.handleEditVertex}/>
         </div>
         <div
             style={{

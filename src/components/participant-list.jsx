@@ -96,7 +96,11 @@ class ParticipantList extends React.Component {
                       subtitle={`Updated: ${formatDate(participant.updated)}`}/>
                     <CardText>{participant.note}</CardText>
                     <CardMedia>
-                      <ParticipantEvaluationStructure graph={graph} participantId={participant.id}/>
+                      <ParticipantEvaluationStructure
+                        graph={graph}
+                        participantId={participant.id}
+                        styleWidth="100%"
+                        styleHeight="300"/>
                     </CardMedia>
                     <CardActions>
                       <FlatButton onClick={this.handleNavigateToInterview.bind(this, participant.id)} label="Interview"/>

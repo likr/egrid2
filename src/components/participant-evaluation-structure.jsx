@@ -1,60 +1,32 @@
-/* global window */
 import React from 'react'
-import {findDOMNode} from 'react-dom'
 import filterGraphByParticipant from '../utils/filter-graph-by-participant'
+import centering from '../utils/centering'
 import layoutGraph from '../utils/layout-graph'
+import layoutRegion from '../utils/layout-region'
 import Vertex from './vertex'
 import Edge from './edge'
+import injectBBox from './inject-bbox'
 
-const transform = (layout, {width, height}) => {
-  const layoutLeft = Math.min(0, ...layout.vertices.map(({x, width}) => x - width / 2));
-  const layoutRight = Math.max(0, ...layout.vertices.map(({x, width}) => x + width / 2));
-  const layoutTop = Math.min(0, ...layout.vertices.map(({y, height}) => y - height / 2));
-  const layoutBottom = Math.max(0, ...layout.vertices.map(({y, height}) => y + height / 2));
-  const layoutWidth = layoutRight - layoutLeft;
-  const layoutHeight = layoutBottom - layoutTop;
-  const xScale = layoutWidth > 0 ? width / layoutWidth : 1;
-  const yScale = layoutHeight > 0 ? height / layoutHeight : 1;
-  const scale = Math.min(1, xScale, yScale);
-  return {
-    x: (width - layoutWidth * scale) / 2,
-    y: (height - layoutHeight * scale) / 2,
-    scale: scale
-  };
-};
 
-const margin = 10;
-
+@injectBBox
 class ParticipantEvaluationStructure extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      width: 0,
-      height: 0
-    };
-  }
-
-  componentDidMount() {
-    const element = findDOMNode(this).parentNode;
-    this.setState({
-      width: element.clientWidth - 2 * margin,
-      height: element.clientHeight - 2 * margin
-    });
-    this.resizeListener = ::this.handleResize;
-    window.addEventListener('resize', this.resizeListener);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeListener);
   }
 
   render() {
-    const {participantId} = this.props;
+    const margin = 10;
+    const {participantId, styleWidth, styleHeight} = this.props;
     const graph = filterGraphByParticipant(this.props.graph, participantId);
     const layout = layoutGraph(graph);
-    const {x, y, scale} = transform(layout, this.state);
+    const W = this.props.width - 2 * margin;
+    const H = this.props.height - 2 * margin;
+    const region = layoutRegion(layout);
+    const w = region.width;
+    const h = region.height;
+    const {x, y, scale} = centering(w, h, W, H);
     return (
-      <svg width="100%" height="300">
+      <svg width={styleWidth} height={styleHeight}>
         <g transform={`translate(${margin},${margin})translate(${x},${y})scale(${scale})`}>
           <g>
             {layout.edges.map(({u, v, points, points0}) => (
@@ -69,14 +41,6 @@ class ParticipantEvaluationStructure extends React.Component {
         </g>
       </svg>
     );
-  }
-
-  handleResize() {
-    const element = findDOMNode(this).parentNode;
-    this.setState({
-      width: element.clientWidth - 2 * margin,
-      height: element.clientHeight - 2 * margin
-    });
   }
 }
 

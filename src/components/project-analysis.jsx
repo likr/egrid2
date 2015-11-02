@@ -6,9 +6,36 @@ import {
   loadGraph
 } from '../actions/graph-actions'
 import layoutGraph from '../utils/layout-graph'
-import ZoomableSVG from './zoomable-svg'
+import layoutRegion from '../utils/layout-region'
 import Vertex from './vertex'
 import Edge from './edge'
+import zoom from './zoom'
+import injectBBox from './inject-bbox'
+
+@injectBBox
+@zoom
+class ProjectAnalysisSvg extends React.Component {
+  render() {
+    const dur = 0.3, delay = 0.2;
+    const {x, y, scale} = this.props;
+    return (
+      <svg width="100%" height="100%" style={{cursor: 'move'}}>
+        <g transform={`translate(${x},${y})scale(${scale})`}>
+          <g>
+            {this.props.layout.edges.map(({u, v, points, points0}) => (
+              <Edge key={`${u}:${v}`} dur={dur} delay={delay} points={points} points0={points0}/>
+            ))}
+          </g>
+          <g>
+            {this.props.layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
+              <Vertex key={u} dur={dur} delay={delay} text={text} x={x} y={y} x0={x0} y0={y0} width={width} height={height}/>
+            ))}
+          </g>
+        </g>
+      </svg>
+    );
+  }
+}
 
 @connect((state) => ({
   graph: state.graph.graph
@@ -43,29 +70,22 @@ class ProjectAnalysis extends React.Component {
       }
     }
     this.layout = layoutGraph(graph);
-    const dur = 0.3, delay = 0.2;
+    const region = layoutRegion(this.layout);
+
     return (
       <div>
         <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 10
-            }}>
-          <ZoomableSVG>
-            <g>
-              {this.layout.edges.map(({u, v, points, points0}) => (
-                <Edge key={`${u}:${v}`} dur={dur} delay={delay} points={points} points0={points0}/>
-              ))}
-            </g>
-            <g>
-              {this.layout.vertices.map(({u, text, x, y, x0, y0, width, height}) => (
-                <Vertex key={u} dur={dur} delay={delay} text={text} x={x} y={y} x0={x0} y0={y0} width={width} height={height}/>
-              ))}
-            </g>
-          </ZoomableSVG>
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 64,
+            bottom: 10
+          }}>
+          <ProjectAnalysisSvg
+            layout={this.layout}
+            contentWidth={region.width}
+            contentHeight={region.height}/>
         </div>
       </div>
     );
