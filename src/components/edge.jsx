@@ -50,9 +50,9 @@ class Edge extends React.Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const {points, dur, delay} = this.props;
-    if (dur > 0 && delay > 0) {
+    if (dur > 0 && delay > 0 && this.props.points !== prevProps.points) {
       this.clearAnimateElements();
       animate(findDOMNode(this).firstChild, {
         attributeName: 'd',
