@@ -1,5 +1,6 @@
 /* global document */
 import m from 'mithril'
+import Cache from '../common/cache'
 import Wordcloud from './wordcloud'
 
 const controller = () => {
@@ -52,7 +53,9 @@ const view = (ctrl, {show}) => {
     </div>
     <div className='content'>
       <svg width='400' height='400'>
-        <Wordcloud/>
+        <Cache children={(invalidate) => {
+          return <Wordcloud invalidate={invalidate}/>
+        }}/>
       </svg>
     </div>
   </div>

@@ -1,23 +1,9 @@
-/* global $ */
 import m from 'mithril'
-import {removeProject, updateProject} from '../../../intents/project'
+import {removeProject, updateProject} from '../../intents/project'
+import popup from '../utils/config-popup'
+import formatDate from '../utils/format-date'
 
-const formatDate = (date) => {
-  if (!date) {
-    return '';
-  }
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
-};
-
-const popup = (element, init) => {
-  if (!init) {
-    $(element).popup({
-      position: 'bottom left',
-    });
-  }
-};
-
-const projectView = (project, {confirmModal, projectModal}) => {
+const view = (ctrl, {project, confirmModal, projectModal}) => {
   return <div key={project.id} className="card">
     <div className="content">
       <div className="header">{project.name}</div>
@@ -25,8 +11,8 @@ const projectView = (project, {confirmModal, projectModal}) => {
       <div className="meta">Updated at: {formatDate(project.updated)}</div>
       <div className="description">{project.note}</div>
     </div>
-    <div className="ui bottom attached four buttons">
-      <a className="ui button" href={`/projects/${project.id}`} config={m.route}>Open</a>
+    <div className="extra content">
+      <a className="ui secondary button" href={`/projects/${project.id}`} config={m.route}>Open</a>
       <button className="ui icon button" data-content="Edit" config={popup} onclick={() => {
         projectModal.show({
           title: 'Update Project',
@@ -63,4 +49,4 @@ const projectView = (project, {confirmModal, projectModal}) => {
   </div>
 };
 
-export default projectView
+export default {view}

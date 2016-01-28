@@ -4,9 +4,8 @@ import LayoutWorker from '../../models/layout-worker'
 import vertex from './views/vertex'
 import edge from './views/edge'
 
-const controller = () => {
+const controller = ({invalidate}) => {
   const ctrl = {
-    initialized: false,
     vertices: [],
     edges: [],
     onunload: () => {
@@ -15,8 +14,8 @@ const controller = () => {
 
   LayoutWorker.subscribe((e) => {
     m.startComputation();
-    ctrl.initialized = false;
     Object.assign(ctrl, e.data);
+    invalidate();
     m.endComputation();
   });
 
@@ -33,11 +32,6 @@ const controller = () => {
 };
 
 const view = (ctrl) => {
-  if (ctrl.initialized) {
-    return {subtree: 'retain'};
-  }
-  ctrl.initialized = true;
-
   const {vertices, edges} = ctrl;
   return <g>
     <g>{edges.map(edge)}</g>

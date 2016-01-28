@@ -2,8 +2,8 @@ import m from 'mithril'
 import {addProject, loadProjects} from '../../intents/project'
 import Project from '../../models/project'
 import Page from '../common/page'
-import projectView from './views/project'
-import ConfirmModal from './confirm-modal'
+import ConfirmModal from '../common/confirm-modal'
+import ProjectCard from './project-card'
 import ProjectModal from './project-modal'
 
 const controller = () => {
@@ -57,22 +57,20 @@ const view = (ctrl) => {
         Add
       </button>
     </div>
-    <div className="ui three stackable cards">
+    <div className="ui one cards">
       {ctrl.projects.map((project) => {
-        return projectView(project, {
-          confirmModal: ctrl.confirmModal,
-          projectModal: ctrl.projectModal,
-        });
+        return <ProjectCard
+            project={project}
+            confirmModal={ctrl.confirmModal}
+            projectModal={ctrl.projectModal}/>
       })}
     </div>
-    <ConfirmModal
-        onregister={(modal) => {
-          ctrl.confirmModal = modal;
-        }}/>
-    <ProjectModal
-        onregister={(modal) => {
-          ctrl.projectModal = modal;
-        }}/>
+    <ConfirmModal onregister={(modal) => {
+      ctrl.confirmModal = modal;
+    }}/>
+    <ProjectModal onregister={(modal) => {
+      ctrl.projectModal = modal;
+    }}/>
   </Page>
 };
 

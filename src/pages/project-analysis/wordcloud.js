@@ -44,9 +44,8 @@ const textColor = d3.scale.category20();
 const textSize = d3.scale.linear()
   .range([10, 30]);
 
-const controller = () => {
+const controller = ({invalidate}) => {
   const ctrl = {
-    cached: false,
     words: [],
   };
   LayoutWorker.subscribe(({data}) => {
@@ -64,7 +63,7 @@ const controller = () => {
       .fontSize((d) => textSize(d.count))
       .on('end', (layout) => {
         m.startComputation();
-        ctrl.cached = false;
+        invalidate();
         ctrl.words = layout;
         m.endComputation();
       })
@@ -74,11 +73,6 @@ const controller = () => {
 };
 
 const view = (ctrl) => {
-  if (ctrl.cached) {
-    return {subtree: 'retain'};
-  }
-  ctrl.cached = true;
-
   return <g transform="translate(200,200)">
     {ctrl.words.map(({text, size, x, y, rotate}) => {
       return <text
