@@ -31,10 +31,9 @@ const controller = () => {
     participantModal: null,
   };
 
-  const projectSubscription = Projects.subscribe((project) => {
+  const projectSubscription = Projects.subscribe(({data}) => {
     m.startComputation();
-    ctrl.project = project;
-    listParticipants(project.id);
+    ctrl.project = data;
     m.endComputation();
   });
 
@@ -44,12 +43,14 @@ const controller = () => {
     m.endComputation();
   });
 
-  getProject(m.route.param('projectId'));
-
   ctrl.onunload = () => {
     projectSubscription.dispose();
     participantSubscription.dispose();
   };
+
+  const projectId = m.route.param('projectId');
+  getProject(projectId);
+  listParticipants(projectId);
 
   return ctrl;
 };

@@ -1,44 +1,44 @@
 import Rx from 'rx'
 import {
-  ADD_PROJECT,
-  GET_PROJECT,
-  LOAD_PROJECTS,
-  REMOVE_PROJECT,
-  UPDATE_PROJECT,
+  PROJECT_ADD,
+  PROJECT_GET,
+  PROJECT_LIST,
+  PROJECT_REMOVE,
+  PROJECT_UPDATE,
 } from '../constants'
 
 export const intentSubject = new Rx.Subject();
 
 export const addProject = (data) => {
   intentSubject.onNext({
-    type: ADD_PROJECT,
+    type: PROJECT_ADD,
     data,
   });
 };
 
 export const getProject = (id) => {
   intentSubject.onNext({
-    type: GET_PROJECT,
+    type: PROJECT_GET,
     id,
   });
 };
 
 export const loadProjects = () => {
   intentSubject.onNext({
-    type: LOAD_PROJECTS,
+    type: PROJECT_LIST,
   });
 };
 
 export const removeProject = (id) => {
   intentSubject.onNext({
-    type: REMOVE_PROJECT,
+    type: PROJECT_REMOVE,
     id,
   });
 };
 
 export const updateProject = (data) => {
   intentSubject.onNext({
-    type: UPDATE_PROJECT,
+    type: PROJECT_UPDATE,
     data,
   });
 };

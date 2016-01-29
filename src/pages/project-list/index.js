@@ -13,9 +13,9 @@ const controller = () => {
     confirmModal: null,
   };
 
-  const subscription = Project.subscribe((projects) => {
+  const subscription = Project.subscribe(({data}) => {
     m.startComputation();
-    ctrl.projects = projects;
+    ctrl.projects = data;
     m.endComputation();
   });
 

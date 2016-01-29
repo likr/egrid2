@@ -1,10 +1,10 @@
 import Rx from 'rx'
 import {
-  ADD_PROJECT,
-  GET_PROJECT,
-  LOAD_PROJECTS,
-  REMOVE_PROJECT,
-  UPDATE_PROJECT,
+  PROJECT_ADD,
+  PROJECT_GET,
+  PROJECT_LIST,
+  PROJECT_REMOVE,
+  PROJECT_UPDATE,
 } from '../constants'
 import {intentSubject} from '../intents/project'
 import db from './db'
@@ -13,6 +13,13 @@ const projects = db.collection('projects');
 
 const subject = new Rx.Subject();
 
+const load = (type) => {
+  projects.list({order: '-updated'})
+    .then(({data}) => {
+      subject.onNext({type, data});
+    });
+};
+
 const add = (data) => {
   const now = new Date();
   const project = Object.assign({}, data, {
@@ -20,26 +27,23 @@ const add = (data) => {
     updated: now,
   });
   projects.create(project)
-    .then(load);
+    .then(() => load(PROJECT_ADD));
 };
 
 const get = (id) => {
   projects.get(id)
     .then(({data}) => {
-      subject.onNext(data);
+      subject.onNext({type: PROJECT_GET, data});
     });
 };
 
-const load = () => {
-  projects.list({order: '-updated'})
-    .then(({data}) => {
-      subject.onNext(data);
-    });
+const list = () => {
+  load(PROJECT_LIST);
 };
 
 const remove = (id) => {
   projects.delete(id)
-    .then(load);
+    .then(() => load(PROJECT_REMOVE));
 };
 
 const update = (data) => {
@@ -48,24 +52,24 @@ const update = (data) => {
     .update(Object.assign({}, data, {
       updated: now,
     }))
-    .then(load);
+    .then(() => load(PROJECT_UPDATE));
 };
 
 intentSubject.subscribe((payload) => {
   switch (payload.type) {
-    case ADD_PROJECT:
+    case PROJECT_ADD:
       add(payload.data);
       break;
-    case GET_PROJECT:
+    case PROJECT_GET:
       get(payload.id);
       break;
-    case LOAD_PROJECTS:
-      load();
+    case PROJECT_LIST:
+      list();
       break;
-    case REMOVE_PROJECT:
+    case PROJECT_REMOVE:
       remove(payload.id);
       break;
-    case UPDATE_PROJECT:
+    case PROJECT_UPDATE:
       update(payload.data);
       break;
   }

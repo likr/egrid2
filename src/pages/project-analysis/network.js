@@ -1,23 +1,25 @@
 import m from 'mithril'
 import {calcLayout} from '../../intents/layout-worker'
 import LayoutWorker from '../../models/layout-worker'
-import vertex from './views/vertex'
-import edge from './views/edge'
+import vertex from '../views/vertex'
+import edge from '../views/edge'
 
 const controller = ({invalidate}) => {
   const ctrl = {
     vertices: [],
     edges: [],
-    onunload: () => {
-    },
   };
 
-  LayoutWorker.subscribe((e) => {
+  const subscription = LayoutWorker.subscribe((e) => {
     m.startComputation();
     Object.assign(ctrl, e.data);
     invalidate();
     m.endComputation();
   });
+
+  ctrl.onunload = () => {
+    subscription.dispose();
+  };
 
   m.request({method: 'GET', url: 'graph.json'})
     .then((data) => {

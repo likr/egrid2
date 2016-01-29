@@ -1,8 +1,17 @@
-export const ADD_PROJECT = Symbol('add-project');
-export const GET_PROJECT = Symbol('get-project');
-export const LOAD_PROJECTS = Symbol('load-projects');
-export const REMOVE_PROJECT = Symbol('remove-project');
-export const UPDATE_PROJECT = Symbol('update-project');
+export const GRAPH_ADD_EDGE = Symbol('graph-add-edge');
+export const GRAPH_ADD_VERTEX = Symbol('graph-add-vertex');
+export const GRAPH_CLEAR = Symbol('graph-clear');
+export const GRAPH_LOAD = Symbol('graph-load');
+export const GRAPH_REDO = Symbol('graph-redo');
+export const GRAPH_REMOVE_EDGE = Symbol('graph-remove-edge');
+export const GRAPH_REMOVE_VERTEX = Symbol('graph-remove-vertex');
+export const GRAPH_UNDO = Symbol('graph-undo');
+
+export const PROJECT_ADD = Symbol('project-add');
+export const PROJECT_GET = Symbol('project-get');
+export const PROJECT_LOAD = Symbol('project-load');
+export const PROJECT_REMOVE = Symbol('project-remove');
+export const PROJECT_UPDATE = Symbol('project-update');
 
 export const PARTICIPANT_ADD = Symbol('participant-add');
 export const PARTICIPANT_GET = Symbol('participant-get');
