@@ -22,6 +22,13 @@ const add = (data) => {
     .then(() => list(data.projectId));
 };
 
+const get = (id) => {
+  participants.get(id)
+    .then(({data}) => {
+      subject.onNext({type: PARTICIPANT_GET, data});
+    });
+};
+
 const list = (projectId) => {
   participants
     .list({
@@ -51,6 +58,7 @@ intentSubject.subscribe((payload) => {
       add(payload.data);
       break;
     case PARTICIPANT_GET:
+      get(payload.id);
       break;
     case PARTICIPANT_LIST:
       list(payload.projectId);

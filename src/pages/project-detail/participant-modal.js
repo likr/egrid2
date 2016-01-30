@@ -24,6 +24,7 @@ const controller = () => {
   return {
     title: '',
     data: {},
+    approveButton: null,
   };
 };
 
@@ -33,6 +34,7 @@ const view = (ctrl, args) => {
     <div className="content">
       <form className="ui form" onsubmit={(event) => {
         event.preventDefault();
+        ctrl.approveButton.click();
       }}>
         <div className="field">
           <label>Name</label>
@@ -57,7 +59,11 @@ const view = (ctrl, args) => {
     </div>
     <div className="actions">
       <div className="ui cancel button">Cancel</div>
-      <div className="ui primary approve button">Create</div>
+      <div className="ui primary approve button" config={(element) => {
+        ctrl.approveButton = element;
+      }}>
+        Create
+      </div>
     </div>
   </div>
 };

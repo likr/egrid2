@@ -23,6 +23,7 @@ const controller = () => {
   return {
     title: '',
     text: '',
+    approveButton: null,
   };
 };
 

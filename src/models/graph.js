@@ -4,6 +4,8 @@ import copy from 'egraph/lib/graph/copy'
 import {
   GRAPH_ADD_EDGE,
   GRAPH_ADD_VERTEX,
+  GRAPH_ADD_VERTEX_TO_LOWER,
+  GRAPH_ADD_VERTEX_TO_UPPER,
   GRAPH_CLEAR,
   GRAPH_LOAD,
   GRAPH_REDO,
@@ -33,6 +35,22 @@ const addVertex = (u, d) => {
   graph = copy(graph);
   graph.addVertex(u, d);
   next(GRAPH_ADD_VERTEX);
+};
+
+const addVertexToLower = (u, v, vd, d) => {
+  undoStack.push(graph);
+  graph = copy(graph);
+  graph.addVertex(v, vd);
+  graph.addEdge(u, v, d);
+  next(GRAPH_ADD_VERTEX_TO_LOWER);
+};
+
+const addVertexToUpper = (u, v, ud, d) => {
+  undoStack.push(graph);
+  graph = copy(graph);
+  graph.addVertex(u, ud);
+  graph.addEdge(u, v, d);
+  next(GRAPH_ADD_VERTEX_TO_LOWER);
 };
 
 const clear = () => {
@@ -76,6 +94,12 @@ intentSubject.subscribe((payload) => {
     case GRAPH_ADD_EDGE:
     case GRAPH_ADD_VERTEX:
       addVertex(payload.u, payload.d);
+      break;
+    case GRAPH_ADD_VERTEX_TO_LOWER:
+      addVertexToLower(payload.u, payload.v, payload.vd, payload.d);
+      break;
+    case GRAPH_ADD_VERTEX_TO_UPPER:
+      addVertexToUpper(payload.u, payload.v, payload.ud, payload.d);
       break;
     case GRAPH_CLEAR:
       clear();

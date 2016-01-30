@@ -23,6 +23,7 @@ const load = (type) => {
 const add = (data) => {
   const now = new Date();
   const project = Object.assign({}, data, {
+    graph: '{"vertices":[],"edges":[]}',
     created: now,
     updated: now,
   });

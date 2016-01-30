@@ -12,18 +12,20 @@ import Participants from '../../models/participant'
 import Graph from '../../models/graph'
 import {getProject, updateProject} from '../../intents/project'
 import {getParticipant} from '../../intents/participant'
-import Cache from '../common/cache'
 import ConfirmModal from '../common/confirm-modal'
 import Fullscreen from '../common/fullscreen'
 import TextInputModal from '../common/text-input-modal'
-import ZoomableSvg from '../common/zoomable-svg'
 import Network from './network'
 
-const toJSON = (graph) => {
-  const data = {};
-  data.vertices = graph.vertices().map((u) => ({u, d: graph.vertex(u)}));
-  data.edges = graph.edges().map(([u, v]) => ({u, v, d: graph.edge(u, v)}));
-  return data;
+const layout = (graph, participantId) => {
+  calcLayout({
+    vertices: graph.vertices()
+      .map((u) => ({u, d: graph.vertex(u)}))
+      .filter(({d}) => d.participants.indexOf(participantId) >= 0),
+    edges: graph.edges()
+      .map(([u, v]) => ({u, v, d: graph.edge(u, v)}))
+      .filter(({d}) => d.participants.indexOf(participantId) >= 0),
+  });
 };
 
 const handleAddVertex = (ctrl) => {
@@ -31,6 +33,7 @@ const handleAddVertex = (ctrl) => {
     onapprove: (text) => {
       addVertex(text, {
         text,
+        participants: [ctrl.participant.id],
         width: 80,
         height: 20,
       });
@@ -51,12 +54,17 @@ const handleBack = () => {
 };
 
 const handleSave = (ctrl) => {
-  ctrl.project.graph = JSON.stringify(ctrl.graph);
+  ctrl.project.graph = JSON.stringify({
+    vertices: ctrl.graph.vertices().map((u) => ({u, d: ctrl.graph.vertex(u)})),
+    edges: ctrl.graph.edges().map(([u, v]) => ({u, v, d: ctrl.graph.edge(u, v)})),
+  });
   updateProject(ctrl.project);
 };
 
 const controller = () => {
   const ctrl = {
+    projectId: m.route.param('projectId'),
+    participantId: m.route.param('participantId'),
     project: null,
     participant: null,
     graph: null,
@@ -65,9 +73,6 @@ const controller = () => {
     confirmModal: null,
     textInputModal: null,
   };
-
-  const projectId = m.route.param('projectId');
-  const participantId = m.route.param('participantId');
 
   const projectSubscription = Projects.subscribe(({type, data}) => {
     switch (type) {
@@ -79,23 +84,23 @@ const controller = () => {
         break;
       case PROJECT_UPDATE:
         ctrl.saved = true;
-        m.route(`/projects/${projectId}`);
+        m.route(`/projects/${ctrl.projectId}`);
         break;
     }
   });
 
-  const participantSubscription = Participants.subscribe((participant) => {
+  const participantSubscription = Participants.subscribe(({data}) => {
     m.startComputation();
-    ctrl.participant = participant;
+    ctrl.participant = data;
     m.endComputation();
   });
 
   const graphSubscription = Graph.subscribe(({graph, canUndo, canRedo}) => {
-    ctrl.graph = toJSON(graph);
+    ctrl.graph = graph;
     ctrl.saved = !canUndo;
     ctrl.canUndo = canUndo;
     ctrl.canRedo = canRedo;
-    calcLayout(ctrl.graph);
+    layout(graph, ctrl.participantId);
   });
 
   ctrl.onunload = (event) => {
@@ -108,28 +113,16 @@ const controller = () => {
     graphSubscription.dispose();
   };
 
-  getProject(projectId);
-  getParticipant(projectId, participantId);
+  getProject(ctrl.projectId);
+  getParticipant(ctrl.participantId);
 
   return ctrl;
 };
 
 const view = (ctrl) => {
   return <Fullscreen>
-    <div style={{
-      position: 'absolute',
-      top: '40px',
-      left: 0,
-      right: 0,
-      bottom: 0,
-    }}>
-      <ZoomableSvg className="cursor-move" width="100%" height="100%" children={({x, y, scale}) => {
-        return <g transform={`translate(${x},${y})scale(${scale})`}>
-          <Cache children={(invalidate) => {
-            return <Network invalidate={invalidate}/>
-          }}/>
-        </g>
-      }}/>
+    <div style={{position: 'absolute', top: '40px', left: 0, right: 0, bottom: 0}}>
+      <Network graph={ctrl.graph} textInputModal={ctrl.textInputModal} participantId={ctrl.participantId}/>
     </div>
     <div style={{position: 'absolute', right: '20px', top: '60px'}}>
       <button className="ui massive circular icon button" onclick={handleBack}>
