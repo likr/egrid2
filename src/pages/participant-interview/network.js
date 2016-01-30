@@ -1,6 +1,6 @@
 import m from 'mithril'
 import part from '../../utils/partial'
-import {addEdge, addVertexToLower, addVertexToUpper} from '../../intents/graph'
+import {updateEdge} from '../../intents/graph'
 import Cache from '../common/cache'
 import Network from '../common/network'
 import ZoomableSvg from '../common/zoomable-svg'
@@ -9,28 +9,52 @@ import edge from '../views/edge'
 
 const handleLadderUp = ({graph, textInputModal, participantId}, v) => {
   textInputModal.show({
-    onapprove: (text) => {
-      const d = {participants: [participantId]};
-      if (graph.vertex(text)) {
-        addEdge(text, v, d);
-      } else {
-        const ud = {text, participants: [participantId], width: 80, height: 20};
-        addVertexToUpper(text, v, ud, d);
+    onapprove: (u) => {
+      const d = graph.edge(u, v) || {
+        participants: [],
+      };
+      if (d.participants.indexOf(participantId) < 0) {
+        d.participants = Array.from(d.participants);
+        d.participants.push(participantId);
       }
+      const ud = graph.vertex(u) || {
+        text: u,
+        participants: [],
+        width: 80,
+        height: 20,
+      };
+      if (ud.participants.indexOf(participantId) < 0) {
+        ud.participants = Array.from(ud.participants);
+        ud.participants.push(participantId);
+      }
+      const vd = graph.vertex(v);
+      updateEdge(u, v, ud, vd, d);
     },
   });
 };
 
 const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
   textInputModal.show({
-    onapprove: (text) => {
-      const d = {participants: [participantId]};
-      if (graph.vertex(text)) {
-        addEdge(u, text, d);
-      } else {
-        const vd = {text, participants: [participantId], width: 80, height: 20};
-        addVertexToLower(u, text, vd, d);
+    onapprove: (v) => {
+      const d = graph.edge(u, v) || {
+        participants: [],
+      };
+      if (d.participants.indexOf(participantId) < 0) {
+        d.participants = Array.from(d.participants);
+        d.participants.push(participantId);
       }
+      const ud = graph.vertex(u);
+      const vd = graph.vertex(v) || {
+        text: v,
+        participants: [],
+        width: 80,
+        height: 20,
+      };
+      if (vd.participants.indexOf(participantId) < 0) {
+        vd.participants = Array.from(vd.participants);
+        vd.participants.push(participantId);
+      }
+      updateEdge(u, v, ud, vd, d);
     },
   });
 };

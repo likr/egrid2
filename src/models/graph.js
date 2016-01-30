@@ -1,6 +1,6 @@
 import Rx from 'rx'
 import Graph from 'egraph/lib/graph'
-import copy from 'egraph/lib/graph/copy'
+import copy from '../utils/copy-graph'
 import {
   GRAPH_ADD_EDGE,
   GRAPH_ADD_VERTEX,
@@ -12,6 +12,8 @@ import {
   GRAPH_REMOVE_EDGE,
   GRAPH_REMOVE_VERTEX,
   GRAPH_UNDO,
+  GRAPH_UPDATE_EDGE,
+  GRAPH_UPDATE_VERTEX,
 } from '../constants'
 import {intentSubject} from '../intents/graph'
 
@@ -89,6 +91,48 @@ const redo = () => {
   }
 };
 
+const updateEdge = ({u, v, ud, vd, d}) => {
+  undoStack.push(graph);
+  graph = copy(graph);
+
+  const vertexU = graph.vertex(u);
+  if (vertexU) {
+    Object.assign(vertexU, ud);
+  } else {
+    graph.addVertex(u, ud);
+  }
+
+  const vertexV = graph.vertex(v);
+  if (vertexV) {
+    Object.assign(vertexV, vd);
+  } else {
+    graph.addVertex(v, vd);
+  }
+
+  const edge = graph.edge(u, v);
+  if (edge) {
+    Object.assign(edge, d);
+  } else {
+    graph.addEdge(u, v, d);
+  }
+
+  next(GRAPH_UPDATE_EDGE);
+};
+
+const updateVertex = ({u, d}) => {
+  undoStack.push(graph);
+  graph = copy(graph);
+
+  const vertex = graph.vertex(u);
+  if (vertex) {
+    Object.assign(vertex, d);
+  } else {
+    graph.addVertex(u, d);
+  }
+
+  next(GRAPH_UPDATE_VERTEX);
+};
+
 intentSubject.subscribe((payload) => {
   switch (payload.type) {
     case GRAPH_ADD_EDGE:
@@ -114,6 +158,12 @@ intentSubject.subscribe((payload) => {
     case GRAPH_REMOVE_VERTEX:
     case GRAPH_UNDO:
       undo();
+      break;
+    case GRAPH_UPDATE_EDGE:
+      updateEdge(payload);
+      break;
+    case GRAPH_UPDATE_VERTEX:
+      updateVertex(payload);
       break;
   }
 });

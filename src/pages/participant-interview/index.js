@@ -5,7 +5,7 @@ import {
   PROJECT_GET,
   PROJECT_UPDATE,
 } from '../../constants'
-import {addVertex, load, undo, redo} from '../../intents/graph'
+import {updateVertex, load, undo, redo} from '../../intents/graph'
 import {calcLayout} from '../../intents/layout-worker'
 import Projects from '../../models/project'
 import Participants from '../../models/participant'
@@ -28,15 +28,20 @@ const layout = (graph, participantId) => {
   });
 };
 
-const handleAddVertex = (ctrl) => {
-  ctrl.textInputModal.show({
-    onapprove: (text) => {
-      addVertex(text, {
-        text,
-        participants: [ctrl.participant.id],
+const handleAddVertex = ({graph, textInputModal, participantId}) => {
+  textInputModal.show({
+    onapprove: (u) => {
+      const ud = graph.vertex(u) || {
+        text: u,
+        participants: [],
         width: 80,
         height: 20,
-      });
+      }
+      if (ud.participants.indexOf(participantId) < 0) {
+        ud.participants = Array.from(ud.participants);
+        ud.participants.push(participantId);
+      }
+      updateVertex(u, ud);
     },
   });
 };

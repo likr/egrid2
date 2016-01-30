@@ -5,7 +5,6 @@ import {intentSubject} from '../intents/layout-worker'
 const subject = Rx.DOM.fromWorker('layout-worker.js');
 
 const calc = (data) => {
-  console.log(data);
   subject.onNext(data);
 };
 

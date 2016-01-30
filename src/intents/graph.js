@@ -10,6 +10,8 @@ import {
   GRAPH_REMOVE_EDGE,
   GRAPH_REMOVE_VERTEX,
   GRAPH_UNDO,
+  GRAPH_UPDATE_EDGE,
+  GRAPH_UPDATE_VERTEX,
 } from '../constants'
 
 export const intentSubject = new Rx.Subject();
@@ -88,5 +90,24 @@ export const removeVertex = (u) => {
 export const undo = () => {
   intentSubject.onNext({
     type: GRAPH_UNDO,
+  });
+};
+
+export const updateEdge = (u, v, ud, vd, d) => {
+  intentSubject.onNext({
+    type: GRAPH_UPDATE_EDGE,
+    u,
+    v,
+    ud,
+    vd,
+    d,
+  });
+};
+
+export const updateVertex = (u, d) => {
+  intentSubject.onNext({
+    type: GRAPH_UPDATE_VERTEX,
+    u,
+    d,
   });
 };
