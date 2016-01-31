@@ -7,7 +7,7 @@ import {calcMorph} from '../../intents/morph-worker'
 
 const pos = new Set(['名詞', '動詞', '形容詞']);
 const stopWords = new Set([
-  '*',
+  ' ',
   '、',
   'する',
   'れる',
@@ -23,7 +23,7 @@ const count = (data) => {
   const wordCount = new Map();
   for (const paths of data) {
     for (const path of paths) {
-      const word = path.basic_form;
+      const word = path.basic_form === '*' ? path.surface_form : path.basic_form;
       if (!pos.has(path.pos) || stopWords.has(word)) {
         continue;
       }
