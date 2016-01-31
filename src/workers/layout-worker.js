@@ -3,14 +3,6 @@
 import Graph from 'egraph/lib/graph'
 import Layouter from 'egraph/lib/layouter/sugiyama'
 
-const layouter = new Layouter()
-  .layerMargin(100)
-  .vertexWidth(({d}) => d.width)
-  .vertexHeight(({d}) => d.height)
-  .vertexMargin(30)
-  .edgeWidth(({d}) => d.width)
-  .edgeMargin(5);
-
 const calcSize = (vertices) => {
   const left = Math.min(...vertices.map(({x, width}) => x - width / 2));
   const right = Math.max(...vertices.map(({x, width}) => x + width / 2));
@@ -22,7 +14,14 @@ const calcSize = (vertices) => {
   };
 };
 
-const layout = (graph) => {
+const layout = (graph, {layerMargin, vertexMargin, edgeMargin}) => {
+  const layouter = new Layouter()
+    .layerMargin(layerMargin)
+    .vertexWidth(({d}) => d.width)
+    .vertexHeight(({d}) => d.height)
+    .vertexMargin(vertexMargin)
+    .edgeWidth(({d}) => d.width)
+    .edgeMargin(edgeMargin);
   const positions = layouter.layout(graph);
 
   const vertices = [];
@@ -83,5 +82,5 @@ onmessage = ({data}) => {
   for (const {u, v, d} of data.edges) {
     graph.addEdge(u, v, d);
   }
-  postMessage(layout(graph));
+  postMessage(layout(graph, data.options));
 };

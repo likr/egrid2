@@ -18,6 +18,9 @@ const controller = () => {
   const projectSubscription = Projects.subscribe(({data}) => {
     m.startComputation();
     calcLayout(JSON.parse(data.graph), {
+      layerMargin: 100,
+      vertexMargin: 10,
+      edgeMargin: 5,
       vertexScale: ({d}) => d.participants.length,
       edgeScale: ({d}) => d.participants.length,
     });
