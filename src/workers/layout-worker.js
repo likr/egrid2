@@ -8,7 +8,7 @@ const layouter = new Layouter()
   .vertexWidth(({d}) => d.width)
   .vertexHeight(({d}) => d.height)
   .vertexMargin(30)
-  .edgeWidth(() => 2)
+  .edgeWidth(({d}) => d.width)
   .edgeMargin(5);
 
 const calcSize = (vertices) => {
@@ -55,12 +55,12 @@ const layout = (graph) => {
   for (const [u, v] of graph.edges()) {
     const d = graph.edge(u, v);
     const {upper, lower, participants} = d;
-    const {points, reversed} = positions.edges[u][v];
+    const {points, reversed, width} = positions.edges[u][v];
     while (points.length < 6) {
       points.push(points[points.length - 1]);
     }
     const points0 = d.points === undefined ? enterPoints(u, v) : d.points;
-    edges.push({u, v, points, points0, reversed, upper, lower, participants});
+    edges.push({u, v, points, points0, reversed, width, upper, lower, participants});
   }
 
   for (const u of graph.vertices()) {
