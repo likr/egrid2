@@ -3,6 +3,7 @@ import part from '../../utils/partial'
 import {updateEdge} from '../../intents/graph'
 import Cache from '../common/cache'
 import Network from '../common/network'
+import SvgButton from '../common/svg-button'
 import ZoomableSvg from '../common/zoomable-svg'
 import vertex from '../views/vertex'
 import edge from '../views/edge'
@@ -63,8 +64,9 @@ const view = (ctrl, args) => {
             <g>{vertices.map(vertex)}</g>
             <g>{vertices.map(({u, x, y, height}) => {
               return <g transform={`translate(${x},${y})`}>
-                <circle className="cursor-pointer" cx="-30" cy={height / 2 + 12} r="10" onclick={part(handleLadderUp, args, u)}/>
-                <circle className="cursor-pointer" cx="30" cy={height / 2 + 12} r="10" onclick={part(handleLadderDown, args, u)}/>
+                <SvgButton ref="&#61536;" x={-30} y={height / 2 + 12} onclick={part(handleLadderUp, args, u)}/>
+                <SvgButton ref="&#61453;" x={0} y={height / 2 + 12} onclick={() => {}}/>
+                <SvgButton ref="&#61537;" x={30} y={height / 2 + 12} onclick={part(handleLadderDown, args, u)}/>
               </g>
             })}</g>
           </g>
