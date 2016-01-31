@@ -61,8 +61,11 @@ const controller = () => {
 };
 
 const view = (ctrl, args) => {
-  return <svg {...args} config={config(ctrl)}>
-    {args.children({x: ctrl.x, y: ctrl.y, scale:ctrl.scale, center: ctrl.center})}
+  const children = args.children;
+  const svgAttributes = Object.assign({}, args);
+  delete svgAttributes.children;
+  return <svg {...svgAttributes} config={config(ctrl)}>
+    {children({x: ctrl.x, y: ctrl.y, scale:ctrl.scale, center: ctrl.center})}
   </svg>
 };
 
