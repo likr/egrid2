@@ -35,12 +35,12 @@ const svgPath = (points) => {
           + curveTo(x3, y3, x4, y4) + lineTo(x5, y5));
 };
 
-const edge = ({points, points0}) => {
+const edge = ({points, points0, width}) => {
   return <g>
     <path
       fill='none'
       stroke='#888'
-      stroke-width='3'
+      stroke-width={width}
       d={svgPath(points0)}
       config={(element) => {
         d3.select(element)

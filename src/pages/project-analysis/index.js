@@ -6,6 +6,10 @@ import Fullscreen from '../common/fullscreen'
 import Menu from './network-menu'
 import Network from './network'
 
+const handleBack = () => {
+  m.route(`/projects/${m.route.param('projectId')}`);
+};
+
 const controller = () => {
   const ctrl = {
     showWordcloud: true,
@@ -13,7 +17,10 @@ const controller = () => {
 
   const projectSubscription = Projects.subscribe(({data}) => {
     m.startComputation();
-    calcLayout(JSON.parse(data.graph));
+    calcLayout(JSON.parse(data.graph), {
+      vertexScale: ({d}) => d.participants.length,
+      edgeScale: ({d}) => d.participants.length,
+    });
     m.endComputation();
   });
 
@@ -32,6 +39,9 @@ const view = (ctrl) => {
       <Network/>
     </div>
     <div style={{position: 'absolute', right: '20px', bottom: '20px'}}>
+      <button className="ui massive circular icon button" onclick={handleBack}>
+        <i className="icon arrow left"/>
+      </button>
       <button
           className={'circular ui icon button toggle massive' + (ctrl.showWordcloud ? ' active' : '')}
           onclick={() => {

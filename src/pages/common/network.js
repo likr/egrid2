@@ -1,16 +1,17 @@
 import m from 'mithril'
 import LayoutWorker from '../../models/layout-worker'
 
-const controller = ({invalidate}) => {
+const controller = ({invalidate, center}) => {
   const ctrl = {
     vertices: [],
     edges: [],
   };
 
-  const subscription = LayoutWorker.subscribe((e) => {
+  const subscription = LayoutWorker.subscribe(({data}) => {
     m.startComputation();
-    Object.assign(ctrl, e.data);
+    Object.assign(ctrl, data);
     invalidate();
+    center(data.width, data.height);
     m.endComputation();
   });
 

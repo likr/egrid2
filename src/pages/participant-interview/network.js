@@ -17,12 +17,7 @@ const handleLadderUp = ({graph, textInputModal, participantId}, v) => {
         d.participants = Array.from(d.participants);
         d.participants.push(participantId);
       }
-      const ud = graph.vertex(u) || {
-        text: u,
-        participants: [],
-        width: 80,
-        height: 20,
-      };
+      const ud = graph.vertex(u) || {text: u, participants: []};
       if (ud.participants.indexOf(participantId) < 0) {
         ud.participants = Array.from(ud.participants);
         ud.participants.push(participantId);
@@ -44,12 +39,7 @@ const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
         d.participants.push(participantId);
       }
       const ud = graph.vertex(u);
-      const vd = graph.vertex(v) || {
-        text: v,
-        participants: [],
-        width: 80,
-        height: 20,
-      };
+      const vd = graph.vertex(v) || {text: v, participants: []};
       if (vd.participants.indexOf(participantId) < 0) {
         vd.participants = Array.from(vd.participants);
         vd.participants.push(participantId);
@@ -64,17 +54,17 @@ const controller = ({graph}) => {
 };
 
 const view = (ctrl, args) => {
-  return <ZoomableSvg caassName="cursor-move" width="100%" height="100%" children={({x, y, scale}) => {
+  return <ZoomableSvg className="cursor-move" width="100%" height="100%" children={({x, y, scale, center}) => {
     return <g transform={`translate(${x},${y})scale(${scale})`}>
       <Cache children={(invalidate) => {
-        return <Network invalidate={invalidate} children={({vertices, edges}) => {
+        return <Network invalidate={invalidate} center={center} children={({vertices, edges}) => {
           return <g>
             <g>{edges.map(edge)}</g>
             <g>{vertices.map(vertex)}</g>
-            <g>{vertices.map(({u, x, y}) => {
+            <g>{vertices.map(({u, x, y, height}) => {
               return <g transform={`translate(${x},${y})`}>
-                <circle className="cursor-pointer" cx="-30" cy="30" r="10" onclick={part(handleLadderUp, args, u)}/>
-                <circle className="cursor-pointer" cx="30" cy="30" r="10" onclick={part(handleLadderDown, args, u)}/>
+                <circle className="cursor-pointer" cx="-30" cy={height / 2 + 12} r="10" onclick={part(handleLadderUp, args, u)}/>
+                <circle className="cursor-pointer" cx="30" cy={height / 2 + 12} r="10" onclick={part(handleLadderDown, args, u)}/>
               </g>
             })}</g>
           </g>

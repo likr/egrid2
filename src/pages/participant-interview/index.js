@@ -25,18 +25,16 @@ const layout = (graph, participantId) => {
     edges: graph.edges()
       .map(([u, v]) => ({u, v, d: graph.edge(u, v)}))
       .filter(({d}) => d.participants.indexOf(participantId) >= 0),
+  }, {
+    vertexScale: () => 1,
+    edgeScale: () => 1,
   });
 };
 
 const handleAddVertex = ({graph, textInputModal, participantId}) => {
   textInputModal.show({
     onapprove: (u) => {
-      const ud = graph.vertex(u) || {
-        text: u,
-        participants: [],
-        width: 80,
-        height: 20,
-      }
+      const ud = graph.vertex(u) || {text: u, participants: []};
       if (ud.participants.indexOf(participantId) < 0) {
         ud.participants = Array.from(ud.participants);
         ud.participants.push(participantId);
