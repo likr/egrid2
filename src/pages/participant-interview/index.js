@@ -59,12 +59,30 @@ const handleBack = () => {
   m.route(`/projects/${m.route.param('projectId')}`);
 };
 
-const handleSave = (ctrl) => {
-  ctrl.project.graph = JSON.stringify({
-    vertices: ctrl.graph.vertices().map((u) => ({u, d: ctrl.graph.vertex(u)})),
-    edges: ctrl.graph.edges().map(([u, v]) => ({u, v, d: ctrl.graph.edge(u, v)})),
+const handleSave = ({project, graph}) => {
+  project.graph = JSON.stringify({
+    vertices: graph.vertices().map((u) => {
+      const d = graph.vertex(u);
+      return {
+        u,
+        d: {
+          text: d.text,
+          participants: d.participants,
+        },
+      };
+    }),
+    edges: graph.edges().map(([u, v]) => {
+      const d = graph.edge(u, v);
+      return {
+        u,
+        v,
+        d: {
+          participants: d.participants,
+        },
+      };
+    }),
   });
-  updateProject(ctrl.project);
+  updateProject(project);
 };
 
 const controller = () => {

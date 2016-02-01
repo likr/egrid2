@@ -22,7 +22,6 @@ const subject = Rx.DOM.fromWorker('layout-worker.js');
 
 const calc = (data, options) => {
   const {vertexScale, edgeScale, layerMargin, vertexMargin, edgeMargin} = options;
-  data = JSON.parse(JSON.stringify(data));
   const size = calcSize(data.vertices.map(({d}) => d.text), 10, 'sans-serif');
   for (const {u, d} of data.vertices) {
     const scale = vertexScale({u, d});

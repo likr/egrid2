@@ -50,10 +50,6 @@ const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
   });
 };
 
-const controller = ({graph}) => {
-  return {graph, participantId: m.route.param('participantId')};
-};
-
 const view = (ctrl, args) => {
   return <ZoomableSvg className="cursor-move" width="100%" height="100%" children={({x, y, scale, center}) => {
     return <g transform={`translate(${x},${y})scale(${scale})`}>
@@ -76,4 +72,4 @@ const view = (ctrl, args) => {
   }}/>
 };
 
-export default {controller, view}
+export default {view}
