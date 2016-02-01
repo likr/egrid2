@@ -37,9 +37,9 @@ const controller = () => {
     m.endComputation();
   });
 
-  const participantSubscription = Participants.subscribe((participants) => {
+  const participantSubscription = Participants.subscribe(({data}) => {
     m.startComputation();
-    ctrl.participants = participants;
+    ctrl.participants = data;
     m.endComputation();
   });
 

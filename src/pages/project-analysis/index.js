@@ -1,10 +1,13 @@
 import m from 'mithril'
 import {calcLayout} from '../../intents/layout-worker'
 import {getProject} from '../../intents/project'
+import {listParticipants} from '../../intents/participant'
 import Projects from '../../models/project'
+import Participants from '../../models/participant'
 import Fullscreen from '../common/fullscreen'
 import Menu from './network-menu'
 import Network from './network'
+import ParticipantList from './participant-list'
 
 const handleBack = () => {
   m.route(`/projects/${m.route.param('projectId')}`);
@@ -13,6 +16,7 @@ const handleBack = () => {
 const controller = () => {
   const ctrl = {
     showWordcloud: true,
+    participants: [],
   };
 
   const projectSubscription = Projects.subscribe(({data}) => {
@@ -27,11 +31,20 @@ const controller = () => {
     m.endComputation();
   });
 
+  const participantSubscription = Participants.subscribe(({data}) => {
+    m.startComputation();
+    ctrl.participants = data.map((participant) => ({participant, checked: true}));
+    m.endComputation();
+  });
+
   ctrl.onunload = () => {
     projectSubscription.dispose();
+    participantSubscription.dispose();
   };
 
-  getProject(m.route.param('projectId'));
+  const projectId = m.route.param('projectId');
+  getProject(projectId);
+  listParticipants(projectId);
 
   return ctrl;
 };
@@ -54,6 +67,7 @@ const view = (ctrl) => {
       </button>
     </div>
     <Menu show={ctrl.showWordcloud}/>
+    <ParticipantList participants={ctrl.participants}/>
   </Fullscreen>
 };
 

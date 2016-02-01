@@ -13,13 +13,20 @@ const participants = db.collection('participants');
 
 const subject = new Rx.Subject();
 
+const load = (type, projectId) => {
+  participants.list({filters: {projectId}, order: '-updated'})
+    .then(({data}) => {
+      subject.onNext({type, data});
+    });
+};
+
 const add = (data) => {
   participants
     .create(Object.assign({}, data, {
       created: new Date(),
       updated: new Date(),
     }))
-    .then(() => list(data.projectId));
+    .then(() => load(PARTICIPANT_ADD, data.projectId));
 };
 
 const get = (id) => {
@@ -30,26 +37,17 @@ const get = (id) => {
 };
 
 const list = (projectId) => {
-  participants
-    .list({
-      filters: {projectId},
-      order: '-updated',
-    })
-    .then(({data}) => {
-      subject.onNext(data);
-    });
+  load(PARTICIPANT_LIST, projectId);
 };
 
 const remove = (id) => {
-  participants
-    .delete(id)
-    .then(({data}) => list(data.projectId));
+  participants.delete(id)
+    .then(({data}) => load(PARTICIPANT_REMOVE, data.projectId));
 };
 
 const update = (data) => {
-  participants
-    .update(data)
-    .then(() => list(data.projectId));
+  participants.update(data)
+    .then(() => load(PARTICIPANT_UPDATE, data.projectId));
 };
 
 intentSubject.subscribe((payload) => {
