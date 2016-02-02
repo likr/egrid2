@@ -1,9 +1,11 @@
 import m from 'mithril'
+import {PROJECT_GET} from '../../constants'
 import Projects from '../../models/project'
 import Participants from '../../models/participant'
 import {getProject} from '../../intents/project'
 import {addParticipant, listParticipants} from '../../intents/participant'
 import ConfirmModal from '../common/confirm-modal'
+import FileSelectModal from '../common/file-select-modal'
 import Page from '../common/page'
 import ParticipantCard from './participant-card'
 import ParticipantModal from './participant-modal'
@@ -28,13 +30,16 @@ const controller = () => {
     project: null,
     participants: [],
     confirmModal: null,
+    fileSelectModal: null,
     participantModal: null,
   };
 
-  const projectSubscription = Projects.subscribe(({data}) => {
-    m.startComputation();
-    ctrl.project = data;
-    m.endComputation();
+  const projectSubscription = Projects.subscribe(({type, data}) => {
+    if (type === PROJECT_GET) {
+      m.startComputation();
+      ctrl.project = data;
+      m.endComputation();
+    }
   });
 
   const participantSubscription = Participants.subscribe(({data}) => {
@@ -89,14 +94,19 @@ const view = (ctrl) => {
       <div className="ui one cards">
         {ctrl.participants.map((participant) => {
           return <ParticipantCard
+              project={ctrl.project}
               participant={participant}
               confirmModal={ctrl.confirmModal}
+              fileSelectModal={ctrl.fileSelectModal}
               participantModal={ctrl.participantModal}/>
         })}
       </div>
     </div>
     <ConfirmModal onregister={(modal) => {
       ctrl.confirmModal = modal;
+    }}/>
+    <FileSelectModal onregister={(modal) => {
+      ctrl.fileSelectModal = modal;
     }}/>
     <ParticipantModal onregister={(modal) => {
       ctrl.participantModal = modal;

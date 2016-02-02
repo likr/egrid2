@@ -1,6 +1,7 @@
 /* global confirm */
 import m from 'mithril'
 import part from '../../utils/partial'
+import graphToJson from '../../utils/graph-to-json'
 import {
   PROJECT_GET,
   PROJECT_UPDATE,
@@ -60,28 +61,7 @@ const handleBack = () => {
 };
 
 const handleSave = ({project, graph}) => {
-  project.graph = JSON.stringify({
-    vertices: graph.vertices().map((u) => {
-      const d = graph.vertex(u);
-      return {
-        u,
-        d: {
-          text: d.text,
-          participants: d.participants,
-        },
-      };
-    }),
-    edges: graph.edges().map(([u, v]) => {
-      const d = graph.edge(u, v);
-      return {
-        u,
-        v,
-        d: {
-          participants: d.participants,
-        },
-      };
-    }),
-  });
+  project.graph = JSON.stringify(graphToJson(graph));
   updateProject(project);
 };
 
