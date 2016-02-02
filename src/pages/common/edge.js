@@ -1,3 +1,4 @@
+import m from 'mithril'
 import d3 from 'd3'
 
 const startFrom = (x, y) => {
@@ -35,21 +36,40 @@ const svgPath = (points) => {
           + curveTo(x3, y3, x4, y4) + lineTo(x5, y5));
 };
 
-const edge = ({points, points0, width}) => {
+const config = (points, width) => {
+  return (element) => {
+    d3.select(element)
+      .transition()
+      .duration(1000)
+      .attr({
+        d: svgPath(points),
+        'stroke-width': width,
+      });
+  };
+};
+
+const controller = () => {
+  return {
+    points0: null,
+    width0: null,
+  };
+};
+
+const view = (ctrl, {points, width}) => {
+  const points0 = ctrl.points0 || points.map(([x]) => [x, 0]);
+  const width0 = ctrl.width0 || width;
+  ctrl.points0 = points;
+  ctrl.width0 = width;
+
   return <g>
     <path
       fill='none'
       stroke='#888'
-      stroke-width={width}
+      stroke-width={width0}
       d={svgPath(points0)}
-      config={(element) => {
-        d3.select(element)
-          .transition()
-          .duration(1000)
-          .attr('d', svgPath(points));
-      }}
+      config={config(points, width)}
     />
   </g>
 };
 
-export default edge
+export default {controller, view}

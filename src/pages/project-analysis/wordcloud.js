@@ -4,6 +4,7 @@ import d3cloud from 'd3-cloud'
 import LayoutWorker from '../../models/layout-worker'
 import MorphWorker from '../../models/morph-worker'
 import {calcMorph} from '../../intents/morph-worker'
+import Word from '../common/word'
 
 const pos = new Set(['名詞', '動詞', '形容詞']);
 const stopWords = new Set([
@@ -40,7 +41,6 @@ const count = (data) => {
   return words;
 };
 
-const textColor = d3.scale.category20();
 const textSize = d3.scale.linear()
   .range([10, 30]);
 
@@ -74,19 +74,8 @@ const controller = ({invalidate}) => {
 
 const view = (ctrl) => {
   return <g transform="translate(200,200)">
-    {ctrl.words.map(({text, size, x, y, rotate}) => {
-      return <text
-          className="unselectable"
-          style={{
-            cursor: 'pointer',
-          }}
-          font-size={size}
-          font-family='Impact'
-          text-anchor='middle'
-          transform={`translate(${x},${y})rotate(${rotate})`}
-          fill={textColor(text)}>
-        {text}
-      </text>
+    {ctrl.words.map((d) => {
+      return <Word key={d.text} {...d}/>
     })}
   </g>
 };

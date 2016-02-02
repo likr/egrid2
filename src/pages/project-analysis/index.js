@@ -33,6 +33,9 @@ const controller = () => {
     });
 
   const analysisSubscription = Analysis.subscribe(({type, state}) => {
+    const participantIds = new Set(Object.values(state.participants)
+      .filter(({checked}) => checked)
+      .map(({participant}) => participant.id));
     switch (type) {
       case ANALYSIS_INIT:
       case ANALYSIS_UPDATE_PARTICIPANTS:
@@ -40,8 +43,8 @@ const controller = () => {
           layerMargin: 100,
           vertexMargin: 10,
           edgeMargin: 5,
-          vertexScale: ({d}) => d.participants.length,
-          edgeScale: ({d}) => d.participants.length,
+          vertexScale: ({d}) => d.participants.filter((id) => participantIds.has(id)).length,
+          edgeScale: ({d}) => d.participants.filter((id) => participantIds.has(id)).length,
         });
         break;
       default:

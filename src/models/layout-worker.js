@@ -25,11 +25,13 @@ const calc = (data, options) => {
   const size = calcSize(data.vertices.map(({d}) => d.text), 10, 'sans-serif');
   for (const {u, d} of data.vertices) {
     const scale = vertexScale({u, d});
-    d.width = size[d.text].width * scale;
-    d.height = size[d.text].height * scale;
+    d.scale = scale;
+    d.width = size[d.text].width;
+    d.height = size[d.text].height;
   }
   for (const {u, v, d} of data.edges) {
-    d.width = 2 * edgeScale({u, v, d});
+    d.scale = edgeScale({u, v, d})
+    d.width = 2;
   }
   data.options = {layerMargin, vertexMargin, edgeMargin};
   subject.onNext(data);

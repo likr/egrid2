@@ -5,8 +5,8 @@ import Cache from '../common/cache'
 import Network from '../common/network'
 import SvgButton from '../common/svg-button'
 import ZoomableSvg from '../common/zoomable-svg'
-import vertex from '../views/vertex'
-import edge from '../views/edge'
+import Vertex from '../common/vertex'
+import Edge from '../common/edge'
 
 const handleLadderUp = ({graph, textInputModal, participantId}, v) => {
   textInputModal.show({
@@ -56,8 +56,12 @@ const view = (ctrl, args) => {
       <Cache children={(invalidate) => {
         return <Network invalidate={invalidate} center={center} children={({vertices, edges}) => {
           return <g>
-            <g>{edges.map(edge)}</g>
-            <g>{vertices.map(vertex)}</g>
+            <g>{edges.map((d) => {
+              return <Edge key={`${d.u}:${d.v}`} {...d}/>
+            })}</g>
+            <g>{vertices.map((d) => {
+              return <Vertex key={d.u} {...d}/>
+            })}</g>
             <g>{vertices.map(({u, x, y, height}) => {
               return <g transform={`translate(${x},${y})`}>
                 <SvgButton ref="&#61536;" x={-30} y={height / 2 + 12} onclick={part(handleLadderUp, args, u)}/>
