@@ -51,7 +51,7 @@ const controller = () => {
           layerMargin: 50,
           vertexMargin: 10,
           edgeMargin: 5,
-          vertexScale: ({d}) => participantCount(d),
+          vertexScale: ({d}) => Math.sqrt(participantCount(d)),
           edgeScale: ({d}) => participantCount(d),
         });
         break;
