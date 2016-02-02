@@ -1,6 +1,7 @@
 import Rx from 'rx'
 import {
   ANALYSIS_INIT,
+  ANALYSIS_SET_THRESHOLD,
   ANALYSIS_UPDATE_PARTICIPANTS,
 } from '../constants'
 
@@ -18,5 +19,12 @@ export const updateParticipants = (participants) => {
   intentSubject.onNext({
     type: ANALYSIS_UPDATE_PARTICIPANTS,
     participants,
+  });
+};
+
+export const setThreshold = (threshold) => {
+  intentSubject.onNext({
+    type: ANALYSIS_SET_THRESHOLD,
+    threshold,
   });
 };

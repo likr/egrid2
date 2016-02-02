@@ -22,10 +22,6 @@ const view = (ctrl, {show, participants}) => {
       style={{
         transition: 'opacity .5s ease',
         opacity: show ? 1 : 0,
-        position: 'absolute',
-        top: '120px',
-        left: '20px',
-        width: '428px',
       }}>
     <div className="content">
       <div className="header">Participants</div>

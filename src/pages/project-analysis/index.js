@@ -2,6 +2,7 @@ import m from 'mithril'
 import {Observable} from 'rx'
 import {
   ANALYSIS_INIT,
+  ANALYSIS_SET_THRESHOLD,
   ANALYSIS_UPDATE_PARTICIPANTS,
 } from '../../constants'
 import {initAnalysis} from '../../intents/analysis'
@@ -15,6 +16,7 @@ import Fullscreen from '../common/fullscreen'
 import popup from '../utils/config-popup'
 import Menu from './network-menu'
 import Network from './network'
+import FilteringThreshold from './filtering-threshold'
 import ParticipantList from './participant-list'
 
 const handleBack = () => {
@@ -25,6 +27,7 @@ const controller = () => {
   const ctrl = {
     showWordcloud: true,
     participants: [],
+    threshold: 0,
   };
 
   const initSubscription = Observable
@@ -37,21 +40,26 @@ const controller = () => {
     const participantIds = new Set(Object.values(state.participants)
       .filter(({checked}) => checked)
       .map(({participant}) => participant.id));
+    const participantCount = (d) => {
+      return d.participants ? d.participants.filter((id) => participantIds.has(id)).length : 1;
+    };
     switch (type) {
       case ANALYSIS_INIT:
+      case ANALYSIS_SET_THRESHOLD:
       case ANALYSIS_UPDATE_PARTICIPANTS:
         calcLayout(state.graph, {
-          layerMargin: 100,
+          layerMargin: 50,
           vertexMargin: 10,
           edgeMargin: 5,
-          vertexScale: ({d}) => d.participants.filter((id) => participantIds.has(id)).length,
-          edgeScale: ({d}) => d.participants.filter((id) => participantIds.has(id)).length,
+          vertexScale: ({d}) => participantCount(d),
+          edgeScale: ({d}) => participantCount(d),
         });
         break;
       default:
     }
     m.startComputation();
     ctrl.participants = Object.values(state.participants);
+    ctrl.threshold = state.threshold;
     m.endComputation();
   });
 
@@ -87,7 +95,10 @@ const view = (ctrl) => {
       </button>
     </div>
     <Menu show={ctrl.showWordcloud}/>
-    <ParticipantList show={ctrl.showWordcloud} participants={ctrl.participants}/>
+    <div className="ui one cards" style={{position: 'absolute', top: '140px', left: '20px', width: '300px'}}>
+      <ParticipantList show={ctrl.showWordcloud} participants={ctrl.participants}/>
+      <FilteringThreshold show={ctrl.showWordcloud} value={ctrl.threshold}/>
+    </div>
   </Fullscreen>
 };
 

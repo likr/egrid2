@@ -1,4 +1,7 @@
 import Rx from 'rx'
+import Graph from 'egraph/lib/graph';
+import katz from 'egraph/lib/network/centrality/katz';
+import CoarseGrainingTransformer from 'egraph/lib/transformer/coarse-graining';
 import {
   ANALYSIS_INIT,
   ANALYSIS_SET_THRESHOLD,
@@ -16,7 +19,7 @@ const state = {
   },
   participants: {},
   words: {},
-  threshold: 0.7,
+  threshold: 0.3,
 };
 
 const originalData = {
@@ -24,15 +27,38 @@ const originalData = {
   edges: [],
 };
 
-const filterByParticipants = () => {
+const next = (type) => {
   const participantIds = new Set(Object.values(state.participants)
     .filter(({checked}) => checked)
     .map(({participant}) => participant.id));
-  state.graph.vertices = originalData.vertices.filter(({d}) => d.participants.some((id) => participantIds.has(id)));
-  state.graph.edges = originalData.edges.filter(({d}) => d.participants.some((id) => participantIds.has(id)));
-};
-
-const next = (type) => {
+  const graph = new Graph();
+  for (const {u, d} of originalData.vertices) {
+    if (d.participants.some((id) => participantIds.has(id))) {
+      graph.addVertex(u, d);
+    }
+  }
+  for (const {u, v, d} of originalData.edges) {
+    if (d.participants.some((id) => participantIds.has(id))) {
+      graph.addEdge(u, v, d);
+    }
+  }
+  const centralities = katz(graph);
+  const vertices = graph.vertices();
+  vertices.sort((u, v) => centralities[u] - centralities[v]);
+  const priority = {};
+  priority[vertices[0]] = 0;
+  for (let i = 1; i < vertices.length; ++i) {
+    if (centralities[vertices[i]] > centralities[vertices[i - 1]]) {
+      priority[vertices[i]] = i + 1;
+    } else {
+      priority[vertices[i]] = priority[vertices[i - 1]];
+    }
+  }
+  const transformer = new CoarseGrainingTransformer()
+    .vertexVisibility(({u}) => priority[u] >= (1 - state.threshold) * vertices.length);
+  const cgGraph = transformer.transform(graph);
+  state.graph.vertices = cgGraph.vertices().map((u) => ({u, d: cgGraph.vertex(u)}));
+  state.graph.edges = cgGraph.edges().map(([u, v]) => ({u, v, d: cgGraph.edge(u, v)}));
   subject.onNext({type, state});
 };
 
@@ -46,8 +72,13 @@ const init = ({graph, participants}) => {
       checked: true,
     };
   }
-  filterByParticipants();
+  state.threshold = 0.3;
   next(ANALYSIS_INIT);
+};
+
+const setThreshold = ({threshold}) => {
+  state.threshold = threshold;
+  next(ANALYSIS_SET_THRESHOLD);
 };
 
 const updateParticipants = ({participants}) => {
@@ -58,7 +89,6 @@ const updateParticipants = ({participants}) => {
       state.participants[id].checked = false;
     }
   }
-  filterByParticipants();
   next(ANALYSIS_UPDATE_PARTICIPANTS);
 };
 
@@ -68,6 +98,7 @@ intentSubject.subscribe((payload) => {
       init(payload);
       break;
     case ANALYSIS_SET_THRESHOLD:
+      setThreshold(payload);
       break;
     case ANALYSIS_UPDATE_PARTICIPANTS:
       updateParticipants(payload);
