@@ -1,6 +1,6 @@
 import m from 'mithril'
 import part from '../../utils/partial'
-import {updateEdge, removeVertex} from '../../intents/graph'
+import {updateEdge, updateVertex, removeVertex} from '../../intents/graph'
 import Cache from '../common/cache'
 import Network from '../common/network'
 import SvgButton from '../common/svg-button'
@@ -50,8 +50,18 @@ const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
   });
 };
 
-const handleRemove = ({graph}, u) => {
+const handleRemove = ({}, u) => {
   removeVertex(u);
+};
+
+const handleEdit = ({graph, textInputModal}, u) => {
+  const d = graph.vertex(u);
+  textInputModal.show({
+    text: d.text,
+    onapprove: (text) => {
+      updateVertex(u, Object.assign({}, d, {text}));
+    },
+  });
 };
 
 const view = (ctrl, args) => {
@@ -65,10 +75,11 @@ const view = (ctrl, args) => {
             })}</g>
             <g>{vertices.map((d) => {
               return <Vertex key={d.u} {...d} children={() => {
-                return <g>
-                  <SvgButton ref="&#61536;" x="-30" y="20" onclick={part(handleLadderUp, args, d.u)}/>
-                  <SvgButton ref="&#61453;" x="0" y="20" onclick={part(handleRemove, args, d.u)}/>
-                  <SvgButton ref="&#61537;" x="30" y="20" onclick={part(handleLadderDown, args, d.u)}/>
+                return <g transform="translate(0,22)">
+                  <SvgButton ref="&#61536;" x="-45" y="0" onclick={part(handleLadderUp, args, d.u)}/>
+                  <SvgButton ref="&#61453;" x="-15" y="0" onclick={part(handleRemove, args, d.u)}/>
+                  <SvgButton ref="&#61508;" x="15" y="0" onclick={part(handleEdit, args, d.u)}/>
+                  <SvgButton ref="&#61537;" x="45" y="0" onclick={part(handleLadderDown, args, d.u)}/>
                 </g>
               }}/>
             })}</g>

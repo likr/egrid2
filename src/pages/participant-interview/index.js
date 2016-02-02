@@ -26,9 +26,9 @@ const layout = (graph, participantId) => {
       .map(([u, v]) => ({u, v, d: graph.edge(u, v)}))
       .filter(({d}) => d.participants.indexOf(participantId) >= 0),
   }, {
-    layerMargin: 100,
+    layerMargin: 150,
     vertexMargin: 50,
-    edgeMargin: 5,
+    edgeMargin: 10,
     vertexScale: () => 1,
     edgeScale: () => 1,
   });
