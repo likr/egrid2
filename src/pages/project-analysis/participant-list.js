@@ -16,8 +16,17 @@ const checkbox = (participant) => {
   };
 };
 
-const view = (ctrl, {participants}) => {
-  return <div className="ui card" style={{position: 'absolute', top: '120px', left: '20px', width: '428px'}}>
+const view = (ctrl, {show, participants}) => {
+  return <div
+      className="ui card"
+      style={{
+        transition: 'opacity .5s ease',
+        opacity: show ? 1 : 0,
+        position: 'absolute',
+        top: '120px',
+        left: '20px',
+        width: '428px',
+      }}>
     <div className="content">
       <div className="header">Participants</div>
     </div>

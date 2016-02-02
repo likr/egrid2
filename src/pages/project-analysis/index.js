@@ -12,6 +12,7 @@ import Analysis from '../../models/analysis'
 import Projects from '../../models/project'
 import Participants from '../../models/participant'
 import Fullscreen from '../common/fullscreen'
+import popup from '../utils/config-popup'
 import Menu from './network-menu'
 import Network from './network'
 import ParticipantList from './participant-list'
@@ -76,6 +77,8 @@ const view = (ctrl) => {
         <i className="icon arrow left"/>
       </button>
       <button
+          config={popup}
+          data-content="Toggle Menu"
           className={'circular ui icon button toggle massive' + (ctrl.showWordcloud ? ' active' : '')}
           onclick={() => {
             ctrl.showWordcloud = !ctrl.showWordcloud;
@@ -84,7 +87,7 @@ const view = (ctrl) => {
       </button>
     </div>
     <Menu show={ctrl.showWordcloud}/>
-    <ParticipantList participants={ctrl.participants}/>
+    <ParticipantList show={ctrl.showWordcloud} participants={ctrl.participants}/>
   </Fullscreen>
 };
 
