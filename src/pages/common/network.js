@@ -7,13 +7,18 @@ const controller = ({invalidate, center}) => {
     edges: [],
   };
 
+  let first = true;
+
   const layoutSubscription = LayoutWorker.subscribe(({data}) => {
     const {vertices, edges} = data;
     m.startComputation();
     ctrl.vertices = vertices;
     ctrl.edges = edges;
     invalidate();
-    center(data.width, data.height);
+    if (first) {
+      center(data.width, data.height);
+      first = false;
+    }
     m.endComputation();
   });
 
