@@ -46,9 +46,9 @@ const controller = () => {
   ctrl.center = (width, height) => {
     m.startComputation();
     const {clientWidth, clientHeight} = ctrl.element;
-    const x = (clientWidth - width) / 2;
-    const y = (clientHeight - height) / 2;
-    const scale = clamp(Math.min(clientWidth / width, clientWidth / height), minScale, maxScale);
+    const scale = clamp(Math.min(clientWidth / width, clientHeight / height), minScale, maxScale);
+    const x = (clientWidth - width * scale) / 2;
+    const y = (clientHeight - height * scale) / 2;
     ctrl.zoom.translate([x, y]);
     ctrl.zoom.scale(scale);
     ctrl.x = x;
