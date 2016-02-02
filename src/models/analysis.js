@@ -24,6 +24,14 @@ const originalData = {
   edges: [],
 };
 
+const filterByParticipants = () => {
+  const participantIds = new Set(Object.values(state.participants)
+    .filter(({checked}) => checked)
+    .map(({participant}) => participant.id));
+  state.graph.vertices = originalData.vertices.filter(({d}) => d.participants.some((id) => participantIds.has(id)));
+  state.graph.edges = originalData.edges.filter(({d}) => d.participants.some((id) => participantIds.has(id)));
+};
+
 const next = (type) => {
   subject.onNext({type, state});
 };
@@ -38,6 +46,7 @@ const init = ({graph, participants}) => {
       checked: true,
     };
   }
+  filterByParticipants();
   next(ANALYSIS_INIT);
 };
 
@@ -49,11 +58,7 @@ const updateParticipants = ({participants}) => {
       state.participants[id].checked = false;
     }
   }
-  const participantIds = new Set(Object.values(state.participants)
-    .filter(({checked}) => checked)
-    .map(({participant}) => participant.id));
-  state.graph.vertices = originalData.vertices.filter(({d}) => d.participants.some((id) => participantIds.has(id)));
-  state.graph.edges = originalData.edges.filter(({d}) => d.participants.some((id) => participantIds.has(id)));
+  filterByParticipants();
   next(ANALYSIS_UPDATE_PARTICIPANTS);
 };
 

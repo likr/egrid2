@@ -45,14 +45,12 @@ const showModal = (ctrl) => {
 
 const view = (ctrl) => {
   return <Page>
-    <div style={{
-      'margin-bottom': '20px',
-    }}>
-      <h2>My Projects</h2>
+    <div style={{'margin-bottom': '20px'}}>
+      <div className="ui breadcrumb">
+        <div className="active section">My Projects</div>
+      </div>
     </div>
-    <div style={{
-      'margin-bottom': '20px',
-    }}>
+    <div style={{'margin-bottom': '20px'}}>
       <button className="ui primary button" onclick={showModal.bind(null, ctrl)}>
         Add
       </button>

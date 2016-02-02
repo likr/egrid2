@@ -47,9 +47,6 @@ const view = (ctrl, {participant, confirmModal, participantModal}) => {
       }}>
         <i className="icon remove"/>
       </button>
-      <button className="ui icon button" data-content="Copy" config={popup}>
-        <i className="icon copy"/>
-      </button>
     </div>
   </div>
 };

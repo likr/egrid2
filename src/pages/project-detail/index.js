@@ -62,7 +62,11 @@ const view = (ctrl) => {
 
   return <Page>
     <div style={{'margin-bottom': '20px'}}>
-      <h2>{ctrl.project.name}</h2>
+      <div className="ui breadcrumb">
+        <a className="section" href="/projects" config={m.route}>My Projects</a>
+        <i className="right angle icon divider"/>
+        <div className="active section">{ctrl.project.name}</div>
+      </div>
     </div>
     <h3 class="ui horizontal divider header">Analysis</h3>
     <div>

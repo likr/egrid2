@@ -148,7 +148,7 @@ const view = (ctrl) => {
     <div style={{position: 'absolute', top: '40px', left: 0, right: 0, bottom: 0}}>
       <Network graph={ctrl.graph} textInputModal={ctrl.textInputModal} participantId={ctrl.participantId}/>
     </div>
-    <div style={{position: 'absolute', right: '20px', top: '60px'}}>
+    <div style={{position: 'absolute', left: '20px', top: '60px'}}>
       <button className="ui massive circular icon button" onclick={handleBack}>
         <i className="icon arrow left"/>
       </button>
@@ -161,7 +161,7 @@ const view = (ctrl) => {
         <i className="icon plus"/>
       </button>
     </div>
-    <div style={{position: 'absolute', left: '20px', top: '60px'}}>
+    <div style={{position: 'absolute', left: '20px', bottom: '20px'}}>
       <button className={`ui large circular icon button ${ctrl.canUndo ? '' : 'disabled'}`} onclick={handleUndo}>
         <i className="icon undo"/>
       </button>
