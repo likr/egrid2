@@ -64,7 +64,7 @@ const view = (ctrl, args) => {
   const children = args.children;
   const svgAttributes = Object.assign({}, args);
   delete svgAttributes.children;
-  return <svg {...svgAttributes} config={config(ctrl)}>
+  return <svg {...svgAttributes} style={{'background-color': '#eee'}} config={config(ctrl)}>
     {children({x: ctrl.x, y: ctrl.y, scale:ctrl.scale, center: ctrl.center})}
   </svg>
 };
