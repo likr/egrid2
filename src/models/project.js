@@ -76,4 +76,4 @@ intentSubject.subscribe((payload) => {
   }
 });
 
-export default subject
+export default subject.share()

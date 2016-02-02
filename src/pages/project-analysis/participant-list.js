@@ -1,9 +1,19 @@
 /* global $ */
 
 import m from 'mithril'
+import {updateParticipants} from '../../intents/analysis'
 
-const checkbox = (element) => {
-  $(element).checkbox();
+const checkbox = (participant) => {
+  return (element) => {
+    $(element).checkbox({
+      onChecked: () => {
+        updateParticipants({[participant.id]: true});
+      },
+      onUnchecked: () => {
+        updateParticipants({[participant.id]: false});
+      },
+    });
+  };
 };
 
 const view = (ctrl, {participants}) => {
@@ -13,10 +23,10 @@ const view = (ctrl, {participants}) => {
     </div>
     <div className="content">
       <div className="ui form">
-        {participants.map(({participant}) => {
-          return <div className="field">
-            <div className="ui checkbox" config={checkbox}>
-              <input checked="checked" type="checkbox"/>
+        {participants.map(({participant, checked}) => {
+          return <div key={participant.id} className="field">
+            <div className="ui checkbox" config={checkbox(participant)}>
+              <input checked={checked ? 'checked' : ''} type="checkbox"/>
               <label>{participant.name}</label>
             </div>
           </div>

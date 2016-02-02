@@ -4,10 +4,10 @@ import Graph from 'egraph/lib/graph'
 import Layouter from 'egraph/lib/layouter/sugiyama'
 
 const calcSize = (vertices) => {
-  const left = Math.min(...vertices.map(({x, width}) => x - width / 2));
-  const right = Math.max(...vertices.map(({x, width}) => x + width / 2));
-  const top = Math.min(...vertices.map(({y, height}) => y - height / 2));
-  const bottom = Math.max(...vertices.map(({y, height}) => y + height / 2));
+  const left = Math.min(0, ...vertices.map(({x, width}) => x - width / 2));
+  const right = Math.max(0, ...vertices.map(({x, width}) => x + width / 2));
+  const top = Math.min(0, ...vertices.map(({y, height}) => y - height / 2));
+  const bottom = Math.max(0, ...vertices.map(({y, height}) => y + height / 2));
   return {
     width: right - left,
     height: bottom - top,

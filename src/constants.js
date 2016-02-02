@@ -26,3 +26,6 @@ export const PARTICIPANT_UPDATE = Symbol('participant-update')
 export const CALC_MORPH = Symbol('calc-morph')
 
 export const CALC_LAYOUT = Symbol('calc-layout')
+
+export const ANALYSIS_INIT = Symbol('analysis-init')
+export const ANALYSIS_UPDATE_PARTICIPANTS = Symbol('analysis-update-participants')

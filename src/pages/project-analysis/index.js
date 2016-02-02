@@ -1,7 +1,14 @@
 import m from 'mithril'
+import {Observable} from 'rx'
+import {
+  ANALYSIS_INIT,
+  ANALYSIS_UPDATE_PARTICIPANTS,
+} from '../../constants'
+import {initAnalysis} from '../../intents/analysis'
 import {calcLayout} from '../../intents/layout-worker'
 import {getProject} from '../../intents/project'
 import {listParticipants} from '../../intents/participant'
+import Analysis from '../../models/analysis'
 import Projects from '../../models/project'
 import Participants from '../../models/participant'
 import Fullscreen from '../common/fullscreen'
@@ -19,27 +26,34 @@ const controller = () => {
     participants: [],
   };
 
-  const projectSubscription = Projects.subscribe(({data}) => {
-    m.startComputation();
-    calcLayout(JSON.parse(data.graph), {
-      layerMargin: 100,
-      vertexMargin: 10,
-      edgeMargin: 5,
-      vertexScale: ({d}) => d.participants.length,
-      edgeScale: ({d}) => d.participants.length,
+  const initSubscription = Observable
+    .zip(Projects.map(({data}) => data), Participants.map(({data}) => data))
+    .subscribe(([project, participants]) => {
+      initAnalysis(JSON.parse(project.graph), participants);
     });
-    m.endComputation();
-  });
 
-  const participantSubscription = Participants.subscribe(({data}) => {
+  const analysisSubscription = Analysis.subscribe(({type, state}) => {
+    switch (type) {
+      case ANALYSIS_INIT:
+      case ANALYSIS_UPDATE_PARTICIPANTS:
+        calcLayout(state.graph, {
+          layerMargin: 100,
+          vertexMargin: 10,
+          edgeMargin: 5,
+          vertexScale: ({d}) => d.participants.length,
+          edgeScale: ({d}) => d.participants.length,
+        });
+        break;
+      default:
+    }
     m.startComputation();
-    ctrl.participants = data.map((participant) => ({participant, checked: true}));
+    ctrl.participants = Object.values(state.participants);
     m.endComputation();
   });
 
   ctrl.onunload = () => {
-    projectSubscription.dispose();
-    participantSubscription.dispose();
+    initSubscription.dispose();
+    analysisSubscription.dispose();
   };
 
   const projectId = m.route.param('projectId');
