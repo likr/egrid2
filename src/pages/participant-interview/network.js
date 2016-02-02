@@ -60,14 +60,13 @@ const view = (ctrl, args) => {
               return <Edge key={`${d.u}:${d.v}`} {...d}/>
             })}</g>
             <g>{vertices.map((d) => {
-              return <Vertex key={d.u} {...d}/>
-            })}</g>
-            <g>{vertices.map(({u, x, y, height}) => {
-              return <g transform={`translate(${x},${y})`}>
-                <SvgButton ref="&#61536;" x={-30} y={height / 2 + 12} onclick={part(handleLadderUp, args, u)}/>
-                <SvgButton ref="&#61453;" x={0} y={height / 2 + 12} onclick={() => {}}/>
-                <SvgButton ref="&#61537;" x={30} y={height / 2 + 12} onclick={part(handleLadderDown, args, u)}/>
-              </g>
+              return <Vertex key={d.u} {...d} children={() => {
+                return <g>
+                  <SvgButton ref="&#61536;" x="-30" y="20" onclick={part(handleLadderUp, args, d.u)}/>
+                  <SvgButton ref="&#61453;" x="0" y="20" onclick={() => {}}/>
+                  <SvgButton ref="&#61537;" x="30" y="20" onclick={part(handleLadderDown, args, d.u)}/>
+                </g>
+              }}/>
             })}</g>
           </g>
         }}/>

@@ -48,11 +48,12 @@ const controller = ({invalidate}) => {
   const ctrl = {
     words: [],
   };
-  LayoutWorker.subscribe(({data}) => {
+
+  const layoutWorkerSubscription = LayoutWorker.subscribe(({data}) => {
     const {vertices} = data;
     calcMorph(vertices.map(({text}) => text));
   });
-  MorphWorker.subscribe(({data}) => {
+  const morphWorkerSubscription = MorphWorker.subscribe(({data}) => {
     const words = count(data);
     textSize.domain(d3.extent(words, ({count}) => count));
     d3cloud().size([400, 400])
@@ -69,6 +70,12 @@ const controller = ({invalidate}) => {
       })
       .start();
   });
+
+  ctrl.onunload = () => {
+    layoutWorkerSubscription.dispose();
+    morphWorkerSubscription.dispose();
+  };
+
   return ctrl;
 };
 

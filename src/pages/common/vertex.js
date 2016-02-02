@@ -1,6 +1,7 @@
 import m from 'mithril'
 import d3 from 'd3'
 import textImage from '../views/text-image'
+import nop from '../../utils/nop'
 
 const config = (x, y, scale) => {
   return (element) => {
@@ -19,7 +20,7 @@ const controller = () => {
   };
 };
 
-const view = (ctrl, {text, x, y, scale, width, height}) => {
+const view = (ctrl, {text, x, y, scale, width, height, children=nop}) => {
   const r = 3;
   const x0 = ctrl.x0 || x;
   const y0 = ctrl.y0 || 0;
@@ -41,6 +42,7 @@ const view = (ctrl, {text, x, y, scale, width, height}) => {
       stroke='#888'
       fill='white'/>
     {textImage(text, width, height)}
+    {children()}
   </g>
 };
 
