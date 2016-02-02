@@ -55,7 +55,7 @@ const controller = () => {
   };
 };
 
-const view = (ctrl, {points, width}) => {
+const view = (ctrl, {points, width, reversed}) => {
   const points0 = ctrl.points0 || points.map(([x]) => [x, 0]);
   const width0 = ctrl.width0 || width;
   ctrl.points0 = points;
@@ -66,6 +66,7 @@ const view = (ctrl, {points, width}) => {
       fill='none'
       stroke='#888'
       stroke-width={width0}
+      stroke-dasharray={reversed ? 5 : 0}
       d={svgPath(points0)}
       config={config(points, width)}
     />

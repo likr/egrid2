@@ -2,8 +2,6 @@ import Rx from 'rx'
 import {
   GRAPH_ADD_EDGE,
   GRAPH_ADD_VERTEX,
-  GRAPH_ADD_VERTEX_TO_LOWER,
-  GRAPH_ADD_VERTEX_TO_UPPER,
   GRAPH_CLEAR,
   GRAPH_LOAD,
   GRAPH_REDO,
@@ -29,26 +27,6 @@ export const addVertex = (u, d) => {
   intentSubject.onNext({
     type: GRAPH_ADD_VERTEX,
     u,
-    d,
-  });
-};
-
-export const addVertexToLower = (u, v, vd, d) => {
-  intentSubject.onNext({
-    type: GRAPH_ADD_VERTEX_TO_LOWER,
-    u,
-    v,
-    vd,
-    d,
-  });
-};
-
-export const addVertexToUpper = (u, v, ud, d) => {
-  intentSubject.onNext({
-    type: GRAPH_ADD_VERTEX_TO_UPPER,
-    u,
-    v,
-    ud,
     d,
   });
 };

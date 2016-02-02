@@ -1,7 +1,5 @@
 export const GRAPH_ADD_EDGE = Symbol('graph-add-edge')
 export const GRAPH_ADD_VERTEX = Symbol('graph-add-vertex')
-export const GRAPH_ADD_VERTEX_TO_LOWER = Symbol('graph-add-vertex-to-lower')
-export const GRAPH_ADD_VERTEX_TO_UPPER = Symbol('graph-add-vertex-to-upper')
 export const GRAPH_CLEAR = Symbol('graph-clear')
 export const GRAPH_LOAD = Symbol('graph-load')
 export const GRAPH_REDO = Symbol('graph-redo')

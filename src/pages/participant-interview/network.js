@@ -1,6 +1,6 @@
 import m from 'mithril'
 import part from '../../utils/partial'
-import {updateEdge} from '../../intents/graph'
+import {updateEdge, removeVertex} from '../../intents/graph'
 import Cache from '../common/cache'
 import Network from '../common/network'
 import SvgButton from '../common/svg-button'
@@ -50,6 +50,10 @@ const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
   });
 };
 
+const handleRemove = ({graph}, u) => {
+  removeVertex(u);
+};
+
 const view = (ctrl, args) => {
   return <ZoomableSvg className="cursor-move" width="100%" height="100%" children={({x, y, scale, center}) => {
     return <g transform={`translate(${x},${y})scale(${scale})`}>
@@ -63,7 +67,7 @@ const view = (ctrl, args) => {
               return <Vertex key={d.u} {...d} children={() => {
                 return <g>
                   <SvgButton ref="&#61536;" x="-30" y="20" onclick={part(handleLadderUp, args, d.u)}/>
-                  <SvgButton ref="&#61453;" x="0" y="20" onclick={() => {}}/>
+                  <SvgButton ref="&#61453;" x="0" y="20" onclick={part(handleRemove, args, d.u)}/>
                   <SvgButton ref="&#61537;" x="30" y="20" onclick={part(handleLadderDown, args, d.u)}/>
                 </g>
               }}/>
