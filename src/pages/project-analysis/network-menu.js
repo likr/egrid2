@@ -29,8 +29,9 @@ const view = (ctrl, {show}) => {
   return <div
     className='ui card'
     style={{
-      transition: 'opacity .5s ease',
+      transition: 'opacity .5s ease, visibility .5s ease',
       opacity: show ? 1 : 0,
+      visibility: show ? 'visible' : 'hidden',
       width: '428px',
       position: 'absolute',
       top: '60px',

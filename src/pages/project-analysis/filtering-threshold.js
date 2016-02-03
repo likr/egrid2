@@ -25,7 +25,12 @@ const controller = ({value}) => {
 const view = (ctrl, args) => {
   const value = ctrl.changing ? ctrl.value : args.value;
 
-  return <div className="ui card" style={{transition: 'opacity .5s ease', opacity: args.show ? 1 : 0}}>
+  return <div className="ui card"
+      style={{
+        transition: 'opacity .5s ease, visibility .5s ease',
+        opacity: args.show ? 1 : 0,
+        visibility: args.show ? 'visible' : 'hidden',
+      }}>
     <div className="content">
       <div className="header">Filtering Threshold</div>
     </div>

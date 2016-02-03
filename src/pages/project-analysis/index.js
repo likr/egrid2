@@ -95,7 +95,16 @@ const view = (ctrl) => {
       </button>
     </div>
     <Menu show={ctrl.showWordcloud}/>
-    <div className="ui one cards" style={{position: 'absolute', top: '140px', left: '20px', width: '300px'}}>
+    <div
+        className="ui one cards"
+        style={{
+          transition: 'visibility .5s ease',
+          visibility: ctrl.showWordcloud ? 'visible' : 'hidden',
+          position: 'absolute',
+          top: '140px',
+          left: '20px',
+          width: '300px',
+        }}>
       <ParticipantList show={ctrl.showWordcloud} participants={ctrl.participants}/>
       <FilteringThreshold show={ctrl.showWordcloud} value={ctrl.threshold}/>
     </div>
