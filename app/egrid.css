@@ -1,0 +1,21 @@
+.unselectable {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+body {
+  background-color: #e2f0fa;
+}
+
+svg {
+  display: block;
+}
