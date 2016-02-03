@@ -27,6 +27,7 @@ const handleClickAddParticipant = (ctrl) => {
 
 const controller = () => {
   const ctrl = {
+    projectId: m.route.param('projectId'),
     project: null,
     participants: [],
     confirmModal: null,
@@ -53,9 +54,8 @@ const controller = () => {
     participantSubscription.dispose();
   };
 
-  const projectId = m.route.param('projectId');
-  getProject(projectId);
-  listParticipants(projectId);
+  getProject(ctrl.projectId);
+  listParticipants(ctrl.projectId);
 
   return ctrl;
 };
@@ -75,12 +75,8 @@ const view = (ctrl) => {
     </div>
     <h3 class="ui horizontal divider header">Analysis</h3>
     <div>
-      <a
-          className="ui button"
-          href={`/projects/${m.route.param('projectId')}/analysis`}
-          config={m.route}>
-        Open
-      </a>
+      <a className="ui button" href={`/projects/${ctrl.projectId}/analysis`} config={m.route}>Open</a>
+      <a className="ui button" href={`/projects/${ctrl.projectId}/words`} config={m.route}>Words</a>
     </div>
     <h3 class="ui horizontal divider header">Participants</h3>
     <div>
