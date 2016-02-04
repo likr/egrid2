@@ -45,6 +45,9 @@ const next = (type) => {
   const centralities = katz(graph);
   const vertices = graph.vertices();
   vertices.sort((u, v) => centralities[u] - centralities[v]);
+  for (const u of vertices) {
+    graph.vertex(u).centrality = centralities[u];
+  }
   const priority = {};
   priority[vertices[0]] = 0;
   for (let i = 1; i < vertices.length; ++i) {

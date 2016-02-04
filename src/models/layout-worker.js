@@ -1,5 +1,6 @@
 /* global document */
 
+import d3 from 'd3'
 import Rx from 'rx-dom'
 import {CALC_LAYOUT} from '../constants'
 import {intentSubject} from '../intents/layout-worker'
@@ -22,10 +23,13 @@ const subject = Rx.DOM.fromWorker('layout-worker.js');
 
 const calc = (data, options) => {
   const {vertexScale, edgeScale, layerMargin, vertexMargin, edgeMargin} = options;
+  const scale = d3.scale.linear()
+    .domain(d3.extent(data.vertices, vertexScale))
+    .range([1, 3]);
   const size = calcSize(data.vertices.map(({d}) => d.text), 10, 'sans-serif');
-  for (const {u, d} of data.vertices) {
-    const scale = vertexScale({u, d});
-    d.scale = scale;
+  for (const vertex of data.vertices) {
+    const {d} = vertex;
+    d.scale = scale(vertexScale(vertex));
     d.width = size[d.text].width;
     d.height = size[d.text].height;
   }

@@ -11,8 +11,8 @@ const view = () => {
       <Cache children={(invalidate) => {
         return <Network invalidate={invalidate} center={center} children={({vertices, edges}) => {
           return <g>
-            <g>{edges.map(({u, v, points, d}) => {
-              return <Edge key={`${u}:${v}`} points={points} {...d}/>
+            <g>{edges.map(({u, v, points, width, reversed, d}) => {
+              return <Edge key={`${u}:${v}`} points={points} width={width} reversed={reversed} d={d}/>
             })}</g>
             <g>{vertices.map(({u, x, y, d}) => {
               return <Vertex key={u} x={x} y={y} {...d}/>

@@ -53,9 +53,15 @@ const handleAddGroup = (ctrl) => {
   };
 };
 
-const handleSearch = (ctrl) => {
+const handleInputSearchLeft = (ctrl) => {
   return (event) => {
-    ctrl.search = event.target.value;
+    ctrl.searchLeft = event.target.value;
+  };
+};
+
+const handleInputSearchRight = (ctrl) => {
+  return (event) => {
+    ctrl.searchRight = event.target.value;
   };
 };
 
@@ -77,7 +83,8 @@ const controller = () => {
     project: null,
     words: {},
     groups: [],
-    search: '',
+    searchLeft: '',
+    searchRight: '',
   };
 
   const projectSubscription = Projects.subscribe(({type, data}) => {
@@ -114,7 +121,15 @@ const controller = () => {
 };
 
 const view = (ctrl) => {
-  const words = Object.values(ctrl.words).filter(({d}) => d.parent == undefined && d.text.indexOf(ctrl.search) >= 0);
+  const words = Object.values(ctrl.words).filter(({d}) => {
+    return d.parent == undefined && d.text.indexOf(ctrl.searchLeft) >= 0;
+  });
+  const groups = ctrl.groups.filter((group) => {
+    if (group.name.indexOf(ctrl.searchRight) >= 0) {
+      return true;
+    }
+    return group.items.some((u) => ctrl.words[u].d.text.indexOf(ctrl.searchRight) >= 0);
+  });
 
   return <Page>
     <div style={{'margin-bottom': '20px'}}>
@@ -137,11 +152,11 @@ const view = (ctrl) => {
           <div className="column">
             <div className="ui vertical segment">
               <div className="ui fluid icon input">
-                <input placeholder="Search..." oninput={handleSearch(ctrl)}/>
+                <input placeholder="Search..." oninput={handleInputSearchLeft(ctrl)}/>
                 <i className="icon search"/>
               </div>
             </div>
-            <div className="ui vertical segment" ondrop={handleDropToList(ctrl)} ondragover={handleDragOver} style={{'max-height': '800px', 'overflow-y': 'scroll'}}>
+            <div className="ui vertical segment" ondrop={handleDropToList(ctrl)} ondragover={handleDragOver} style={{'max-height': '700px', 'overflow-y': 'scroll'}}>
               {words.map((item) => <Word {...item}/>)}
             </div>
           </div>
@@ -150,11 +165,15 @@ const view = (ctrl) => {
           </div>
           <div className="column">
             <div className="ui vertical segment">
+              <div className="ui fluid icon input">
+                <input placeholder="Search..." oninput={handleInputSearchRight(ctrl)}/>
+                <i className="icon search"/>
+              </div>
               <button className="ui button" onclick={handleAddGroup(ctrl)}>Add</button>
             </div>
-            <div className="ui vertical segment" style={{'max-height': '800px', 'overflow-y': 'scroll'}}>
+            <div className="ui vertical segment" style={{'max-height': '700px', 'overflow-y': 'scroll'}}>
               <div className="ui one cards">
-                {ctrl.groups.map((group) => {
+                {groups.map((group) => {
                   return <Group group={group} words={ctrl.words} handleDropToGroup={handleDropToGroup(ctrl, group)} handleDragOver={handleDragOver}/>
                 })}
               </div>

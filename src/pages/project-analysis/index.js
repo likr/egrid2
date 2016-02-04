@@ -55,9 +55,9 @@ const parseGraph = (str) => {
       }
       const key = `${edge.u}:${edge.v}`;
       if (visitedEdges[key]) {
-        visitedEdges[key].d.participants = uniqueConcat(
+        visitedEdges[key].d.participants = uniqueConcat([
           visitedEdges[key].d.participants,
-          edge.d.participants);
+          edge.d.participants]);
       } else {
         visitedEdges[key] = edge;
       }
