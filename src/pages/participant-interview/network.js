@@ -18,7 +18,7 @@ const handleLadderUp = ({graph, textInputModal, participantId}, v) => {
         d.participants = Array.from(d.participants);
         d.participants.push(participantId);
       }
-      const ud = Object.assign({}, graph.vertex(u)) || {text: u, participants: []};
+      const ud = graph.vertex(u) ? Object.assign({}, graph.vertex(u)) : {text: u, participants: []};
       if (ud.participants.indexOf(participantId) < 0) {
         ud.participants = Array.from(ud.participants);
         ud.participants.push(participantId);
@@ -40,7 +40,7 @@ const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
         d.participants.push(participantId);
       }
       const ud = graph.vertex(u);
-      const vd = Object.assign({}, graph.vertex(v)) || {text: v, participants: []};
+      const vd = graph.vertex(v) ? Object.assign({}, graph.vertex(v)) : {text: v, participants: []};
       if (vd.participants.indexOf(participantId) < 0) {
         vd.participants = Array.from(vd.participants);
         vd.participants.push(participantId);

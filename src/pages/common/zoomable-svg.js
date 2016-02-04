@@ -45,10 +45,11 @@ const controller = () => {
 
   ctrl.center = (width, height) => {
     m.startComputation();
-    const {clientWidth, clientHeight} = ctrl.element;
-    const scale = clamp(Math.min(clientWidth / width, clientHeight / height), minScale, maxScale);
-    const x = (clientWidth - width * scale) / 2;
-    const y = (clientHeight - height * scale) / 2;
+    const displayWidth = $(ctrl.element).width();
+    const displayHeight = $(ctrl.element).height();
+    const scale = clamp(Math.min(displayWidth / width, displayHeight / height), minScale, maxScale);
+    const x = (displayWidth - width * scale) / 2;
+    const y = (displayHeight - height * scale) / 2;
     ctrl.zoom.translate([x, y]);
     ctrl.zoom.scale(scale);
     ctrl.x = x;
