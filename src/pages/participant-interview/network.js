@@ -18,7 +18,7 @@ const handleLadderUp = ({graph, textInputModal, participantId}, v) => {
         d.participants = Array.from(d.participants);
         d.participants.push(participantId);
       }
-      const ud = graph.vertex(u) || {text: u, participants: []};
+      const ud = Object.assign({}, graph.vertex(u)) || {text: u, participants: []};
       if (ud.participants.indexOf(participantId) < 0) {
         ud.participants = Array.from(ud.participants);
         ud.participants.push(participantId);
@@ -40,7 +40,7 @@ const handleLadderDown = ({graph, textInputModal, participantId}, u) => {
         d.participants.push(participantId);
       }
       const ud = graph.vertex(u);
-      const vd = graph.vertex(v) || {text: v, participants: []};
+      const vd = Object.assign({}, graph.vertex(v)) || {text: v, participants: []};
       if (vd.participants.indexOf(participantId) < 0) {
         vd.participants = Array.from(vd.participants);
         vd.participants.push(participantId);
@@ -76,10 +76,10 @@ const view = (ctrl, args) => {
             <g>{vertices.map(({u, x, y, d}) => {
               return <Vertex key={u} x={x} y={y} {...d} children={() => {
                 return <g transform="translate(0,22)">
-                  <SvgButton ref="&#61536;" x="-45" y="0" onclick={part(handleLadderUp, args, d.u)}/>
-                  <SvgButton ref="&#61453;" x="-15" y="0" onclick={part(handleRemove, args, d.u)}/>
-                  <SvgButton ref="&#61508;" x="15" y="0" onclick={part(handleEdit, args, d.u)}/>
-                  <SvgButton ref="&#61537;" x="45" y="0" onclick={part(handleLadderDown, args, d.u)}/>
+                  <SvgButton ref="&#61536;" x="-45" y="0" onclick={part(handleLadderUp, args, u)}/>
+                  <SvgButton ref="&#61453;" x="-15" y="0" onclick={part(handleRemove, args, u)}/>
+                  <SvgButton ref="&#61508;" x="15" y="0" onclick={part(handleEdit, args, u)}/>
+                  <SvgButton ref="&#61537;" x="45" y="0" onclick={part(handleLadderDown, args, u)}/>
                 </g>
               }}/>
             })}</g>
