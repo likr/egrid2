@@ -51,7 +51,7 @@ const controller = ({invalidate}) => {
 
   const layoutWorkerSubscription = LayoutWorker.subscribe(({data}) => {
     const {vertices} = data;
-    calcMorph(vertices.map(({text}) => text));
+    calcMorph(vertices.map(({d}) => d.text));
   });
   const morphWorkerSubscription = MorphWorker.subscribe(({data}) => {
     const words = count(data);

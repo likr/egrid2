@@ -70,11 +70,11 @@ const view = (ctrl, args) => {
       <Cache children={(invalidate) => {
         return <Network invalidate={invalidate} center={center} children={({vertices, edges}) => {
           return <g>
-            <g>{edges.map((d) => {
-              return <Edge key={`${d.u}:${d.v}`} {...d}/>
+            <g>{edges.map(({u, v, points, d}) => {
+              return <Edge key={`${u}:${v}`} points={points} {...d}/>
             })}</g>
-            <g>{vertices.map((d) => {
-              return <Vertex key={d.u} {...d} children={() => {
+            <g>{vertices.map(({u, x, y, d}) => {
+              return <Vertex key={u} x={x} y={y} {...d} children={() => {
                 return <g transform="translate(0,22)">
                   <SvgButton ref="&#61536;" x="-45" y="0" onclick={part(handleLadderUp, args, d.u)}/>
                   <SvgButton ref="&#61453;" x="-15" y="0" onclick={part(handleRemove, args, d.u)}/>

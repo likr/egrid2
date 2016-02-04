@@ -19,6 +19,54 @@ import Network from './network'
 import FilteringThreshold from './filtering-threshold'
 import ParticipantList from './participant-list'
 
+const uniqueConcat = (arr) => {
+  return Array.from(new Set([].concat(...arr)));
+};
+
+const parseGraph = (str) => {
+  const graph = JSON.parse(str);
+  if (graph.groups) {
+    const vertices = {}
+    for (const vertex of graph.vertices) {
+      vertices[vertex.u] = vertex;
+    }
+    const groupVertices = graph.groups.map(({id, name, color, items}) => {
+      return {
+        u: `group${id}`,
+        d: {
+          text: name,
+          color,
+          items: items.map((u) => vertices[u]),
+          participants: uniqueConcat(items.map((u) => vertices[u].d.participants)),
+        },
+      };
+    });
+    graph.vertices = graph.vertices
+      .filter(({d}) => d.parent == undefined)
+      .concat(groupVertices);
+    const visitedEdges = {};
+    for (const edge of graph.edges) {
+      const {u, v} = edge;
+      if (vertices[u].d.parent != undefined) {
+        edge.u = `group${vertices[u].d.parent}`;
+      }
+      if (vertices[v].d.parent != undefined) {
+        edge.v = `group${vertices[v].d.parent}`;
+      }
+      const key = `${edge.u}:${edge.v}`;
+      if (visitedEdges[key]) {
+        visitedEdges[key].d.participants = uniqueConcat(
+          visitedEdges[key].d.participants,
+          edge.d.participants);
+      } else {
+        visitedEdges[key] = edge;
+      }
+    }
+    graph.edges = Object.values(visitedEdges);
+  }
+  return graph;
+};
+
 const handleBack = () => {
   m.route(`/projects/${m.route.param('projectId')}`);
 };
@@ -33,7 +81,7 @@ const controller = () => {
   const initSubscription = Observable
     .zip(Projects.map(({data}) => data), Participants.map(({data}) => data))
     .subscribe(([project, participants]) => {
-      initAnalysis(JSON.parse(project.graph), participants);
+      initAnalysis(parseGraph(project.graph), participants);
     });
 
   const analysisSubscription = Analysis.subscribe(({type, state}) => {

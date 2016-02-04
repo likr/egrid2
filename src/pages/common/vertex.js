@@ -20,7 +20,7 @@ const controller = () => {
   };
 };
 
-const view = (ctrl, {text, x, y, scale, width, height, children=nop}) => {
+const view = (ctrl, {text, x, y, scale, width, height, color='#fff', children=nop}) => {
   const r = 3;
   const x0 = ctrl.x0 || x;
   const y0 = ctrl.y0 || 0;
@@ -40,7 +40,7 @@ const view = (ctrl, {text, x, y, scale, width, height, children=nop}) => {
       width={width}
       height={height}
       stroke='#888'
-      fill='white'/>
+      fill={color}/>
     {textImage(text, width, height)}
     {children()}
   </g>

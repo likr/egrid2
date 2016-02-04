@@ -27,19 +27,19 @@ const layout = (graph, {layerMargin, vertexMargin, edgeMargin}) => {
   const vertices = [];
   for (const u of graph.vertices()) {
     const d = graph.vertex(u);
-    const {text, width, height, scale} = d;
-    const {x, y} = positions.vertices[u];
-    vertices.push({u, x, y, width, height, scale, text});
+    const {x, y, width, height} = positions.vertices[u];
+    vertices.push({u, d, x, y, width, height});
   }
 
   const edges = [];
   for (const [u, v] of graph.edges()) {
     if (positions.edges[u][v]) {
+      const d = graph.edge(u, v);
       const {points, width, reversed} = positions.edges[u][v];
       while (points.length < 6) {
         points.push(points[points.length - 1]);
       }
-      edges.push({u, v, points, reversed, width});
+      edges.push({u, v, d, points, reversed, width});
     }
   }
 

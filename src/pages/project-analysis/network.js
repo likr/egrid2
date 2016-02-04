@@ -11,11 +11,11 @@ const view = () => {
       <Cache children={(invalidate) => {
         return <Network invalidate={invalidate} center={center} children={({vertices, edges}) => {
           return <g>
-            <g>{edges.map((d) => {
-              return <Edge key={`${d.u}:${d.v}`} {...d}/>
+            <g>{edges.map(({u, v, points, d}) => {
+              return <Edge key={`${u}:${v}`} points={points} {...d}/>
             })}</g>
-            <g>{vertices.map((d) => {
-              return <Vertex key={d.u} {...d}/>
+            <g>{vertices.map(({u, x, y, d}) => {
+              return <Vertex key={u} x={x} y={y} {...d}/>
             })}</g>
           </g>
         }}/>
