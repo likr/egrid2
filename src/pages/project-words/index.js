@@ -65,6 +65,18 @@ const handleInputSearchRight = (ctrl) => {
   };
 };
 
+const handleClearSearchLeft = (ctrl) => {
+  return () => {
+    ctrl.searchLeft = '';
+  };
+};
+
+const handleClearSearchRight = (ctrl) => {
+  return () => {
+    ctrl.searchRight = '';
+  };
+};
+
 const handleSave = (ctrl) => {
   return () => {
     const graph = Object.assign(JSON.parse(ctrl.project.graph), {
@@ -151,12 +163,19 @@ const view = (ctrl) => {
         <div className="two column row">
           <div className="column">
             <div className="ui vertical segment">
-              <div className="ui fluid icon input">
-                <input placeholder="Search..." oninput={handleInputSearchLeft(ctrl)}/>
-                <i className="icon search"/>
+              <div className="ui form">
+                <div className="field">
+                  <div className="ui fluid left icon right action input">
+                    <input placeholder="Search..." value={ctrl.searchLeft} oninput={handleInputSearchLeft(ctrl)}/>
+                    <i className="icon search"/>
+                    <button className="ui icon button" onclick={handleClearSearchLeft(ctrl)}>
+                      <i className="icon remove"/>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="ui vertical segment" ondrop={handleDropToList(ctrl)} ondragover={handleDragOver} style={{'max-height': '700px', 'overflow-y': 'scroll'}}>
+            <div className="ui vertical segment" ondrop={handleDropToList(ctrl)} ondragover={handleDragOver} style={{'max-height': 'calc(100vh - 300px)', 'overflow-y': 'scroll'}}>
               {words.map((item) => <Word {...item}/>)}
             </div>
           </div>
@@ -165,13 +184,22 @@ const view = (ctrl) => {
           </div>
           <div className="column">
             <div className="ui vertical segment">
-              <div className="ui fluid icon input">
-                <input placeholder="Search..." oninput={handleInputSearchRight(ctrl)}/>
-                <i className="icon search"/>
+              <div className="ui form">
+                <div className="field">
+                  <div className="ui fluid left icon right action input">
+                    <input placeholder="Search..." value={ctrl.searchRight} oninput={handleInputSearchRight(ctrl)}/>
+                    <i className="icon search"/>
+                    <button className="ui icon button" onclick={handleClearSearchRight(ctrl)}>
+                      <i className="icon remove"/>
+                    </button>
+                  </div>
+                </div>
+                <div className="field">
+                  <button className="ui button" onclick={handleAddGroup(ctrl)}>Add</button>
+                </div>
               </div>
-              <button className="ui button" onclick={handleAddGroup(ctrl)}>Add</button>
             </div>
-            <div className="ui vertical segment" style={{'max-height': '700px', 'overflow-y': 'scroll'}}>
+            <div className="ui vertical segment" style={{'max-height': 'calc(100vh - 300px)', 'overflow-y': 'scroll'}}>
               <div className="ui one cards">
                 {groups.map((group) => {
                   return <Group group={group} words={ctrl.words} handleDropToGroup={handleDropToGroup(ctrl, group)} handleDragOver={handleDragOver}/>
