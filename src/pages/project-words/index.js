@@ -1,3 +1,4 @@
+/* global confirm */
 import m from 'mithril'
 import {
   PROJECT_GET,
@@ -7,6 +8,7 @@ import Projects from '../../models/project'
 import {getProject, updateProject} from '../../intents/project'
 import Page from '../common/page'
 import Word from './word'
+import Group from './group'
 
 const handleDragOver = (event) => {
   event.preventDefault();
@@ -22,6 +24,7 @@ const handleDropToList = (ctrl) => {
       group.items.splice(group.items.indexOf(u), 1);
       delete data.d.parent;
     }
+    ctrl.saved = false;
   };
 };
 
@@ -35,6 +38,7 @@ const handleDropToGroup = (ctrl, group) => {
     }
     group.items.push(u);
     data.d.parent = group.id;
+    ctrl.saved = false;
   };
 };
 
@@ -46,18 +50,6 @@ const handleAddGroup = (ctrl) => {
       color: '#ffffff',
       items: [],
     });
-  };
-};
-
-const handleInputGroupName = (group) => {
-  return (event) => {
-    group.name = event.target.value;
-  };
-};
-
-const handleInputGroupColor = (group) => {
-  return (event) => {
-    group.color = event.target.value;
   };
 };
 
@@ -80,6 +72,7 @@ const handleSave = (ctrl) => {
 
 const controller = () => {
   const ctrl = {
+    saved: true,
     projectId: m.route.param('projectId'),
     project: null,
     words: {},
@@ -101,12 +94,17 @@ const controller = () => {
         m.endComputation();
         break;
       case PROJECT_UPDATE:
+        ctrl.saved = true;
         m.route(`/projects/${ctrl.projectId}`);
         break;
     }
   });
 
-  ctrl.onunload = () => {
+  ctrl.onunload = (event) => {
+    if (!ctrl.saved && !confirm('保存せずに終了しますか？')) {
+      event.preventDefault();
+      return;
+    }
     projectSubscription.dispose();
   };
 
@@ -132,7 +130,7 @@ const view = (ctrl) => {
       <div className="ui grid">
         <div className="row">
           <div className="column">
-            <button className="ui button" onclick={handleSave(ctrl)}>Save</button>
+            <button className="ui primary button" onclick={handleSave(ctrl)}>Save</button>
           </div>
         </div>
         <div className="two column row">
@@ -157,25 +155,7 @@ const view = (ctrl) => {
             <div className="ui vertical segment" style={{'max-height': '800px', 'overflow-y': 'scroll'}}>
               <div className="ui one cards">
                 {ctrl.groups.map((group) => {
-                  return <div className="ui card" ondrop={handleDropToGroup(ctrl, group)} ondragover={handleDragOver}>
-                    <div className="content">
-                      <div className="ui form">
-                        <div className="two fields">
-                          <div className="field">
-                            <label>Name</label>
-                            <input type="text" value={group.name} oninput={handleInputGroupName(group)}/>
-                          </div>
-                          <div className="field">
-                            <label>Color</label>
-                            <input type="color" value={group.color} oninput={handleInputGroupColor(group)}/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="content" style={{'min-height': '100px'}}>
-                      {group.items.map((u) => <Word {...ctrl.words[u]}/>)}
-                    </div>
-                  </div>
+                  return <Group group={group} words={ctrl.words} handleDropToGroup={handleDropToGroup(ctrl, group)} handleDragOver={handleDragOver}/>
                 })}
               </div>
             </div>
