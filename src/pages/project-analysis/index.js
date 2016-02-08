@@ -23,6 +23,13 @@ const uniqueConcat = (arr) => {
   return Array.from(new Set([].concat(...arr)));
 };
 
+const cutoff = (s, length) => {
+  if (s.length <= length) {
+    return s;
+  }
+  return s.substr(0, length - 1) + '...';
+};
+
 const parseGraph = (str) => {
   const graph = JSON.parse(str);
   if (graph.groups) {
@@ -64,6 +71,9 @@ const parseGraph = (str) => {
     }
     graph.edges = Object.values(visitedEdges);
   }
+  for (const vertex of graph.vertices) {
+    vertex.d.text = cutoff(vertex.d.text, 10);
+  }
   return graph;
 };
 
@@ -97,8 +107,8 @@ const controller = () => {
       case ANALYSIS_UPDATE_PARTICIPANTS:
         calcLayout(state.graph, {
           layerMargin: 50,
-          vertexMargin: 10,
-          edgeMargin: 5,
+          vertexMargin: 15,
+          edgeMargin: 15,
           vertexScale: ({d}) => Math.sqrt(participantCount(d)),
           edgeScale: ({d}) => participantCount(d),
         });
