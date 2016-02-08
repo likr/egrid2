@@ -1,10 +1,17 @@
 {
   "name": "E-Grid",
-  "version": "1",
+  "short_name": "E-Grid",
+  "description": "Visual Analytics System for Laddering Interviews",
+  "version": "1.0.0.1",
   "manifest_version": 2,
   "app": {
     "background": {
       "scripts": ["background.js"]
     }
+  },
+  "icons": {
+    "16": "images/icon/icon16.png",
+    "48": "images/icon/icon48.png",
+    "128": "images/icon/icon128.png"
   }
 }
