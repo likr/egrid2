@@ -7,6 +7,7 @@ const graphToJson = (graph) => {
         d: {
           text: d.text,
           participants: d.participants,
+          parent: d.parent,
         },
       };
     }),
