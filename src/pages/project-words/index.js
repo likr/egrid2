@@ -110,6 +110,9 @@ const controller = () => {
           ctrl.words[vertex.u] = vertex;
         }
         ctrl.groups = graph.groups || [];
+        for (const group of ctrl.groups) {
+          group.items = group.items.filter((u) => ctrl.words[u]);
+        }
         m.endComputation();
         break;
       case PROJECT_UPDATE:

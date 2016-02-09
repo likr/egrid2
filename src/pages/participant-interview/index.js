@@ -61,7 +61,8 @@ const handleBack = () => {
 };
 
 const handleSave = ({project, graph}) => {
-  project.graph = JSON.stringify(graphToJson(graph));
+  const baseGraph = JSON.parse(project.graph);
+  project.graph = JSON.stringify(Object.assign(baseGraph, graphToJson(graph)));
   updateProject(project);
 };
 

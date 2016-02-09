@@ -38,13 +38,14 @@ const parseGraph = (str) => {
       vertices[vertex.u] = vertex;
     }
     const groupVertices = graph.groups.map(({id, name, color, items}) => {
+      const filteredItems = items.filter((u) => vertices[u]);
       return {
         u: `group${id}`,
         d: {
           text: name,
           color,
-          items: items.map((u) => vertices[u]),
-          participants: uniqueConcat(items.map((u) => vertices[u].d.participants)),
+          items: filteredItems.map((u) => vertices[u]),
+          participants: uniqueConcat(filteredItems.map((u) => vertices[u].d.participants)),
         },
       };
     });
