@@ -28,6 +28,7 @@ class Word extends React.Component {
     const {x0, y0, rotate0, size0} = this.state;
     return (
       <text
+          ref="word"
           className="unselectable cursor-pointer"
           fontSize={size0}
           fontFamily='Impact'

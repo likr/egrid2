@@ -214,7 +214,7 @@ class ProjectAnalysis extends React.Component {
     const {vertices, edges, contentWidth, contentHeight, words, participants, threshold} = this.state;
     return (
       <Fullscreen>
-        <div style={{position: 'absolute', top: '40px', left: 0, right: 0, bottom: 0}}>
+        <div style={{position: 'absolute', top: '40px', left: 0, right: '320px', bottom: 0}}>
           <Network
               vertices={vertices}
               edges={edges}
@@ -226,10 +226,28 @@ class ProjectAnalysis extends React.Component {
             <i className="icon arrow left"/>
           </button>
         </div>
-        <div className="ui one cards" style={{position: 'absolute', top: '140px', left: '20px', width: '300px'}}>
-          <ParticipantList participants={participants}/>
-          <FilteringThreshold value={threshold}/>
-          <WordCloud width={wordCloudWidth} height={wordCloudHeight} words={words}/>
+        <div
+            style={{
+              position: 'absolute',
+              top: '40px',
+              bottom: 0,
+              right: 0,
+              width: '320px',
+              padding: '10px',
+              boxShadow: '0 0 10px',
+            }}>
+          <div style={{maxHeight: '100%', overflowY: 'scroll'}}>
+            <div style={{marginBottom: '30px'}}>
+              <ParticipantList participants={participants}/>
+            </div>
+            <div style={{marginBottom: '30px'}}>
+              <FilteringThreshold value={threshold}/>
+            </div>
+            <div style={{marginBottom: '30px'}}>
+              <WordCloud width={wordCloudWidth} height={wordCloudHeight} words={words}/>
+            </div>
+          </div>
+
         </div>
       </Fullscreen>
     );
