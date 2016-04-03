@@ -10,7 +10,7 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           presets: ['es2015'],
-          plugins: ['mjsx'],
+          plugins: ['transform-react-jsx'],
         },
       },
     ],
@@ -23,5 +23,8 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'app'),
     filename: '[name].js',
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
   },
 };
