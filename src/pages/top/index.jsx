@@ -35,6 +35,9 @@ class Top extends React.Component {
               </div>
               <div className="ui vertical segment">
                 <h3 className="ui header">Contact</h3>
+                <ul>
+                  <li><a href="https://groups.google.com/forum/#!forum/egrid-user-group">E-Grid User Group (メーリングリスト)</a></li>
+                </ul>
               </div>
             </div>
           </div>
