@@ -11,7 +11,7 @@ class Page extends React.Component {
               backgroundColor: '#fff',
               padding: '50px 10px 10px',
               marginBottom: '40px',
-              boxShadow: '0 0 5px',
+              boxShadow: '0 0 20px',
               minHeight: 'calc(100vh - 40px)',
             }}>
           {this.props.children}
