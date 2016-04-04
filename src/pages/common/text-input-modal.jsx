@@ -8,6 +8,9 @@ class TextInputModal extends React.Component {
         this.props.onApprove(this.refs.text.value, this.context);
       },
     });
+    $(this.refs.form).on('submit', () => {
+      this.refs.approveButton.click();
+    });
   }
 
   render() {
@@ -16,7 +19,7 @@ class TextInputModal extends React.Component {
       <div ref="modal" className="ui modal">
         <div className="header">{title}</div>
         <div className="content">
-          <form className="ui form">
+          <form ref="form" className="ui form">
             <div className="field">
               <label>評価項目の入力</label>
               <input ref="text"/>
@@ -25,7 +28,7 @@ class TextInputModal extends React.Component {
         </div>
         <div className="actions">
           <button className="ui cancel button">Cancel</button>
-          <button className="ui primary approve button">OK</button>
+          <button ref="approveButton" className="ui primary approve button">OK</button>
         </div>
       </div>
     );
