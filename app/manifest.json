@@ -2,7 +2,7 @@
   "name": "E-Grid",
   "short_name": "E-Grid",
   "description": "Visual Analytics System for Laddering Interviews",
-  "version": "1.0.1.0",
+  "version": "1.0.1.1",
   "manifest_version": 2,
   "app": {
     "background": {
