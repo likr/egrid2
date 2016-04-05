@@ -63,13 +63,13 @@ class Edge extends React.Component {
   }
 
   render() {
-    const {reversed} = this.props;
+    const {reversed, strokeColor} = this.props;
     const {points0, width0} = this.state;
     return (
       <g ref="edge">
         <path
             fill='none'
-            stroke='#888'
+            stroke={strokeColor || '#888'}
             strokeWidth={width0}
             strokeDasharray={reversed ? 5 : 0}
             d={svgPath(points0)}

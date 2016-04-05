@@ -1,6 +1,8 @@
 import Rx from 'rx'
 import {
   ANALYSIS_INIT,
+  ANALYSIS_SELECT_VERTEX,
+  ANALYSIS_SELECT_VERTICES_BY_WORD,
   ANALYSIS_SET_THRESHOLD,
   ANALYSIS_UPDATE_PARTICIPANTS,
 } from '../constants'
@@ -15,10 +17,17 @@ export const initAnalysis = (graph, participants) => {
   });
 };
 
-export const updateParticipants = (participants) => {
+export const selectVertex = (u) => {
   intentSubject.onNext({
-    type: ANALYSIS_UPDATE_PARTICIPANTS,
-    participants,
+    type: ANALYSIS_SELECT_VERTEX,
+    u,
+  });
+};
+
+export const selectVerticesByWord = (word) => {
+  intentSubject.onNext({
+    type: ANALYSIS_SELECT_VERTICES_BY_WORD,
+    word,
   });
 };
 
@@ -26,5 +35,12 @@ export const setThreshold = (threshold) => {
   intentSubject.onNext({
     type: ANALYSIS_SET_THRESHOLD,
     threshold,
+  });
+};
+
+export const updateParticipants = (participants) => {
+  intentSubject.onNext({
+    type: ANALYSIS_UPDATE_PARTICIPANTS,
+    participants,
   });
 };

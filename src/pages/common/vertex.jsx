@@ -2,6 +2,8 @@ import React from 'react'
 import d3 from 'd3'
 import TextImage from '../views/text-image'
 
+const nop = () => {};
+
 class Vertex extends React.Component {
   constructor(props) {
     super(props);
@@ -32,12 +34,13 @@ class Vertex extends React.Component {
 
   render() {
     const r = 3;
-    const {width, height, color, text, children} = this.props;
+    const {width, height, color, strokeColor, text, children, onClick, selected} = this.props;
     const {x0, y0, scale0} = this.state;
     return (
       <g
           ref="vertex"
           className="cursor-pointer"
+          onClick={onClick || nop}
           transform={`translate(${x0},${y0})scale(${scale0})`}>
         <rect
             x={-width / 2}
@@ -45,9 +48,13 @@ class Vertex extends React.Component {
             rx={r}
             width={width}
             height={height}
-            stroke='#888'
-            fill={color || 'none'}/>
-        <TextImage text={text} width={width} height={height}/>
+            stroke={strokeColor || '#888'}
+            strokeWidth={selected ? 2 : 1}
+            fill={color || '#fff'}/>
+        <TextImage
+            text={text}
+            width={width}
+            height={height}/>
         {children}
       </g>
     );

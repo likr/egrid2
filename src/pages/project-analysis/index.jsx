@@ -2,18 +2,10 @@ import React from 'react'
 import d3 from 'd3';
 import d3cloud from 'd3-cloud'
 import {Observable} from 'rx'
-import {
-  ANALYSIS_INIT,
-  ANALYSIS_SET_THRESHOLD,
-  ANALYSIS_UPDATE_PARTICIPANTS,
-} from '../../constants'
 import {initAnalysis} from '../../intents/analysis'
-import {calcLayout} from '../../intents/layout-worker'
-import {calcMorph} from '../../intents/morph-worker'
 import {listParticipants} from '../../intents/participant'
 import {getProject} from '../../intents/project'
 import Analysis from '../../models/analysis'
-import LayoutWorker from '../../models/layout-worker'
 import MorphWorker from '../../models/morph-worker'
 import Participants from '../../models/participant'
 import Projects from '../../models/project'
@@ -141,42 +133,16 @@ class ProjectAnalysis extends React.Component {
         initAnalysis(parseGraph(project.graph), participants);
       });
 
-    this.analysisSubscription = Analysis.subscribe(({type, state}) => {
-      const participantIds = new Set(Object.values(state.participants)
-        .filter(({checked}) => checked)
-        .map(({participant}) => participant.id));
-      const participantCount = (d) => {
-        return d.participants ? d.participants.filter((id) => participantIds.has(id)).length : 1;
-      };
-      switch (type) {
-        case ANALYSIS_INIT:
-        case ANALYSIS_SET_THRESHOLD:
-        case ANALYSIS_UPDATE_PARTICIPANTS:
-          calcLayout(state.graph, {
-            layerMargin: 50,
-            vertexMargin: 15,
-            edgeMargin: 15,
-            vertexScale: ({d}) => Math.sqrt(participantCount(d)),
-            edgeScale: ({d}) => participantCount(d),
-          });
-          break;
-        default:
-      }
+    this.analysisSubscription = Analysis.subscribe((state) => {
+      const {vertices, edges, width, height} = state.layout;
       this.setState({
         participants: Object.values(state.participants),
         threshold: state.threshold,
-      });
-    });
-
-    this.layoutWorkerSubscription = LayoutWorker.subscribe(({data}) => {
-      const {vertices, edges, width, height} = data;
-      this.setState({
         vertices,
         edges,
         contentWidth: width,
         contentHeight: height,
       });
-      calcMorph(vertices.map(({d}) => d.text));
     });
 
     this.morphWorkerSubscription = MorphWorker.subscribe(({data}) => {
@@ -206,7 +172,6 @@ class ProjectAnalysis extends React.Component {
   componentWillUnmount() {
     this.initSubscription.dispose();
     this.analysisSubscription.dispose();
-    this.layoutWorkerSubscription.dispose();
     this.morphWorkerSubscription.dispose();
   }
 

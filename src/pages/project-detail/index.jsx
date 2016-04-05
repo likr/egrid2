@@ -60,8 +60,8 @@ class ProjectDetail extends React.Component {
         </div>
         <h3 className="ui horizontal divider header">Analysis</h3>
         <div>
-          <Link className="ui button" to={`/projects/${projectId}/analysis`}>Open</Link>
-          <Link className="ui button" to={`/projects/${projectId}/words`}>Words</Link>
+          <Link className="ui primary button" to={`/projects/${projectId}/analysis`}>Open</Link>
+          <Link className="ui secondary button" to={`/projects/${projectId}/words`}>Words</Link>
         </div>
         <h3 className="ui horizontal divider header">Participants</h3>
         <div>

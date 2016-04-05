@@ -35,11 +35,13 @@ const layout = (graph, {layerMargin, vertexMargin, edgeMargin}) => {
   for (const [u, v] of graph.edges()) {
     if (positions.edges[u][v]) {
       const d = graph.edge(u, v);
+      const ud = graph.vertex(u);
+      const vd = graph.vertex(v);
       const {points, width, reversed} = positions.edges[u][v];
       while (points.length < 6) {
         points.push(points[points.length - 1]);
       }
-      edges.push({u, v, d, points, reversed, width});
+      edges.push({u, v, ud, vd, d, points, reversed, width});
     }
   }
 

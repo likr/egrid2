@@ -35,7 +35,7 @@ const calc = (data, options) => {
   }
   for (const {u, v, d} of data.edges) {
     d.scale = edgeScale({u, v, d})
-    d.width = 2;
+    d.width = 3;
   }
   data.options = {layerMargin, vertexMargin, edgeMargin};
   subject.onNext(data);

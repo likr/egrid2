@@ -26,4 +26,7 @@ export const CALC_MORPH = Symbol('calc-morph')
 export const CALC_LAYOUT = Symbol('calc-layout')
 
 export const ANALYSIS_INIT = Symbol('analysis-init')
+export const ANALYSIS_SELECT_VERTEX = Symbol('analysis-select-vertex')
+export const ANALYSIS_SELECT_VERTICES_BY_WORD = Symbol('analysis-select-vertices-by-word')
+export const ANALYSIS_SET_THRESHOLD = Symbol('analysis-set-threshold')
 export const ANALYSIS_UPDATE_PARTICIPANTS = Symbol('analysis-update-participants')
