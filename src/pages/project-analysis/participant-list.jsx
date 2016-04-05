@@ -7,14 +7,12 @@ class ParticipantList extends React.Component {
     return (
       <div>
         <h4 className="ui header">Participants</h4>
-        <div style={{maxHeight: '300px', overflowY: 'scroll'}}>
-          <div className="ui form">
-            {participants.map(({participant, checked}) => {
-              return <div key={participant.id} className="field">
-                <CheckBox participant={participant} checked={checked}/>
-              </div>
-            })}
-          </div>
+        <div className="ui form">
+          {participants.map(({participant, checked}) => {
+            return <div key={participant.id} className="field">
+              <CheckBox participant={participant} checked={checked}/>
+            </div>
+          })}
         </div>
       </div>
     );

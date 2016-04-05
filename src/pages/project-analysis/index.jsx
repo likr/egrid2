@@ -24,7 +24,7 @@ import ParticipantList from './participant-list'
 import WordCloud from './wordcloud'
 
 const wordCloudWidth = 300;
-const wordCloudHeight = 300;
+const wordCloudHeight = 500;
 
 const uniqueConcat = (arr) => {
   return Array.from(new Set([].concat(...arr)));
@@ -214,7 +214,7 @@ class ProjectAnalysis extends React.Component {
     const {vertices, edges, contentWidth, contentHeight, words, participants, threshold} = this.state;
     return (
       <Fullscreen>
-        <div style={{position: 'absolute', top: '40px', left: 0, right: '320px', bottom: 0}}>
+        <div style={{position: 'absolute', top: '40px', left: 0, right: `${wordCloudWidth + 40}px`, bottom: 0}}>
           <Network
               vertices={vertices}
               edges={edges}
@@ -232,11 +232,11 @@ class ProjectAnalysis extends React.Component {
               top: '40px',
               bottom: 0,
               right: 0,
-              width: '320px',
+              width: `${wordCloudWidth + 40}px`,
               padding: '10px',
               boxShadow: '0 0 10px',
             }}>
-          <div style={{maxHeight: '100%', overflowY: 'scroll'}}>
+          <div style={{height: '100%', overflowY: 'scroll'}}>
             <div style={{marginBottom: '30px'}}>
               <ParticipantList participants={participants}/>
             </div>
