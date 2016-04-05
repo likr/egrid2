@@ -26,12 +26,9 @@ class Top extends React.Component {
             <div className="sixteen wide column">
               <div className="ui vertical segment">
                 <h3 className="ui header">News</h3>
-              </div>
-              <div className="ui vertical segment">
-                <h3 className="ui header">Features</h3>
-              </div>
-              <div className="ui vertical segment">
-                <h3 className="ui header">Citation</h3>
+                <ul>
+                  <li>Chrome Web Storeでの公開を開始しました。 (2016/04/05)</li>
+                </ul>
               </div>
               <div className="ui vertical segment">
                 <h3 className="ui header">Contact</h3>
