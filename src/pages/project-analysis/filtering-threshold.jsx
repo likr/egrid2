@@ -1,27 +1,43 @@
+/* global $ */
 import React from 'react'
 import {setThreshold} from '../../intents/analysis'
 
 class FilteringThreshold extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentValue: props.value,
+    };
+  }
+
+  componentDidMount() {
+    $(this.refs.slider)
+      .on('input', (event) => {
+        this.setState({
+          currentValue: +event.target.value,
+        });
+      })
+      .on('change', (event) => {
+        setThreshold(+event.target.value);
+      });
+  }
+
   render() {
-    const {value} = this.props;
+    const {currentValue} = this.state;
     return (
       <div>
         <h4 className="ui header">Filtering Threshold</h4>
         <div className="ui form">
           <div className="field">
-            <label>{value.toFixed(2)}</label>
+            <label>{currentValue.toFixed(2)}</label>
             <input
+                ref="slider"
                 type="range" style={{width: '100%'}}
-                min="0" max="1" step="0.01" value={value}
-                onChange={this.handleChange.bind(this)}/>
+                min="0" max="1" step="0.01"/>
           </div>
         </div>
       </div>
     );
-  }
-
-  handleChange(event) {
-    setThreshold(+event.target.value);
   }
 }
 
