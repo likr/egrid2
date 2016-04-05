@@ -22,6 +22,12 @@ class FilteringThreshold extends React.Component {
       });
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      currentValue: nextProps.value,
+    });
+  }
+
   render() {
     const {currentValue} = this.state;
     return (
@@ -33,7 +39,7 @@ class FilteringThreshold extends React.Component {
             <input
                 ref="slider"
                 type="range" style={{width: '100%'}}
-                min="0" max="1" step="0.01"/>
+                min="0" max="1" step="0.01" value={currentValue}/>
           </div>
         </div>
       </div>
