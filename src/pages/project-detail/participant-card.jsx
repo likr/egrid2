@@ -1,7 +1,7 @@
 /* global FileReader */
 import React from 'react'
 import { Link } from 'react-router'
-import Graph from 'egraph/lib/graph'
+import Graph from 'egraph/graph'
 import graphToJson from '../../utils/graph-to-json'
 import { removeParticipant, updateParticipant } from '../../intents/participant'
 import { updateProject } from '../../intents/project'

@@ -9,8 +9,7 @@ import TextInputModal from '../common/text-input-modal'
 class Network extends React.Component {
   render () {
     const {vertices, edges, contentWidth, contentHeight} = this.props
-    const content = (
-    <g>
+    const content = <g>
       <g>
         {edges.map(({u, v, points, d}) => {
            return <Edge key={`${u}:${v}`} points={points} {...d}/>
@@ -51,25 +50,21 @@ class Network extends React.Component {
          })}
       </g>
     </g>
-    )
-    return (
-    <div style={{width: '100%', height: '100%'}}>
+    return <div style={{width: '100%', height: '100%'}}>
       <ZoomableSvg
         className="cursor-move"
         width="100%"
         height="100%"
         contentWidth={contentWidth}
         contentHeight={contentHeight}
-        children={;({x, y, scale}) => {
-                    return <g transform={`translate(${x},${y})scale(${scale})`}>
-                             {content}
-                           </g>
-                  }} />
+        children={({x, y, scale}) => {
+          return <g transform={`translate(${x},${y})scale(${scale})`}>{content}</g>
+        }
+      }/>
       <TextInputModal ref="ladderUpModal" title="Ladder Up" onApprove={this.handleApproveLadderUpModal.bind(this)} />
       <TextInputModal ref="ladderDownModal" title="Ladder Down" onApprove={this.handleApproveLadderDownModal.bind(this)} />
       <TextInputModal ref="editModal" title="Edit" onApprove={this.handleApproveEditModal.bind(this)} />
     </div>
-    )
   }
 
   handleClickLadderUpButton (v) {

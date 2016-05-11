@@ -1,7 +1,7 @@
 import Rx from 'rx'
-import Graph from 'egraph/lib/graph'
-import katz from 'egraph/lib/network/centrality/katz'
-import CoarseGrainingTransformer from 'egraph/lib/transformer/coarse-graining'
+import Graph from 'egraph/graph'
+import katz from 'egraph/network/centrality/katz'
+import CoarseGrainingTransformer from 'egraph/transformer/coarse-graining'
 import { ANALYSIS_INIT, ANALYSIS_SELECT_VERTEX, ANALYSIS_SELECT_VERTICES_BY_WORD, ANALYSIS_SET_THRESHOLD, ANALYSIS_UPDATE_PARTICIPANTS,
 } from '../constants'
 import { intentSubject } from '../intents/analysis'

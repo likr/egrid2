@@ -19,8 +19,7 @@ class CheckBox extends React.Component {
     const {participant, checked} = this.props
     return (
     <div ref="checkbox" className="ui checkbox">
-      <input type="checkbox" checked={checked} onChange={;() => {
-                                                         }} />
+      <input type="checkbox" checked={checked} onChange={() => {}}/>
       <label>
         {participant.name}
       </label>

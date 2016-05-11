@@ -1,4 +1,4 @@
-import Graph from 'egraph/lib/graph'
+import Graph from 'egraph/graph'
 
 const copy = (g) => {
   const newGraph = new Graph()

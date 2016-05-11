@@ -67,11 +67,11 @@ class Network extends React.Component {
       height="100%"
       contentWidth={contentWidth}
       contentHeight={contentHeight}
-      children={;({x, y, scale}) => {
-                  return <g transform={`translate(${x},${y})scale(${scale})`}>
-                           {content}
-                         </g>
-                }} />
+      children={({x, y, scale}) => {
+        return <g transform={`translate(${x},${y})scale(${scale})`}>
+          {content}
+        </g>
+        }} />
     )
   }
 

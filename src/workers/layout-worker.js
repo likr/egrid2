@@ -1,7 +1,7 @@
 /* eslint-env worker */
 
-import Graph from 'egraph/lib/graph'
-import Layouter from 'egraph/lib/layouter/sugiyama'
+import Graph from 'egraph/graph'
+import Layouter from 'egraph/layouter/sugiyama'
 
 const calcSize = (vertices) => {
   const left = Math.min(0, ...vertices.map(({x, width}) => x - width / 2))
@@ -10,7 +10,7 @@ const calcSize = (vertices) => {
   const bottom = Math.max(0, ...vertices.map(({y, height}) => y + height / 2))
   return {
     width: right - left,
-    height: bottom - top,
+    height: bottom - top
   }
 }
 

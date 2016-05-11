@@ -1,5 +1,5 @@
 import Rx from 'rx'
-import Graph from 'egraph/lib/graph'
+import Graph from 'egraph/graph'
 import copy from '../utils/copy-graph'
 import { GRAPH_ADD_EDGE, GRAPH_ADD_VERTEX, GRAPH_CLEAR, GRAPH_LOAD, GRAPH_REDO, GRAPH_REMOVE_EDGE, GRAPH_REMOVE_VERTEX, GRAPH_UNDO, GRAPH_UPDATE_EDGE, GRAPH_UPDATE_VERTEX,
 } from '../constants'
