@@ -1,5 +1,5 @@
 import Kinto from 'kinto'
 
-const db = new Kinto();
+const db = new Kinto()
 
 export default db

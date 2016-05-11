@@ -1,10 +1,10 @@
 import React from 'react'
-import d3 from 'd3';
+import d3 from 'd3'
 import d3cloud from 'd3-cloud'
-import {Observable} from 'rx'
-import {initAnalysis} from '../../intents/analysis'
-import {listParticipants} from '../../intents/participant'
-import {getProject} from '../../intents/project'
+import { Observable } from 'rx'
+import { initAnalysis } from '../../intents/analysis'
+import { listParticipants } from '../../intents/participant'
+import { getProject } from '../../intents/project'
 import Analysis from '../../models/analysis'
 import MorphWorker from '../../models/morph-worker'
 import Participants from '../../models/participant'
@@ -15,29 +15,29 @@ import FilteringThreshold from './filtering-threshold'
 import ParticipantList from './participant-list'
 import WordCloud from './wordcloud'
 
-const wordCloudWidth = 300;
-const wordCloudHeight = 500;
+const wordCloudWidth = 300
+const wordCloudHeight = 500
 
 const uniqueConcat = (arr) => {
-  return Array.from(new Set([].concat(...arr)));
-};
+  return Array.from(new Set([].concat(...arr)))
+}
 
 const cutoff = (s, length) => {
   if (s.length <= length) {
-    return s;
+    return s
   }
-  return s.substr(0, length - 1) + '...';
-};
+  return s.substr(0, length - 1) + '...'
+}
 
 const parseGraph = (str) => {
-  const graph = JSON.parse(str);
+  const graph = JSON.parse(str)
   if (graph.groups) {
     const vertices = {}
     for (const vertex of graph.vertices) {
-      vertices[vertex.u] = vertex;
+      vertices[vertex.u] = vertex
     }
     const groupVertices = graph.groups.map(({id, name, color, items}) => {
-      const filteredItems = items.filter((u) => vertices[u]);
+      const filteredItems = items.filter((u) => vertices[u])
       return {
         u: `group${id}`,
         d: {
@@ -46,38 +46,38 @@ const parseGraph = (str) => {
           items: filteredItems.map((u) => vertices[u]),
           participants: uniqueConcat(filteredItems.map((u) => vertices[u].d.participants)),
         },
-      };
-    });
+      }
+    })
     graph.vertices = graph.vertices
       .filter(({d}) => d.parent == undefined)
-      .concat(groupVertices);
-    const visitedEdges = {};
+      .concat(groupVertices)
+    const visitedEdges = {}
     for (const edge of graph.edges) {
-      const {u, v} = edge;
+      const {u, v} = edge
       if (vertices[u].d.parent != undefined) {
-        edge.u = `group${vertices[u].d.parent}`;
+        edge.u = `group${vertices[u].d.parent}`
       }
       if (vertices[v].d.parent != undefined) {
-        edge.v = `group${vertices[v].d.parent}`;
+        edge.v = `group${vertices[v].d.parent}`
       }
-      const key = `${edge.u}:${edge.v}`;
+      const key = `${edge.u}:${edge.v}`
       if (visitedEdges[key]) {
         visitedEdges[key].d.participants = uniqueConcat([
           visitedEdges[key].d.participants,
-          edge.d.participants]);
+          edge.d.participants])
       } else {
-        visitedEdges[key] = edge;
+        visitedEdges[key] = edge
       }
     }
-    graph.edges = Object.values(visitedEdges);
+    graph.edges = Object.values(visitedEdges)
   }
   for (const vertex of graph.vertices) {
-    vertex.d.text = cutoff(vertex.d.text, 10);
+    vertex.d.text = cutoff(vertex.d.text, 10)
   }
-  return graph;
-};
+  return graph
+}
 
-const pos = new Set(['名詞', '動詞', '形容詞']);
+const pos = new Set(['名詞', '動詞', '形容詞'])
 const stopWords = new Set([
   ' ',
   '、',
@@ -89,32 +89,32 @@ const stopWords = new Set([
   'なる',
   'できる',
   'わかる',
-]);
+])
 
 const count = (data) => {
-  const wordCount = new Map();
+  const wordCount = new Map()
   for (const paths of data) {
     for (const path of paths) {
-      const word = path.basic_form === '*' ? path.surface_form : path.basic_form;
+      const word = path.basic_form === '*' ? path.surface_form : path.basic_form
       if (!pos.has(path.pos) || stopWords.has(word)) {
-        continue;
+        continue
       }
       if (!wordCount.has(word)) {
-        wordCount.set(word, 0);
+        wordCount.set(word, 0)
       }
-      wordCount.set(word, wordCount.get(word) + 1);
+      wordCount.set(word, wordCount.get(word) + 1)
     }
   }
   const words = Array.from(wordCount.entries()).map(([text, count]) => {
-    return {text, count};
-  });
-  words.sort((word1, word2) => word2.count - word1.count);
-  return words;
-};
+    return {text, count}
+  })
+  words.sort((word1, word2) => word2.count - word1.count)
+  return words
+}
 
 class ProjectAnalysis extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       participants: [],
       threshold: 0,
@@ -126,15 +126,15 @@ class ProjectAnalysis extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.initSubscription = Observable
       .zip(Projects.map(({data}) => data), Participants.map(({data}) => data))
       .subscribe(([project, participants]) => {
-        initAnalysis(parseGraph(project.graph), participants);
-      });
+        initAnalysis(parseGraph(project.graph), participants)
+      })
 
     this.analysisSubscription = Analysis.subscribe((state) => {
-      const {vertices, edges, width, height} = state.layout;
+      const {vertices, edges, width, height} = state.layout
       this.setState({
         participants: Object.values(state.participants),
         threshold: state.threshold,
@@ -142,14 +142,14 @@ class ProjectAnalysis extends React.Component {
         edges,
         contentWidth: width,
         contentHeight: height,
-      });
-    });
+      })
+    })
 
     this.morphWorkerSubscription = MorphWorker.subscribe(({data}) => {
-      const words = count(data);
+      const words = count(data)
       const textSize = d3.scale.linear()
         .range([10, 30])
-        .domain(d3.extent(words, ({count}) => count));
+        .domain(d3.extent(words, ({count}) => count))
       d3cloud().size([wordCloudWidth, wordCloudHeight])
         .words(words)
         .padding(1)
@@ -159,73 +159,63 @@ class ProjectAnalysis extends React.Component {
         .on('end', (layout) => {
           this.setState({
             words: layout,
-          });
+          })
         })
-        .start();
-    });
+        .start()
+    })
 
-    const {projectId} = this.props.params;
-    getProject(projectId);
-    listParticipants(projectId);
+    const {projectId} = this.props.params
+    getProject(projectId)
+    listParticipants(projectId)
   }
 
-  componentWillUnmount() {
-    this.initSubscription.dispose();
-    this.analysisSubscription.dispose();
-    this.morphWorkerSubscription.dispose();
+  componentWillUnmount () {
+    this.initSubscription.dispose()
+    this.analysisSubscription.dispose()
+    this.morphWorkerSubscription.dispose()
   }
 
-  render() {
-    const {vertices, edges, contentWidth, contentHeight, words, participants, threshold} = this.state;
+  render () {
+    const {vertices, edges, contentWidth, contentHeight, words, participants, threshold} = this.state
     return (
-      <Fullscreen>
-        <div style={{position: 'absolute', top: '40px', left: 0, right: `${wordCloudWidth + 40}px`, bottom: 0}}>
-          <Network
-              vertices={vertices}
-              edges={edges}
-              contentWidth={contentWidth}
-              contentHeight={contentHeight}/>
-        </div>
-        <div style={{position: 'absolute', left: '20px', top: '60px'}}>
-          <button className="ui massive circular icon button" onClick={this.handleClickBackButton.bind(this)}>
-            <i className="icon arrow left"/>
-          </button>
-        </div>
-        <div
-            style={{
-              position: 'absolute',
-              top: '40px',
-              bottom: 0,
-              right: 0,
-              width: `${wordCloudWidth + 40}px`,
-              padding: '10px',
-              boxShadow: '0 0 10px',
-            }}>
-          <div style={{height: '100%', overflowY: 'scroll'}}>
-            <div style={{marginBottom: '30px'}}>
-              <ParticipantList participants={participants}/>
-            </div>
-            <div style={{marginBottom: '30px'}}>
-              <FilteringThreshold value={threshold}/>
-            </div>
-            <div style={{marginBottom: '30px'}}>
-              <WordCloud width={wordCloudWidth} height={wordCloudHeight} words={words}/>
-            </div>
+    <Fullscreen>
+      <div style={{position: 'absolute', top: '40px', left: 0, right: `${wordCloudWidth + 40}px`, bottom: 0}}>
+        <Network
+          vertices={vertices}
+          edges={edges}
+          contentWidth={contentWidth}
+          contentHeight={contentHeight} />
+      </div>
+      <div style={{position: 'absolute', left: '20px', top: '60px'}}>
+        <button className="ui massive circular icon button" onClick={this.handleClickBackButton.bind(this)}>
+          <i className="icon arrow left" />
+        </button>
+      </div>
+      <div style={{  position: 'absolute',  top: '40px',  bottom: 0,  right: 0,  width: `${wordCloudWidth + 40}px`,  padding: '10px',  boxShadow: '0 0 10px',}}>
+        <div style={{height: '100%', overflowY: 'scroll'}}>
+          <div style={{marginBottom: '30px'}}>
+            <ParticipantList participants={participants} />
           </div>
-
+          <div style={{marginBottom: '30px'}}>
+            <FilteringThreshold value={threshold} />
+          </div>
+          <div style={{marginBottom: '30px'}}>
+            <WordCloud width={wordCloudWidth} height={wordCloudHeight} words={words} />
+          </div>
         </div>
-      </Fullscreen>
-    );
+      </div>
+    </Fullscreen>
+    )
   }
 
-  handleClickBackButton() {
-    const {projectId} = this.props.params;
-    this.context.router.push(`/projects/${projectId}`);
+  handleClickBackButton () {
+    const {projectId} = this.props.params
+    this.context.router.push(`/projects/${projectId}`)
   }
 }
 
 ProjectAnalysis.contextTypes = {
   router: React.PropTypes.object,
-};
+}
 
 export default ProjectAnalysis

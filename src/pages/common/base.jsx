@@ -1,17 +1,18 @@
-import React from 'react';
-import {Link} from 'react-router'
+import React from 'react'
+import { Link } from 'react-router'
 
 class Base extends React.Component {
-  render() {
+  render () {
     return (
-      <div>
-        <div className="ui fixed inverted menu" style={{backgroundColor: '#303a48'}}>
-          <div className="ui container">
-            <Link className="header item" to="/">E-Grid</Link>
-          </div>
+    <div>
+      <div className="ui fixed inverted menu" style={{backgroundColor: '#303a48'}}>
+        <div className="ui container">
+          <Link className="header item" to="/"> E-Grid
+          </Link>
         </div>
-        {this.props.children}
       </div>
+      {this.props.children}
+    </div>
     )
   }
 }

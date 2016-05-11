@@ -1,5 +1,5 @@
 const partial = (f, ...args) => {
-  return f.bind(null, ...args);
-};
+  return f.bind(null, ...args)
+}
 
 export default partial

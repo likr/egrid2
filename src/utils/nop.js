@@ -1,3 +1,4 @@
-const nop = () => {};
+const nop = () => {
+}
 
 export default nop

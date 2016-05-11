@@ -1,14 +1,14 @@
-import Graph from 'egraph/lib/graph';
+import Graph from 'egraph/lib/graph'
 
 const copy = (g) => {
-  const newGraph = new Graph();
+  const newGraph = new Graph()
   for (const u of g.vertices()) {
-    newGraph.addVertex(u, Object.assign({}, g.vertex(u)));
+    newGraph.addVertex(u, Object.assign({}, g.vertex(u)))
   }
   for (const [u, v] of g.edges()) {
-    newGraph.addEdge(u, v, Object.assign({}, g.edge(u, v)));
+    newGraph.addEdge(u, v, Object.assign({}, g.edge(u, v)))
   }
-  return newGraph;
-};
+  return newGraph
+}
 
-export default copy;
+export default copy
