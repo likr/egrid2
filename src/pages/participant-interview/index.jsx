@@ -1,33 +1,39 @@
 import React from 'react'
+import copy from 'egraph/graph/copy'
+import CycleRemovalTransformer from 'egraph/transformer/cycle-removal'
 import graphToJson from '../../utils/graph-to-json'
-import { PROJECT_GET, PROJECT_UPDATE,
+import {
+  PROJECT_GET,
+  PROJECT_UPDATE
 } from '../../constants'
-import { updateVertex, load, undo, redo } from '../../intents/graph'
-import { calcLayout } from '../../intents/layout-worker'
+import {updateVertex, load, undo, redo} from '../../intents/graph'
+import {calcLayout} from '../../intents/layout-worker'
 import Projects from '../../models/project'
 import Participants from '../../models/participant'
 import Graph from '../../models/graph'
 import LayoutWorker from '../../models/layout-worker'
-import { getProject, updateProject } from '../../intents/project'
-import { getParticipant } from '../../intents/participant'
+import {getProject, updateProject} from '../../intents/project'
+import {getParticipant} from '../../intents/participant'
 import Fullscreen from '../common/fullscreen'
 import TextInputModal from '../common/text-input-modal'
 import Network from './network'
 
-const layout = (graph, participantId) => {
+const layout = (inGraph, participantId) => {
+  const graph = copy(inGraph)
+  new CycleRemovalTransformer().transform(graph)
   calcLayout({
     vertices: graph.vertices()
       .map((u) => ({u, d: graph.vertex(u)}))
       .filter(({d}) => d.participants.indexOf(participantId) >= 0),
     edges: graph.edges()
       .map(([u, v]) => ({u, v, d: graph.edge(u, v)}))
-      .filter(({d}) => d.participants.indexOf(participantId) >= 0),
+      .filter(({d}) => d.participants.indexOf(participantId) >= 0)
   }, {
     layerMargin: 150,
     vertexMargin: 50,
     edgeMargin: 10,
     vertexScale: () => 1,
-    edgeScale: () => 1,
+    edgeScale: () => 1
   })
 }
 
@@ -44,7 +50,7 @@ class ParticipantInterview extends React.Component {
       vertices: [],
       edges: [],
       contentWidth: 0,
-      contentHeight: 0,
+      contentHeight: 0
     }
   }
 
@@ -61,13 +67,13 @@ class ParticipantInterview extends React.Component {
       switch (type) {
         case PROJECT_GET:
           this.setState({
-            project: data,
+            project: data
           })
           load(JSON.parse(this.state.project.graph))
           break
         case PROJECT_UPDATE:
           this.setState({
-            saved: true,
+            saved: true
           })
           this.context.router.push(`/projects/${projectId}`)
           break
@@ -76,7 +82,7 @@ class ParticipantInterview extends React.Component {
 
     this.participantSubscription = Participants.subscribe(({data}) => {
       this.setState({
-        participant: data,
+        participant: data
       })
     })
 
@@ -85,7 +91,7 @@ class ParticipantInterview extends React.Component {
         graph,
         saved: !canUndo,
         canUndo,
-        canRedo,
+        canRedo
       })
       layout(graph, participantId)
     })
@@ -96,7 +102,7 @@ class ParticipantInterview extends React.Component {
         vertices,
         edges,
         contentWidth: width,
-        contentHeight: height,
+        contentHeight: height
       })
     })
 
@@ -114,8 +120,7 @@ class ParticipantInterview extends React.Component {
   render () {
     const {graph, vertices, edges, contentWidth, contentHeight, canUndo, canRedo} = this.state
     const {participantId} = this.props.params
-    return (
-    <Fullscreen>
+    return <Fullscreen>
       <div style={{position: 'absolute', top: '40px', left: 0, right: 0, bottom: 0}}>
         <Network
           graph={graph}
@@ -126,29 +131,28 @@ class ParticipantInterview extends React.Component {
           participantId={participantId} />
       </div>
       <div style={{position: 'absolute', left: '20px', top: '60px'}}>
-        <button className="ui massive circular icon button" onClick={this.handleClickBackButton.bind(this)}>
-          <i className="icon arrow left" />
+        <button className='ui massive circular icon button' onClick={this.handleClickBackButton.bind(this)}>
+          <i className='icon arrow left' />
         </button>
-        <button className="ui secondary massive circular icon button" onClick={this.handleClickSaveButton.bind(this)}>
-          <i className="icon save" />
+        <button className='ui secondary massive circular icon button' onClick={this.handleClickSaveButton.bind(this)}>
+          <i className='icon save' />
         </button>
       </div>
       <div style={{position: 'absolute', right: '20px', bottom: '20px'}}>
-        <button className="ui primary massive circular icon button" onClick={this.handleClickAddVertexButton.bind(this)}>
-          <i className="icon plus" />
+        <button className='ui primary massive circular icon button' onClick={this.handleClickAddVertexButton.bind(this)}>
+          <i className='icon plus' />
         </button>
       </div>
       <div style={{position: 'absolute', left: '20px', bottom: '20px'}}>
         <button className={`ui large circular icon button ${canUndo ? '' : 'disabled'}`} onClick={this.handleClickUndoButton.bind(this)}>
-          <i className="icon undo" />
+          <i className='icon undo' />
         </button>
         <button className={`ui large circular icon button ${canRedo ? '' : 'disabled'}`} onClick={this.handleClickRedoButton.bind(this)}>
-          <i className="icon repeat" />
+          <i className='icon repeat' />
         </button>
       </div>
-      <TextInputModal ref="textInputModal" onApprove={this.handleApproveTextInputModal.bind(this)} />
+      <TextInputModal ref='textInputModal' onApprove={this.handleApproveTextInputModal.bind(this)} />
     </Fullscreen>
-    )
   }
 
   handleClickBackButton () {
@@ -188,7 +192,7 @@ class ParticipantInterview extends React.Component {
 }
 
 ParticipantInterview.contextTypes = {
-  router: React.PropTypes.object,
+  router: React.PropTypes.object
 }
 
 export default ParticipantInterview

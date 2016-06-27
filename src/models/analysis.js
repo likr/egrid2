@@ -1,12 +1,22 @@
 import Rx from 'rx'
 import Graph from 'egraph/graph'
 import katz from 'egraph/network/centrality/katz'
-import CoarseGrainingTransformer from 'egraph/transformer/coarse-graining'
-import { ANALYSIS_INIT, ANALYSIS_SELECT_VERTEX, ANALYSIS_SELECT_VERTICES_BY_WORD, ANALYSIS_SET_THRESHOLD, ANALYSIS_UPDATE_PARTICIPANTS,
+import {
+  CoarseGrainingTransformer,
+  CycleRemovalTransformer,
+  IsmTransformer,
+  PipeTransformer
+} from 'egraph/transformer'
+import {
+  ANALYSIS_INIT,
+  ANALYSIS_SELECT_VERTEX,
+  ANALYSIS_SELECT_VERTICES_BY_WORD,
+  ANALYSIS_SET_THRESHOLD,
+  ANALYSIS_UPDATE_PARTICIPANTS
 } from '../constants'
-import { intentSubject } from '../intents/analysis'
-import { calcLayout } from '../intents/layout-worker'
-import { calcMorph } from '../intents/morph-worker'
+import {intentSubject} from '../intents/analysis'
+import {calcLayout} from '../intents/layout-worker'
+import {calcMorph} from '../intents/morph-worker'
 import LayoutWorker from './layout-worker'
 
 const connectedVertices = (graph, u, inverse = false) => {
@@ -33,7 +43,7 @@ const state = {
   graph: new Graph(),
   graphData: {
     vertices: [],
-    edges: [],
+    edges: []
   },
   participants: {},
   words: {},
@@ -43,13 +53,13 @@ const state = {
     vertices: [],
     edges: [],
     width: 0,
-    height: 0,
-  },
+    height: 0
+  }
 }
 
 const originalData = {
   vertices: [],
-  edges: [],
+  edges: []
 }
 
 LayoutWorker.subscribe(({data}) => {
@@ -111,8 +121,12 @@ const next = (type) => {
       priority[vertices[i]] = priority[vertices[i - 1]]
     }
   }
-  const transformer = new CoarseGrainingTransformer()
-    .vertexVisibility(({u}) => priority[u] >= (1 - state.threshold) * vertices.length)
+  const transformer = new PipeTransformer(
+    new CoarseGrainingTransformer()
+      .vertexVisibility(({u}) => priority[u] >= (1 - state.threshold) * vertices.length),
+    new CycleRemovalTransformer(),
+    new IsmTransformer()
+  )
   state.graph = transformer.transform(graph)
   state.graphData.vertices = state.graph.vertices().map((u) => ({u, d: state.graph.vertex(u)}))
   state.graphData.edges = state.graph.edges().map(([u, v]) => ({u, v, d: state.graph.edge(u, v)}))
@@ -132,7 +146,7 @@ const next = (type) => {
         vertexMargin: 15,
         edgeMargin: 15,
         vertexScale: ({d}) => Math.sqrt(participantCount(d)),
-        edgeScale: ({d}) => participantCount(d),
+        edgeScale: ({d}) => participantCount(d)
       })
       break
     default:
@@ -148,7 +162,7 @@ const init = ({graph, participants}) => {
   for (const participant of participants) {
     state.participants[participant.id] = {
       participant,
-      checked: true,
+      checked: true
     }
   }
   state.threshold = 0.3
