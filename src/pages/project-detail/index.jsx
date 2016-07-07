@@ -64,10 +64,11 @@ class ProjectDetail extends React.Component {
       </div>
       <h3 className='ui horizontal divider header'>Analysis</h3>
       <div>
-        <Link className='ui primary button' to={`/projects/${projectId}/analysis`}> Open
-        </Link>
-        <Link className='ui secondary button' to={`/projects/${projectId}/words`}> Words
-        </Link>
+        <Link className='ui primary button' to={`/projects/${projectId}/analysis`}>Open</Link>
+        <Link className='ui secondary button' to={`/projects/${projectId}/words`}>Words</Link>
+        <a ref='exportProjectButton' className='ui button' onClick={this.handleClickExportProjectButton.bind(this)}>
+          <i className='icon download' />Export
+        </a>
       </div>
       <h3 className='ui horizontal divider header'>Participants</h3>
       <div>
@@ -94,6 +95,13 @@ class ProjectDetail extends React.Component {
     addParticipant(Object.assign(data, {
       projectId: this.props.params.projectId
     }))
+  }
+
+  handleClickExportProjectButton () {
+    const {project} = this.state
+    const data = window.btoa(encodeURIComponent(project.graph).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)))
+    this.refs.exportProjectButton.href = `data:text/json;charset=utf-8;base64,${data}`
+    this.refs.exportProjectButton.download = `${project.name}.json`
   }
 }
 
