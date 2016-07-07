@@ -50,58 +50,56 @@ const merge = (graphData, inputData, participantId) => {
 class ParticipantCard extends React.Component {
   render () {
     const {participant} = this.props
-    return (
-    <div className="ui card">
-      <div className="content">
-        <div className="header">
+    return <div className='ui card'>
+      <div className='content'>
+        <div className='header'>
           {participant.name}
         </div>
-        <div className="meta">
+        <div className='meta'>
           Created at:
           {formatDate(participant.created)}
         </div>
-        <div className="meta">
+        <div className='meta'>
           Updated at:
           {formatDate(participant.updated)}
         </div>
-        <div className="description">
+        <div className='description'>
           {participant.note}
         </div>
       </div>
-      <div className="extra content">
-        <Link className="ui secondary button" to={`/projects/${participant.projectId}/participants/${participant.id}`}> Interview
+      <div className='extra content'>
+        <Link className='ui secondary button' to={`/projects/${participant.projectId}/participants/${participant.id}`}> Interview
         </Link>
         <button
-          className="ui icon button"
-          dataContent="Edit"
+          className='ui icon button'
+          dataContent='Edit'
           config={popup}
           onClick={this.handleClickEdit.bind(this)}>
-          <i className="icon edit" />
+          <i className='icon edit' />
         </button>
         <button
-          className="ui icon button"
-          dataContent="Remove"
+          className='ui icon button'
+          dataContent='Remove'
           config={popup}
           onClick={this.handleClickRemove.bind(this)}>
-          <i className="icon remove" />
+          <i className='icon remove' />
         </button>
         <button
-          className="ui icon button"
-          data-content="Import"
+          className='ui icon button'
+          data-content='Import'
           config={popup}
           onClick={this.handleClickImport.bind(this)}>
-          <i className="icon upload" />
+          <i className='icon upload' />
         </button>
       </div>
       <ConfirmModal
-        ref="confirmModal"
-        title="Remove Participant ?"
-        text="Remove Participant ?"
+        ref='confirmModal'
+        title='Remove Participant ?'
+        text='Remove Participant ?'
         onApprove={this.handleApproveConfirmModal.bind(this)} />
-      <FileSelectModal ref="fileSelectModal" title="Import Participant" onApprove={this.handleApproveFileSelectModal.bind(this)} />
-      <ParticipantModal ref="participantModal" title="Update Participant" onApprove={this.handleApproveParticipantModal.bind(this)} />
+      <FileSelectModal ref='fileSelectModal' title='Import Participant' onApprove={this.handleApproveFileSelectModal.bind(this)} />
+      <ParticipantModal ref='participantModal' title='Update Participant' onApprove={this.handleApproveParticipantModal.bind(this)} />
     </div>
-    )
   }
 
   handleClickEdit () {

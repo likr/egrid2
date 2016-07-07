@@ -7,48 +7,46 @@ class ParticipantModal extends React.Component {
       onApprove: () => {
         this.props.onApprove({
           name: this.refs.name.value,
-          note: this.refs.note.value,
+          note: this.refs.note.value
         })
-      },
+      }
     })
   }
 
   render () {
     const {title} = this.props
-    return (
-    <div ref="modal" className="ui modal">
-      <div className="header">
+    return <div ref='modal' className='ui modal'>
+      <div className='header'>
         {title}
       </div>
-      <div className="content">
-        <form className="ui form">
-          <div className="field">
+      <div className='content'>
+        <form className='ui form'>
+          <div className='field'>
             <label>
               Name
             </label>
-            <input ref="name" placeholder="Participant Name" />
+            <input ref='name' placeholder='Participant Name' />
           </div>
-          <div className="field">
+          <div className='field'>
             <label>
               Note
             </label>
-            <textarea ref="note" />
+            <textarea ref='note' />
           </div>
         </form>
       </div>
-      <div className="actions">
-        <button className="ui cancel button">
+      <div className='actions'>
+        <button className='ui cancel button'>
           Cancel
         </button>
-        <button className="ui primary approve button">
+        <button className='ui primary approve button'>
           Create
         </button>
       </div>
     </div>
-    )
   }
 
-  show (name = '' , note = '') {
+  show (name = '', note = '') {
     this.refs.name.value = name
     this.refs.note.value = note
     $(this.refs.modal).modal('show')

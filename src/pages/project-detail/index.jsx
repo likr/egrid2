@@ -14,7 +14,7 @@ class ProjectDetail extends React.Component {
     super()
     this.state = {
       project: null,
-      participants: [],
+      participants: []
     }
   }
 
@@ -22,14 +22,14 @@ class ProjectDetail extends React.Component {
     this.projectSubscription = Projects.subscribe(({type, data}) => {
       if (type === PROJECT_GET) {
         this.setState({
-          project: data,
+          project: data
         })
       }
     })
 
     this.participantSubscription = Participants.subscribe(({data}) => {
       this.setState({
-        participants: data,
+        participants: data
       })
     })
 
@@ -48,44 +48,42 @@ class ProjectDetail extends React.Component {
     const projectId = this.props.params.projectId
     if (project === null) {
       return <Page>
-               loading
-             </Page>
+        loading
+      </Page>
     }
-    return (
-    <Page>
+    return <Page>
       <div style={{marginBottom: '20px'}}>
-        <div className="ui breadcrumb">
-          <Link className="section" to="/projects"> My Projects
+        <div className='ui breadcrumb'>
+          <Link className='section' to='/projects'> My Projects
           </Link>
-          <i className="right angle icon divider" />
-          <div className="active section">
+          <i className='right angle icon divider' />
+          <div className='active section'>
             {project.name}
           </div>
         </div>
       </div>
-      <h3 className="ui horizontal divider header">Analysis</h3>
+      <h3 className='ui horizontal divider header'>Analysis</h3>
       <div>
-        <Link className="ui primary button" to={`/projects/${projectId}/analysis`}> Open
+        <Link className='ui primary button' to={`/projects/${projectId}/analysis`}> Open
         </Link>
-        <Link className="ui secondary button" to={`/projects/${projectId}/words`}> Words
+        <Link className='ui secondary button' to={`/projects/${projectId}/words`}> Words
         </Link>
       </div>
-      <h3 className="ui horizontal divider header">Participants</h3>
+      <h3 className='ui horizontal divider header'>Participants</h3>
       <div>
         <div style={{marginBottom: '20px'}}>
-          <button className="ui primary button" onClick={this.handleClickAddButton.bind(this)}>
+          <button className='ui primary button' onClick={this.handleClickAddButton.bind(this)}>
             Add
           </button>
         </div>
-        <div className="ui one cards">
+        <div className='ui one cards'>
           {participants.map((participant) => {
-             return <ParticipantCard key={participant.id} project={project} participant={participant} />
-           })}
+            return <ParticipantCard key={participant.id} project={project} participant={participant} />
+          })}
         </div>
       </div>
-      <ParticipantModal ref="participantModal" title="Create Participant" onApprove={this.handleApproveParticipantModal.bind(this)} />
+      <ParticipantModal ref='participantModal' title='Create Participant' onApprove={this.handleApproveParticipantModal.bind(this)} />
     </Page>
-    )
   }
 
   handleClickAddButton () {
@@ -94,7 +92,7 @@ class ProjectDetail extends React.Component {
 
   handleApproveParticipantModal (data) {
     addParticipant(Object.assign(data, {
-      projectId: this.props.params.projectId,
+      projectId: this.props.params.projectId
     }))
   }
 }
