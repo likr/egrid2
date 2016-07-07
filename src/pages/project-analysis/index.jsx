@@ -44,20 +44,20 @@ const parseGraph = (str) => {
           text: name,
           color,
           items: filteredItems.map((u) => vertices[u]),
-          participants: uniqueConcat(filteredItems.map((u) => vertices[u].d.participants)),
-        },
+          participants: uniqueConcat(filteredItems.map((u) => vertices[u].d.participants))
+        }
       }
     })
     graph.vertices = graph.vertices
-      .filter(({d}) => d.parent == undefined)
+      .filter(({d}) => d.parent === undefined)
       .concat(groupVertices)
     const visitedEdges = {}
     for (const edge of graph.edges) {
       const {u, v} = edge
-      if (vertices[u].d.parent != undefined) {
+      if (vertices[u].d.parent !== undefined) {
         edge.u = `group${vertices[u].d.parent}`
       }
-      if (vertices[v].d.parent != undefined) {
+      if (vertices[v].d.parent !== undefined) {
         edge.v = `group${vertices[v].d.parent}`
       }
       const key = `${edge.u}:${edge.v}`
@@ -88,7 +88,7 @@ const stopWords = new Set([
   'ある',
   'なる',
   'できる',
-  'わかる',
+  'わかる'
 ])
 
 const count = (data) => {
@@ -122,7 +122,7 @@ class ProjectAnalysis extends React.Component {
       edges: [],
       contentWidth: 0,
       contentHeight: 0,
-      words: [],
+      words: []
     }
   }
 
@@ -141,7 +141,7 @@ class ProjectAnalysis extends React.Component {
         vertices,
         edges,
         contentWidth: width,
-        contentHeight: height,
+        contentHeight: height
       })
     })
 
@@ -158,7 +158,7 @@ class ProjectAnalysis extends React.Component {
         .fontSize((d) => textSize(d.count))
         .on('end', (layout) => {
           this.setState({
-            words: layout,
+            words: layout
           })
         })
         .start()
@@ -177,8 +177,7 @@ class ProjectAnalysis extends React.Component {
 
   render () {
     const {vertices, edges, contentWidth, contentHeight, words, participants, threshold} = this.state
-    return (
-    <Fullscreen>
+    return <Fullscreen>
       <div style={{position: 'absolute', top: '40px', left: 0, right: `${wordCloudWidth + 40}px`, bottom: 0}}>
         <Network
           vertices={vertices}
@@ -187,11 +186,11 @@ class ProjectAnalysis extends React.Component {
           contentHeight={contentHeight} />
       </div>
       <div style={{position: 'absolute', left: '20px', top: '60px'}}>
-        <button className="ui massive circular icon button" onClick={this.handleClickBackButton.bind(this)}>
-          <i className="icon arrow left" />
+        <button className='ui massive circular icon button' onClick={this.handleClickBackButton.bind(this)}>
+          <i className='icon arrow left' />
         </button>
       </div>
-      <div style={{  position: 'absolute',  top: '40px',  bottom: 0,  right: 0,  width: `${wordCloudWidth + 40}px`,  padding: '10px',  boxShadow: '0 0 10px',}}>
+      <div style={{position: 'absolute', top: '40px', bottom: 0, right: 0, width: `${wordCloudWidth + 40}px`, padding: '10px', boxShadow: '0 0 10px'}}>
         <div style={{height: '100%', overflowY: 'scroll'}}>
           <div style={{marginBottom: '30px'}}>
             <ParticipantList participants={participants} />
@@ -205,7 +204,6 @@ class ProjectAnalysis extends React.Component {
         </div>
       </div>
     </Fullscreen>
-    )
   }
 
   handleClickBackButton () {
@@ -215,7 +213,7 @@ class ProjectAnalysis extends React.Component {
 }
 
 ProjectAnalysis.contextTypes = {
-  router: React.PropTypes.object,
+  router: React.PropTypes.object
 }
 
 export default ProjectAnalysis
