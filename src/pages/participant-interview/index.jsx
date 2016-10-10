@@ -111,10 +111,10 @@ class ParticipantInterview extends React.Component {
   }
 
   componentWillUnmount () {
-    this.projectSubscription.dispose()
-    this.participantSubscription.dispose()
-    this.graphSubscription.dispose()
-    this.layoutSubscription.dispose()
+    this.projectSubscription.unsubscribe()
+    this.participantSubscription.unsubscribe()
+    this.graphSubscription.unsubscribe()
+    this.layoutSubscription.unsubscribe()
   }
 
   render () {

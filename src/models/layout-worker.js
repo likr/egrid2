@@ -1,9 +1,7 @@
-/* global document */
-
 import d3 from 'd3'
-import Rx from 'rx-dom'
-import { CALC_LAYOUT } from '../constants'
-import { intentSubject } from '../intents/layout-worker'
+import Rx from 'rxjs/Rx'
+import {CALC_LAYOUT} from '../constants'
+import {intentSubject} from '../intents/layout-worker'
 
 const calcSize = (texts, size, family) => {
   const canvas = document.createElement('canvas')
@@ -13,13 +11,27 @@ const calcSize = (texts, size, family) => {
   for (const text of texts) {
     result[text] = {
       width: ctx.measureText(text).width,
-      height: size * 1.5,
+      height: size * 1.5
     }
   }
   return result
 }
 
-const subject = Rx.DOM.fromWorker('layout-worker.js')
+const layout = (data) => {
+  return Rx.Observable.create((observer) => {
+    const worker = new window.Worker('layout-worker.js')
+    worker.onmessage = (result) => {
+      observer.next(result)
+      observer.complete()
+    }
+    worker.postMessage(data)
+    return () => {
+      worker.terminate()
+    }
+  })
+}
+
+const subject = new Rx.Subject()
 
 const calc = (data, options) => {
   const {vertexScale, edgeScale, layerMargin, vertexMargin, edgeMargin} = options
@@ -38,7 +50,9 @@ const calc = (data, options) => {
     d.width = 3
   }
   data.options = {layerMargin, vertexMargin, edgeMargin}
-  subject.onNext(data)
+  layout(data).subscribe((result) => {
+    subject.next(result)
+  })
 }
 
 intentSubject.subscribe((payload) => {

@@ -39,8 +39,8 @@ class ProjectDetail extends React.Component {
   }
 
   componentWillUnmount () {
-    this.projectSubscription.dispose()
-    this.participantSubscription.dispose()
+    this.projectSubscription.unsubscribe()
+    this.participantSubscription.unsubscribe()
   }
 
   render () {

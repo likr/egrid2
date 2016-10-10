@@ -1,7 +1,12 @@
-import Rx from 'rx'
-import { PARTICIPANT_ADD, PARTICIPANT_GET, PARTICIPANT_LIST, PARTICIPANT_REMOVE, PARTICIPANT_UPDATE,
+import Rx from 'rxjs/Rx'
+import {
+  PARTICIPANT_ADD,
+  PARTICIPANT_GET,
+  PARTICIPANT_LIST,
+  PARTICIPANT_REMOVE,
+  PARTICIPANT_UPDATE
 } from '../constants'
-import { intentSubject } from '../intents/participant'
+import {intentSubject} from '../intents/participant'
 import db from './db'
 
 const participants = db.collection('participants')
@@ -11,7 +16,7 @@ const subject = new Rx.Subject()
 const load = (type, projectId) => {
   participants.list({filters: {projectId}, order: '-updated'})
     .then(({data}) => {
-      subject.onNext({type, data})
+      subject.next({type, data})
     })
 }
 
@@ -19,7 +24,7 @@ const add = (data) => {
   participants
     .create(Object.assign({}, data, {
       created: new Date(),
-      updated: new Date(),
+      updated: new Date()
     }))
     .then(() => load(PARTICIPANT_ADD, data.projectId))
 }
@@ -27,7 +32,7 @@ const add = (data) => {
 const get = (id) => {
   participants.get(id)
     .then(({data}) => {
-      subject.onNext({type: PARTICIPANT_GET, data})
+      subject.next({type: PARTICIPANT_GET, data})
     })
 }
 

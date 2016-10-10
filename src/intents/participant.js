@@ -1,40 +1,45 @@
-import Rx from 'rx'
-import { PARTICIPANT_ADD, PARTICIPANT_GET, PARTICIPANT_LIST, PARTICIPANT_REMOVE, PARTICIPANT_UPDATE,
+import Rx from 'rxjs/Rx'
+import {
+  PARTICIPANT_ADD,
+  PARTICIPANT_GET,
+  PARTICIPANT_LIST,
+  PARTICIPANT_REMOVE,
+  PARTICIPANT_UPDATE
 } from '../constants'
 
 export const intentSubject = new Rx.Subject()
 
 export const addParticipant = (data) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: PARTICIPANT_ADD,
-    data,
+    data
   })
 }
 
 export const getParticipant = (id) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: PARTICIPANT_GET,
-    id,
+    id
   })
 }
 
 export const listParticipants = (projectId) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: PARTICIPANT_LIST,
-    projectId,
+    projectId
   })
 }
 
 export const removeParticipant = (id) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: PARTICIPANT_REMOVE,
-    id,
+    id
   })
 }
 
 export const updateParticipant = (data) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: PARTICIPANT_UPDATE,
-    data,
+    data
   })
 }

@@ -1,7 +1,12 @@
-import Rx from 'rx'
-import { PROJECT_ADD, PROJECT_GET, PROJECT_LIST, PROJECT_REMOVE, PROJECT_UPDATE,
+import Rx from 'rxjs/Rx'
+import {
+  PROJECT_ADD,
+  PROJECT_GET,
+  PROJECT_LIST,
+  PROJECT_REMOVE,
+  PROJECT_UPDATE
 } from '../constants'
-import { intentSubject } from '../intents/project'
+import {intentSubject} from '../intents/project'
 import db from './db'
 
 const projects = db.collection('projects')
@@ -11,7 +16,7 @@ const subject = new Rx.Subject()
 const load = (type) => {
   projects.list({order: '-updated'})
     .then(({data}) => {
-      subject.onNext({type, data})
+      subject.next({type, data})
     })
 }
 
@@ -20,7 +25,7 @@ const add = (data) => {
   const project = Object.assign({}, data, {
     graph: '{"vertices":[],"edges":[]}',
     created: now,
-    updated: now,
+    updated: now
   })
   projects.create(project)
     .then(() => load(PROJECT_ADD))
@@ -29,7 +34,7 @@ const add = (data) => {
 const get = (id) => {
   projects.get(id)
     .then(({data}) => {
-      subject.onNext({type: PROJECT_GET, data})
+      subject.next({type: PROJECT_GET, data})
     })
 }
 
@@ -46,7 +51,7 @@ const update = (data) => {
   const now = new Date()
   projects
     .update(Object.assign({}, data, {
-      updated: now,
+      updated: now
     }))
     .then(() => load(PROJECT_UPDATE))
 }

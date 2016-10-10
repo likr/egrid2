@@ -1,9 +1,19 @@
-import Rx from 'rx'
+import Rx from 'rxjs/Rx'
 import Graph from 'egraph/graph'
 import copy from '../utils/copy-graph'
-import { GRAPH_ADD_EDGE, GRAPH_ADD_VERTEX, GRAPH_CLEAR, GRAPH_LOAD, GRAPH_REDO, GRAPH_REMOVE_EDGE, GRAPH_REMOVE_VERTEX, GRAPH_UNDO, GRAPH_UPDATE_EDGE, GRAPH_UPDATE_VERTEX,
+import {
+  GRAPH_ADD_EDGE,
+  GRAPH_ADD_VERTEX,
+  GRAPH_CLEAR,
+  GRAPH_LOAD,
+  GRAPH_REDO,
+  GRAPH_REMOVE_EDGE,
+  GRAPH_REMOVE_VERTEX,
+  GRAPH_UNDO,
+  GRAPH_UPDATE_EDGE,
+  GRAPH_UPDATE_VERTEX
 } from '../constants'
-import { intentSubject } from '../intents/graph'
+import {intentSubject} from '../intents/graph'
 
 const subject = new Rx.Subject()
 
@@ -12,11 +22,11 @@ let undoStack = []
 let redoStack = []
 
 const next = (type) => {
-  subject.onNext({
+  subject.next({
     type,
     graph,
     canUndo: undoStack.length > 0,
-    canRedo: redoStack.length > 0,
+    canRedo: redoStack.length > 0
   })
 }
 

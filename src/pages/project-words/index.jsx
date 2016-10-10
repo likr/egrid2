@@ -55,7 +55,7 @@ class ProjectWords extends React.Component {
   }
 
   componentWillUnmount () {
-    this.projectSubscription.dispose()
+    this.projectSubscription.unsubscribe()
   }
 
   render () {

@@ -1,11 +1,11 @@
-import Rx from 'rx'
-import { CALC_MORPH } from '../constants'
+import Rx from 'rxjs/Rx'
+import {CALC_MORPH} from '../constants'
 
 export const intentSubject = new Rx.Subject()
 
 export const calcMorph = (texts) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: CALC_MORPH,
-    texts,
+    texts
   })
 }

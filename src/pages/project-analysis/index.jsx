@@ -1,10 +1,10 @@
 import React from 'react'
 import d3 from 'd3'
 import d3cloud from 'd3-cloud'
-import { Observable } from 'rx'
-import { initAnalysis } from '../../intents/analysis'
-import { listParticipants } from '../../intents/participant'
-import { getProject } from '../../intents/project'
+import {Observable} from 'rxjs/Rx'
+import {initAnalysis} from '../../intents/analysis'
+import {listParticipants} from '../../intents/participant'
+import {getProject} from '../../intents/project'
 import Analysis from '../../models/analysis'
 import MorphWorker from '../../models/morph-worker'
 import Participants from '../../models/participant'
@@ -170,9 +170,9 @@ class ProjectAnalysis extends React.Component {
   }
 
   componentWillUnmount () {
-    this.initSubscription.dispose()
-    this.analysisSubscription.dispose()
-    this.morphWorkerSubscription.dispose()
+    this.initSubscription.unsubscribe()
+    this.analysisSubscription.unsubscribe()
+    this.morphWorkerSubscription.unsubscribe()
   }
 
   render () {

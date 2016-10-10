@@ -25,8 +25,7 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^2.8.1",
-    "rx": "^4.0.7",
-    "rx-dom": "^7.0.3",
+    "rxjs": "^5.0.0-beta.12",
     "semantic-ui": "^2.1.8"
   },
   "devDependencies": {

@@ -1,41 +1,46 @@
-import Rx from 'rx'
-import { ANALYSIS_INIT, ANALYSIS_SELECT_VERTEX, ANALYSIS_SELECT_VERTICES_BY_WORD, ANALYSIS_SET_THRESHOLD, ANALYSIS_UPDATE_PARTICIPANTS,
+import Rx from 'rxjs/Rx'
+import {
+  ANALYSIS_INIT,
+  ANALYSIS_SELECT_VERTEX,
+  ANALYSIS_SELECT_VERTICES_BY_WORD,
+  ANALYSIS_SET_THRESHOLD,
+  ANALYSIS_UPDATE_PARTICIPANTS
 } from '../constants'
 
 export const intentSubject = new Rx.Subject()
 
 export const initAnalysis = (graph, participants) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: ANALYSIS_INIT,
     graph,
-    participants,
+    participants
   })
 }
 
 export const selectVertex = (u) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: ANALYSIS_SELECT_VERTEX,
-    u,
+    u
   })
 }
 
 export const selectVerticesByWord = (word) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: ANALYSIS_SELECT_VERTICES_BY_WORD,
-    word,
+    word
   })
 }
 
 export const setThreshold = (threshold) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: ANALYSIS_SET_THRESHOLD,
-    threshold,
+    threshold
   })
 }
 
 export const updateParticipants = (participants) => {
-  intentSubject.onNext({
+  intentSubject.next({
     type: ANALYSIS_UPDATE_PARTICIPANTS,
-    participants,
+    participants
   })
 }

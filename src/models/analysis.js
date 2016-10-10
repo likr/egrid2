@@ -1,4 +1,4 @@
-import Rx from 'rx'
+import Rx from 'rxjs/Rx'
 import Graph from 'egraph/graph'
 import katz from 'egraph/network/centrality/katz'
 import {
@@ -65,7 +65,7 @@ const originalData = {
 LayoutWorker.subscribe(({data}) => {
   state.layout = data
   updateSelection(state.graph, state.layout)
-  subject.onNext(state)
+  subject.next(state)
   calcMorph(data.vertices.map(({d}) => d.text))
 })
 
@@ -151,7 +151,7 @@ const next = (type) => {
       break
     default:
       updateSelection(state.graph, state.layout)
-      subject.onNext(state)
+      subject.next(state)
   }
 }
 

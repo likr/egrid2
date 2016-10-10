@@ -1,11 +1,27 @@
-import Rx from 'rx-dom'
-import { CALC_MORPH } from '../constants'
-import { intentSubject } from '../intents/morph-worker'
+import Rx from 'rxjs/Rx'
+import {CALC_MORPH} from '../constants'
+import {intentSubject} from '../intents/morph-worker'
 
-const subject = Rx.DOM.fromWorker('morph-worker.js')
+const morph = (data) => {
+  return Rx.Observable.create((observer) => {
+    const worker = new window.Worker('morph-worker.js')
+    worker.onmessage = (result) => {
+      observer.next(result)
+      observer.complete()
+    }
+    worker.postMessage(data)
+    return () => {
+      worker.terminate()
+    }
+  })
+}
+
+const subject = new Rx.Subject()
 
 const calc = (texts) => {
-  subject.onNext(texts)
+  morph(texts).subscribe((result) => {
+    subject.next(result)
+  })
 }
 
 intentSubject.subscribe((payload) => {
