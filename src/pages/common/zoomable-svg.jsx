@@ -21,7 +21,7 @@ class ZoomableSvg extends React.Component {
     this.state = {
       x: 0,
       y: 0,
-      scale: 1,
+      scale: 1
     }
   }
 
@@ -33,7 +33,7 @@ class ZoomableSvg extends React.Component {
         this.setState({
           x: translate[0],
           y: translate[1],
-          scale: scale,
+          scale: scale
         })
       })
     d3.select(this.refs.svg)
@@ -58,11 +58,13 @@ class ZoomableSvg extends React.Component {
   render () {
     const {children} = this.props
     const {x, y, scale} = this.state
-    return (
-    <svg ref="svg" {...this.props} style={{backgroundColor: '#f3f9fd'}}>
+    const svgAttrs = Object.assign({}, this.props)
+    for (const attr of ['children', 'contentWidth', 'contentHeight']) {
+      delete svgAttrs[attr]
+    }
+    return <svg ref='svg' {...svgAttrs} style={{backgroundColor: '#f3f9fd'}}>
       {children({x, y, scale, center: this.center.bind(this)})}
     </svg>
-    )
   }
 
   center (width, height) {

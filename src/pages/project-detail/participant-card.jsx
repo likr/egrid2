@@ -1,11 +1,10 @@
 /* global FileReader */
 import React from 'react'
-import { Link } from 'react-router'
+import {Link} from 'react-router'
 import Graph from 'egraph/graph'
 import graphToJson from '../../utils/graph-to-json'
-import { removeParticipant, updateParticipant } from '../../intents/participant'
-import { updateProject } from '../../intents/project'
-import popup from '../utils/config-popup'
+import {removeParticipant, updateParticipant} from '../../intents/participant'
+import {updateProject} from '../../intents/project'
 import formatDate from '../utils/format-date'
 import ConfirmModal from '../common/confirm-modal'
 import FileSelectModal from '../common/file-select-modal'
@@ -72,22 +71,16 @@ class ParticipantCard extends React.Component {
         </Link>
         <button
           className='ui icon button'
-          dataContent='Edit'
-          config={popup}
           onClick={this.handleClickEdit.bind(this)}>
           <i className='icon edit' />
         </button>
         <button
           className='ui icon button'
-          dataContent='Remove'
-          config={popup}
           onClick={this.handleClickRemove.bind(this)}>
           <i className='icon remove' />
         </button>
         <button
           className='ui icon button'
-          data-content='Import'
-          config={popup}
           onClick={this.handleClickImport.bind(this)}>
           <i className='icon upload' />
         </button>

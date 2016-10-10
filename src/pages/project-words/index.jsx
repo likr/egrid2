@@ -1,9 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router'
-import { PROJECT_GET, PROJECT_UPDATE,
-} from '../../constants'
+import {Link} from 'react-router'
+import {PROJECT_GET, PROJECT_UPDATE} from '../../constants'
 import Projects from '../../models/project'
-import { getProject, updateProject } from '../../intents/project'
+import {getProject, updateProject} from '../../intents/project'
 import Page from '../common/page'
 import Word from './word'
 import Group from './group'
@@ -17,7 +16,7 @@ class ProjectWords extends React.Component {
       words: {},
       groups: [],
       searchLeft: '',
-      searchRight: '',
+      searchRight: ''
     }
   }
 
@@ -63,7 +62,7 @@ class ProjectWords extends React.Component {
     const {projectId} = this.props.params
     const {project, searchLeft, searchRight} = this.state
     const words = Object.values(this.state.words).filter(({d}) => {
-      return d.parent == undefined && d.text.indexOf(searchLeft) >= 0
+      return d.parent === undefined && d.text.indexOf(searchLeft) >= 0
     })
     const groups = this.state.groups.filter((group) => {
       if (group.name.indexOf(searchRight) >= 0) {
@@ -71,88 +70,85 @@ class ProjectWords extends React.Component {
       }
       return group.items.some((u) => this.state.words[u].d.text.indexOf(searchRight) >= 0)
     })
-    return (
-    <Page>
+    return <Page>
       <div style={{marginBottom: '20px'}}>
-        <div className="ui breadcrumb">
-          <Link className="section" to="/projects"> My Projects
+        <div className='ui breadcrumb'>
+          <Link className='section' to='/projects'> My Projects
           </Link>
-          <i className="right angle icon divider" />
-          <Link className="section" to={`/projects/${projectId}`}>
-          {project && project.name}
+          <i className='right angle icon divider' />
+          <Link className='section' to={`/projects/${projectId}`}>
+            {project && project.name}
           </Link>
-          <i className="right angle icon divider" />
-          <div className="active section">
+          <i className='right angle icon divider' />
+          <div className='active section'>
             Words
           </div>
         </div>
       </div>
       <div>
-        <div className="ui grid">
-          <div className="row">
-            <div className="column">
-              <button className="ui primary button" onClick={this.handleClickSaveButton.bind(this)}>
+        <div className='ui grid'>
+          <div className='row'>
+            <div className='column'>
+              <button className='ui primary button' onClick={this.handleClickSaveButton.bind(this)}>
                 Save
               </button>
             </div>
           </div>
-          <div className="two column row">
-            <div className="column">
-              <div className="ui vertical segment">
-                <div className="ui form">
-                  <div className="field">
-                    <div className="ui fluid left icon right action input">
-                      <input placeholder="Search..." value={searchLeft} onInput={this.handleInputSearchLeft.bind(this)} />
-                      <i className="icon search" />
-                      <button className="ui icon button" onClick={this.handleClickClearSearchLeftButton.bind(this)}>
-                        <i className="icon remove" />
+          <div className='two column row'>
+            <div className='column'>
+              <div className='ui vertical segment'>
+                <div className='ui form'>
+                  <div className='field'>
+                    <div className='ui fluid left icon right action input'>
+                      <input placeholder='Search...' value={searchLeft} onInput={this.handleInputSearchLeft.bind(this)} />
+                      <i className='icon search' />
+                      <button className='ui icon button' onClick={this.handleClickClearSearchLeftButton.bind(this)}>
+                        <i className='icon remove' />
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
               <div
-                className="ui vertical segment"
+                className='ui vertical segment'
                 onDrop={this.handleDropToList.bind(this)}
                 onDragOver={this.handleDragOver.bind(this)}
                 style={{maxHeight: 'calc(100vh - 300px)', overflowY: 'scroll'}}>
                 {words.map(({u, d}) => <Word key={u} u={u} d={d} />)}
               </div>
             </div>
-            <div className="ui vertical divider">
-              <i className="icon arrow right" />
+            <div className='ui vertical divider'>
+              <i className='icon arrow right' />
             </div>
-            <div className="column">
-              <div className="ui vertical segment">
-                <div className="ui form">
-                  <div className="field">
-                    <div className="ui fluid left icon right action input">
-                      <input placeholder="Search..." value={searchRight} oninput={this.handleInputSearchRight.bind(this)} />
-                      <i className="icon search" />
-                      <button className="ui icon button" onClick={this.handleClickClearSearchRightButton.bind(this)}>
-                        <i className="icon remove" />
+            <div className='column'>
+              <div className='ui vertical segment'>
+                <div className='ui form'>
+                  <div className='field'>
+                    <div className='ui fluid left icon right action input'>
+                      <input placeholder='Search...' value={searchRight} onInput={this.handleInputSearchRight.bind(this)} />
+                      <i className='icon search' />
+                      <button className='ui icon button' onClick={this.handleClickClearSearchRightButton.bind(this)}>
+                        <i className='icon remove' />
                       </button>
                     </div>
                   </div>
-                  <div className="field">
-                    <button className="ui button" onClick={this.handleClickAddGroupButton.bind(this)}>
+                  <div className='field'>
+                    <button className='ui button' onClick={this.handleClickAddGroupButton.bind(this)}>
                       Add
                     </button>
                   </div>
                 </div>
               </div>
-              <div className="ui vertical segment" style={{maxHeight: 'calc(100vh - 300px)', overflowY: 'scroll'}}>
-                <div className="ui one cards">
+              <div className='ui vertical segment' style={{maxHeight: 'calc(100vh - 300px)', overflowY: 'scroll'}}>
+                <div className='ui one cards'>
                   {groups.map((group) => {
-                     return (
-                     <Group
-                       key={group.id}
-                       group={group}
-                       words={group.items.map((u) => this.state.words[u])}
-                       handleDropToGroup={this.handleDropToGroup.bind(this, group)}
-                       handleDragOver={this.handleDragOver.bind(this)} />
-                     )
-                   })}
+                    return <Group
+                      key={group.id}
+                      group={group}
+                      words={group.items.map((u) => this.state.words[u])}
+                      handleDropToGroup={this.handleDropToGroup.bind(this, group)}
+                      handleDragOver={this.handleDragOver.bind(this)} />
+                  })}
                 </div>
               </div>
             </div>
@@ -160,7 +156,6 @@ class ProjectWords extends React.Component {
         </div>
       </div>
     </Page>
-    )
   }
 
   handleDragOver (event) {
@@ -172,7 +167,7 @@ class ProjectWords extends React.Component {
     const {words, groups} = this.state
     const u = event.dataTransfer.getData('text')
     const data = words[u]
-    if (data.d.parent != undefined) {
+    if (data.d.parent !== undefined) {
       const group = groups[data.d.parent]
       group.items.splice(group.items.indexOf(u), 1)
       delete data.d.parent
@@ -180,7 +175,7 @@ class ProjectWords extends React.Component {
     this.setState({
       words,
       groups,
-      saved: false,
+      saved: false
     })
   }
 
@@ -189,14 +184,14 @@ class ProjectWords extends React.Component {
     const {words, groups} = this.state
     const u = event.dataTransfer.getData('text')
     const data = words[u]
-    if (data.d.parent != undefined) {
+    if (data.d.parent !== undefined) {
       const oldGroup = groups[data.d.parent]
       oldGroup.items.splice(oldGroup.items.indexOf(u), 1)
     }
     group.items.push(u)
     data.d.parent = group.id
     this.setState({
-      saved: false,
+      saved: false
     })
   }
 
@@ -206,32 +201,32 @@ class ProjectWords extends React.Component {
       id: Math.max(0, ...groups.map(({id}) => id + 1)),
       name: '',
       color: '#ffffff',
-      items: [],
+      items: []
     })
     this.setState({groups})
   }
 
   handleInputSearchLeft (event) {
     this.setState({
-      searchLeft: event.target.value,
+      searchLeft: event.target.value
     })
   }
 
   handleInputSearchRight (event) {
     this.setState({
-      searchRight: event.target.value,
+      searchRight: event.target.value
     })
   }
 
   handleClickClearSearchLeftButton () {
     this.setState({
-      searchLeft: '',
+      searchLeft: ''
     })
   }
 
   handleClickClearSearchRightButton () {
     this.setState({
-      searchRight: '',
+      searchRight: ''
     })
   }
 
@@ -239,7 +234,7 @@ class ProjectWords extends React.Component {
     const {project, words, groups} = this.state
     const graph = Object.assign(JSON.parse(project.graph), {
       vertices: Object.values(words),
-      groups: groups,
+      groups: groups
     })
     project.graph = JSON.stringify(graph)
     updateProject(project)
@@ -247,7 +242,7 @@ class ProjectWords extends React.Component {
 }
 
 ProjectWords.contextTypes = {
-  router: React.PropTypes.object,
+  router: React.PropTypes.object
 }
 
 export default ProjectWords
