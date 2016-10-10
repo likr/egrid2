@@ -5,7 +5,6 @@
   "scripts": {
     "start": "webpack-dev-server --content-base public",
     "build": "webpack",
-    "deploy": "npm run build && firebase deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,13 +19,14 @@
     "d3": "^3.5.12",
     "d3-cloud": "^1.2.1",
     "egraph": "^3.0.0",
-    "kinto": "^1.2.0",
     "kuromoji": "0.0.5",
+    "lovefield": "^2.1.10",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^2.8.1",
     "rxjs": "^5.0.0-beta.12",
-    "semantic-ui": "^2.1.8"
+    "semantic-ui": "^2.1.8",
+    "uuid": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",

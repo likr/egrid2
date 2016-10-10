@@ -109,23 +109,8 @@ class ParticipantCard extends React.Component {
   }
 
   handleApproveConfirmModal () {
-    const {project, participant} = this.props
+    const {participant} = this.props
     removeParticipant(participant.id)
-    const data = JSON.parse(project.graph)
-    for (const {d} of data.vertices) {
-      const index = d.participants.indexOf(participant.id)
-      if (index > -1) {
-        d.participants.splice(index, 1)
-      }
-    }
-    for (const {d} of data.edges) {
-      const index = d.participants.indexOf(participant.id)
-      if (index > -1) {
-        d.participants.splice(index, 1)
-      }
-    }
-    project.graph = JSON.stringify(data)
-    updateProject(project)
   }
 
   handleClickImport () {

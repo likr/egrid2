@@ -1,4 +1,6 @@
 import Rx from 'rxjs/Rx'
+import lf from 'lovefield'
+import uuid from 'uuid'
 import {
   PARTICIPANT_ADD,
   PARTICIPANT_GET,
@@ -7,33 +9,55 @@ import {
   PARTICIPANT_UPDATE
 } from '../constants'
 import {intentSubject} from '../intents/participant'
-import db from './db'
-
-const participants = db.collection('participants')
+import {connection} from './db'
 
 const subject = new Rx.Subject()
 
 const load = (type, projectId) => {
-  participants.list({filters: {projectId}, order: '-updated'})
-    .then(({data}) => {
-      subject.next({type, data})
-    })
+  connection.then((db) => {
+    const schema = db.getSchema().table('Participant')
+    db.select()
+      .from(schema)
+      .where(schema.projectId.eq(projectId))
+      .orderBy(schema.updated, lf.Order.DESC)
+      .exec()
+      .then((data) => {
+        subject.next({type, data})
+      })
+  })
 }
 
 const add = (data) => {
-  participants
-    .create(Object.assign({}, data, {
-      created: new Date(),
-      updated: new Date()
-    }))
-    .then(() => load(PARTICIPANT_ADD, data.projectId))
+  const now = new Date()
+  const participant = Object.assign({}, data, {
+    id: uuid.v4(),
+    created: now,
+    updated: now
+  })
+  connection.then((db) => {
+    const schema = db.getSchema().table('Participant')
+    const row = schema.createRow(participant)
+    db.insertOrReplace()
+      .into(schema)
+      .values([row])
+      .exec()
+      .then(() => {
+        load(PARTICIPANT_ADD, data.projectId)
+      })
+  })
 }
 
 const get = (id) => {
-  participants.get(id)
-    .then(({data}) => {
-      subject.next({type: PARTICIPANT_GET, data})
-    })
+  connection.then((db) => {
+    const schema = db.getSchema().table('Participant')
+    db.select()
+      .from(schema)
+      .where(schema.id.eq(id))
+      .exec()
+      .then(([data]) => {
+        subject.next({type: PARTICIPANT_GET, data})
+      })
+  })
 }
 
 const list = (projectId) => {
@@ -41,13 +65,38 @@ const list = (projectId) => {
 }
 
 const remove = (id) => {
-  participants.delete(id)
-    .then(({data}) => load(PARTICIPANT_REMOVE, data.projectId))
+  connection.then((db) => {
+    const schema = db.getSchema().table('Participant')
+    db.select()
+      .from(schema)
+      .where(schema.id.eq(id))
+      .exec()
+      .then(([data]) => {
+        db.delete()
+          .from(schema)
+          .where(schema.id.eq(id))
+          .exec()
+          .then(() => {
+            load(PARTICIPANT_REMOVE, data.projectId)
+          })
+      })
+  })
 }
 
 const update = (data) => {
-  participants.update(data)
-    .then(() => load(PARTICIPANT_UPDATE, data.projectId))
+  const now = new Date()
+  connection.then((db) => {
+    const schema = db.getSchema().table('Participant')
+    db.update(schema)
+      .set(schema.name, data.name)
+      .set(schema.note, data.note)
+      .set(schema.updated, now)
+      .where(schema.id.eq(data.id))
+      .exec()
+      .then(() => {
+        load(PARTICIPANT_UPDATE, data.projectId)
+      })
+  })
 }
 
 intentSubject.subscribe((payload) => {
