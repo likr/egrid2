@@ -1,8 +1,8 @@
-app/bundle.js
-app/layout-worker.js
-app/morph-worker.js
-app/vendor
-app/dict
+public/bundle.js
+public/layout-worker.js
+public/morph-worker.js
+public/vendor
+public/dict
 node_modules
 semantic
 app.zip

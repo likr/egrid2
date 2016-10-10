@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "A visual analytics system for the evaluation grid method",
   "scripts": {
-    "start": "webpack-dev-server --content-base app",
+    "start": "webpack-dev-server --content-base public",
     "build": "webpack",
     "deploy": "npm run build && firebase deploy",
     "test": "echo \"Error: no test specified\" && exit 1"

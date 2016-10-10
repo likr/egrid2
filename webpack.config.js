@@ -1,30 +1,28 @@
-/* eslint-env node */
-
-var path = require('path')
-
 module.exports = {
   module: {
     loaders: [
       {
-        test: path.join(__dirname, 'src'),
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015'],
-          plugins: ['transform-react-jsx'],
-        },
-      },
-    ],
+          presets: ['latest'],
+          plugins: ['transform-react-jsx']
+        }
+      }
+    ]
   },
   entry: {
     bundle: './src/index',
     'layout-worker': './src/workers/layout-worker',
-    'morph-worker': './src/workers/morph-worker',
+    'morph-worker': './src/workers/morph-worker'
   },
   output: {
-    path: path.join(__dirname, 'app'),
-    filename: '[name].js',
+    path: './public',
+    filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['', '.js', '.jsx']
   },
+  devtool: 'inline-source-map'
 }
