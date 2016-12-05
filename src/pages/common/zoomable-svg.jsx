@@ -13,7 +13,7 @@ const clamp = (x, min, max) => {
 }
 
 const minScale = 0.1
-const maxScale = 1
+const maxScale = 2
 
 class ZoomableSvg extends React.Component {
   constructor (props) {
