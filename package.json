@@ -5,7 +5,7 @@
   "scripts": {
     "start": "webpack-dev-server --content-base public",
     "build": "webpack",
-    "deploy": "npm run build && firebase deploy",
+    "deploy": "npm run build && gh-pages -d public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +33,7 @@
     "babel-loader": "^6.2.5",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
+    "gh-pages": "^0.12.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
   }
