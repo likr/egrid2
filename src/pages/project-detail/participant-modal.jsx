@@ -20,7 +20,7 @@ class ParticipantModal extends React.Component {
         {title}
       </div>
       <div className='content'>
-        <form className='ui form'>
+        <form className='ui form' onSubmit={this.handleSubmit.bind(this)}>
           <div className='field'>
             <label>
               Name
@@ -39,7 +39,7 @@ class ParticipantModal extends React.Component {
         <button className='ui cancel button'>
           Cancel
         </button>
-        <button className='ui primary approve button'>
+        <button ref='approveButton' className='ui primary approve button'>
           Create
         </button>
       </div>
@@ -50,6 +50,11 @@ class ParticipantModal extends React.Component {
     this.refs.name.value = name
     this.refs.note.value = note
     $(this.refs.modal).modal('show')
+  }
+
+  handleSubmit (event) {
+    event.preventDefault()
+    this.refs.approveButton.click()
   }
 }
 
