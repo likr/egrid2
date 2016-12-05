@@ -1,6 +1,4 @@
 import Rx from 'rxjs/Rx'
-import lf from 'lovefield'
-import uuid from 'uuid'
 import {
   PROJECT_ADD,
   PROJECT_GET,
@@ -9,54 +7,35 @@ import {
   PROJECT_UPDATE
 } from '../constants'
 import {intentSubject} from '../intents/project'
-import {connection} from './db'
+import db from './db'
+
+const projects = db.collection('projects')
 
 const subject = new Rx.Subject()
 
 const load = (type) => {
-  connection.then((db) => {
-    const schema = db.getSchema().table('Project')
-    db.select()
-      .from(schema)
-      .orderBy(schema.updated, lf.Order.DESC)
-      .exec()
-      .then((data) => {
-        subject.next({type, data})
-      })
-  })
+  projects.list({order: '-updated'})
+    .then(({data}) => {
+      subject.next({type, data})
+    })
 }
 
 const add = (data) => {
   const now = new Date()
   const project = Object.assign({}, data, {
-    id: uuid.v4(),
+    graph: '{"vertices":[],"edges":[]}',
     created: now,
     updated: now
   })
-  connection.then((db) => {
-    const schema = db.getSchema().table('Project')
-    const row = schema.createRow(project)
-    db.insertOrReplace()
-      .into(schema)
-      .values([row])
-      .exec()
-      .then(() => {
-        load(PROJECT_ADD)
-      })
-  })
+  projects.create(project)
+    .then(() => load(PROJECT_ADD))
 }
 
 const get = (id) => {
-  connection.then((db) => {
-    const schema = db.getSchema().table('Project')
-    db.select()
-      .from(schema)
-      .where(schema.id.eq(id))
-      .exec()
-      .then(([data]) => {
-        subject.next({type: PROJECT_GET, data})
-      })
-  })
+  projects.get(id)
+    .then(({data}) => {
+      subject.next({type: PROJECT_GET, data})
+    })
 }
 
 const list = () => {
@@ -64,32 +43,17 @@ const list = () => {
 }
 
 const remove = (id) => {
-  connection.then((db) => {
-    const schema = db.getSchema().table('Project')
-    db.delete()
-      .from(schema)
-      .where(schema.id.eq(id))
-      .exec()
-      .then(() => {
-        load(PROJECT_REMOVE)
-      })
-  })
+  projects.delete(id)
+    .then(() => load(PROJECT_REMOVE))
 }
 
 const update = (data) => {
   const now = new Date()
-  connection.then((db) => {
-    const schema = db.getSchema().table('Project')
-    db.update(schema)
-      .set(schema.name, data.name)
-      .set(schema.note, data.note)
-      .set(schema.updated, now)
-      .where(schema.id.eq(data.id))
-      .exec()
-      .then(() => {
-        load(PROJECT_UPDATE)
-      })
-  })
+  projects
+    .update(Object.assign({}, data, {
+      updated: now
+    }))
+    .then(() => load(PROJECT_UPDATE))
 }
 
 intentSubject.subscribe((payload) => {
