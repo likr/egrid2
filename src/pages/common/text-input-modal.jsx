@@ -8,9 +8,6 @@ class TextInputModal extends React.Component {
         this.props.onApprove(this.refs.text.value, this.context)
       },
     })
-    $(this.refs.form).on('submit', () => {
-      this.refs.approveButton.click()
-    })
   }
 
   render () {
@@ -21,7 +18,7 @@ class TextInputModal extends React.Component {
         {title}
       </div>
       <div className="content">
-        <form ref="form" className="ui form">
+        <form className="ui form" onSubmit={this.handleSubmit.bind(this)}>
           <div className="field">
             <label>
               評価項目の入力
@@ -46,6 +43,11 @@ class TextInputModal extends React.Component {
     this.refs.text.value = text
     this.context = context
     $(this.refs.modal).modal('show')
+  }
+
+  handleSubmit (event) {
+    event.preventDefault()
+    this.refs.approveButton.click()
   }
 }
 
