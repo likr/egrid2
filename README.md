@@ -4,7 +4,7 @@ Visual Analytics System for Laddering Interviews
 
 ## For Windows, Mac, and Linux
 
-https://likr.github.io/egrid2/
+http://egrid.jp/
 
 ## For ChromeOS
 
