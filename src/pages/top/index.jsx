@@ -16,6 +16,7 @@ class Top extends React.Component {
               </p>
               <div className='ui center aligned container'>
                 <Link className='ui primary large button' to='/projects'>Start</Link>
+                <a className='ui large button' href='https://collaboegm.appspot.com/'>旧版</a>
               </div>
             </div>
           </div>
