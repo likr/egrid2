@@ -2,7 +2,10 @@
 import React from 'react'
 import {Link} from 'react-router'
 import Graph from 'egraph/graph'
-import graphToJson from '../../utils/graph-to-json'
+import {graphToJson} from '../../utils/graph-to-json'
+import {jsonToGraph} from '../../utils/json-to-graph'
+import {participantGraphJson} from '../../utils/participant-graph-json'
+import {dataLink} from '../../utils/data-link'
 import {removeParticipant, updateParticipant} from '../../intents/participant'
 import {updateProject} from '../../intents/project'
 import formatDate from '../utils/format-date'
@@ -67,23 +70,32 @@ class ParticipantCard extends React.Component {
         </div>
       </div>
       <div className='extra content'>
-        <Link className='ui secondary button' to={`/projects/${participant.projectId}/participants/${participant.id}`}> Interview
-        </Link>
+        <Link className='ui secondary button' to={`/projects/${participant.projectId}/participants/${participant.id}`}>Interview</Link>
         <button
           className='ui icon button'
+          data-tooltip='Edit'
           onClick={this.handleClickEdit.bind(this)}>
           <i className='icon edit' />
         </button>
         <button
           className='ui icon button'
+          data-tooltip='Remove'
           onClick={this.handleClickRemove.bind(this)}>
           <i className='icon remove' />
         </button>
         <button
           className='ui icon button'
+          data-tooltip='Import data'
           onClick={this.handleClickImport.bind(this)}>
           <i className='icon upload' />
         </button>
+        <a
+          ref='exportButton'
+          className='ui icon button'
+          data-tooltip='Export data'
+          onClick={this.handleClickExport.bind(this)}>
+          <i className='icon download' />
+        </a>
       </div>
       <ConfirmModal
         ref='confirmModal'
@@ -130,6 +142,13 @@ class ParticipantCard extends React.Component {
 
   handleClickImport () {
     this.refs.fileSelectModal.show()
+  }
+
+  handleClickExport () {
+    const {project, participant} = this.props
+    const data = participantGraphJson(jsonToGraph(JSON.parse(project.graph)), participant.id)
+    this.refs.exportButton.href = dataLink(JSON.stringify(data))
+    this.refs.exportButton.download = `${project.name}-${participant.name}.json`
   }
 
   handleApproveFileSelectModal (file) {

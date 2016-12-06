@@ -1,7 +1,8 @@
 import React from 'react'
 import copy from 'egraph/graph/copy'
 import CycleRemovalTransformer from 'egraph/transformer/cycle-removal'
-import graphToJson from '../../utils/graph-to-json'
+import {graphToJson} from '../../utils/graph-to-json'
+import {participantGraphJson} from '../../utils/participant-graph-json'
 import {
   PROJECT_GET,
   PROJECT_UPDATE
@@ -21,14 +22,7 @@ import Network from './network'
 const layout = (inGraph, participantId) => {
   const graph = copy(inGraph)
   new CycleRemovalTransformer().transform(graph)
-  calcLayout({
-    vertices: graph.vertices()
-      .map((u) => ({u, d: graph.vertex(u)}))
-      .filter(({d}) => d.participants.indexOf(participantId) >= 0),
-    edges: graph.edges()
-      .map(([u, v]) => ({u, v, d: graph.edge(u, v)}))
-      .filter(({d}) => d.participants.indexOf(participantId) >= 0)
-  }, {
+  calcLayout(participantGraphJson(graph, participantId), {
     layerMargin: 150,
     vertexMargin: 50,
     edgeMargin: 10,

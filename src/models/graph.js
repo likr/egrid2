@@ -1,6 +1,7 @@
 import Rx from 'rxjs/Rx'
 import Graph from 'egraph/graph'
 import copy from '../utils/copy-graph'
+import {jsonToGraph} from '../utils/json-to-graph'
 import {
   GRAPH_ADD_EDGE,
   GRAPH_ADD_VERTEX,
@@ -46,15 +47,9 @@ const clear = () => {
 }
 
 const load = (data) => {
-  graph = new Graph()
+  graph = jsonToGraph(data)
   undoStack = []
   redoStack = []
-  for (const {u, d} of data.vertices) {
-    graph.addVertex(u, d)
-  }
-  for (const {u, v, d} of data.edges) {
-    graph.addEdge(u, v, d)
-  }
   next(GRAPH_LOAD)
 }
 

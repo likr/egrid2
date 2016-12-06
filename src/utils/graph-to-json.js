@@ -1,4 +1,4 @@
-const graphToJson = (graph) => {
+export const graphToJson = (graph) => {
   return {
     vertices: graph.vertices().map((u) => {
       const d = graph.vertex(u)
@@ -7,8 +7,8 @@ const graphToJson = (graph) => {
         d: {
           text: d.text,
           participants: d.participants,
-          parent: d.parent,
-        },
+          parent: d.parent
+        }
       }
     }),
     edges: graph.edges().map(([u, v]) => {
@@ -17,11 +17,9 @@ const graphToJson = (graph) => {
         u,
         v,
         d: {
-          participants: d.participants,
-        },
+          participants: d.participants
+        }
       }
-    }),
+    })
   }
 }
-
-export default graphToJson
