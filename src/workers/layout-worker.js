@@ -1,5 +1,6 @@
 /* eslint-env worker */
 
+import 'babel-polyfill'
 import Graph from 'egraph/graph'
 import Layouter from 'egraph/layouter/sugiyama'
 

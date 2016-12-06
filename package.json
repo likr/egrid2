@@ -5,7 +5,7 @@
   "scripts": {
     "start": "webpack-dev-server --content-base public",
     "build": "webpack",
-    "deploy": "npm run build && gh-pages -d public",
+    "deploy": "NODE_ENV=production npm run build && gh-pages -d public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,15 +16,10 @@
   "author": "Yosuke Onoue <onoue@likr-lab.com>",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "^3.3.6",
-    "d3": "^3.5.12",
     "d3-cloud": "^1.2.1",
     "egraph": "^3.0.0",
     "kinto": "^1.2.0",
     "kuromoji": "0.0.5",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2",
-    "react-router": "^2.8.1",
     "rxjs": "^5.0.0-beta.12",
     "semantic-ui": "^2.1.8"
   },

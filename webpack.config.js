@@ -1,9 +1,15 @@
-module.exports = {
+const path = require('path')
+const webpack = require('webpack')
+
+const base = {
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'node_modules/egraph')
+        ],
         loader: 'babel-loader',
         query: {
           presets: ['latest'],
@@ -24,5 +30,27 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-  devtool: 'inline-source-map'
+  plugins: [
+  ],
+  externals: {
+    'jquery': '$',
+    'd3': 'd3',
+    'react': 'React',
+    'react-dom': 'ReactDOM',
+    'react-router': 'ReactRouter'
+  }
 }
+
+if (process.env.NODE_ENV === 'production') {
+  base.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    }
+  }))
+} else {
+  Object.assign(base, {
+    devtool: 'inline-source-map'
+  })
+}
+
+module.exports = base

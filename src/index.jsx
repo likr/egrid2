@@ -1,4 +1,4 @@
-/* global document */
+import 'babel-polyfill'
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, hashHistory } from 'react-router'
@@ -11,11 +11,11 @@ import ParticipantInterview from './pages/participant-interview/index'
 
 render((
   <Router history={hashHistory}>
-    <Route path="/" component={Top} />
-    <Route path="/projects" component={ProjectList} />
-    <Route path="/projects/:projectId" component={ProjectDetail} />
-    <Route path="/projects/:projectId/analysis" component={ProjectAnalysis} />
-    <Route path="/projects/:projectId/words" component={ProjectWords} />
-    <Route path="/projects/:projectId/participants/:participantId" component={ParticipantInterview} />
+    <Route path='/' component={Top} />
+    <Route path='/projects' component={ProjectList} />
+    <Route path='/projects/:projectId' component={ProjectDetail} />
+    <Route path='/projects/:projectId/analysis' component={ProjectAnalysis} />
+    <Route path='/projects/:projectId/words' component={ProjectWords} />
+    <Route path='/projects/:projectId/participants/:participantId' component={ParticipantInterview} />
   </Router>
   ), document.getElementById('content'))
