@@ -29,7 +29,7 @@ class Top extends React.Component {
               <h3 className='ui header'>News</h3>
               <ul>
                 <li>
-                  <a href='http://egrid.jp'>Web版を公開しました。</a>Chrome Web Store版は2018年初頭にChromeOSのみのサポートとなりますので移行をお願いします。(2016/12/06)
+                  <a href='https://egrid.jp'>Web版を公開しました。</a>Chrome Web Store版は2018年初頭にChromeOSのみのサポートとなりますので移行をお願いします。(2016/12/06)
                 </li>
                 <li>
                   <a href='https://chrome.google.com/webstore/detail/e-grid/pehikclbemopiakglepnklhedocajidk?hl=ja'>Chrome Web Storeでの公開を開始しました。</a> (2016/04/05)
