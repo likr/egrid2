@@ -21,6 +21,11 @@ const merge = (graphData, inputData, participantId) => {
   for (const {u, v, d} of graphData.edges) {
     graph.addEdge(u, v, d)
   }
+  if (inputData.vertices && inputData.edges) {
+    const indices = new Map(inputData.vertices.map(({u}, i) => [u, i]))
+    inputData.nodes = inputData.vertices.map(({d}) => d)
+    inputData.links = inputData.edges.map(({u, v}) => ({source: indices.get(u), target: indices.get(v)}))
+  }
   if (inputData.nodes && inputData.links) {
     const indices = {}
     inputData.nodes.forEach(({text}, i) => {
