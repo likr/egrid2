@@ -1,6 +1,11 @@
 import React from 'react'
-import { Link } from 'react-router'
+import {Link} from 'react-router'
+import {ShareButtons, generateShareIcon} from 'react-share'
 import Page from '../common/page'
+
+const {FacebookShareButton, TwitterShareButton} = ShareButtons
+const FacebookIcon = generateShareIcon('facebook')
+const TwitterIcon = generateShareIcon('twitter')
 
 class Top extends React.Component {
   render () {
@@ -9,10 +14,25 @@ class Top extends React.Component {
         <div className='row'>
           <div className='sixteen wide mobile eight wide computer column'>
             <div style={{margin: '20px 0'}}>
+              <div style={{marginBottom: '10px'}}>
+                <FacebookShareButton
+                  url='https://egrid.jp/'
+                  title='E-Grid - 評価グリッド法ビジュアル分析システム'
+                  className='share-button'>
+                  <FacebookIcon size='32' round className='cursor-pointer' />
+                </FacebookShareButton>
+                <TwitterShareButton
+                  url='https://egrid.jp/'
+                  title='E-Grid - 評価グリッド法ビジュアル分析システム'
+                  className='share-button'>
+                  <TwitterIcon size='32' round className='cursor-pointer' />
+                </TwitterShareButton>
+              </div>
               <h1 className='ui header' style={{marginTop: 0, marginBottom: 0}}>E-Grid</h1>
-              <h2 className='ui header' style={{marginTop: 0, marginBottom: '20px'}}>—認知構造のビジュアル分析システム—</h2>
+              <h2 className='ui header' style={{marginTop: 0, marginBottom: '20px'}}>—評価グリッド法ビジュアル分析システム—</h2>
               <p>
-                E-GridはラダリングンタビューをサポートするWebアプリケーションです。作業負担の軽減された効率的なインタビューと、先進技術による効果的な分析を可能とします。
+                E-Gridは評価グリッド法やラダリングンタビューをサポートするWebアプリケーションです。
+                作業負担の軽減された効率的なインタビューと、先進的可視化技術による効果的な分析を可能とします。
               </p>
               <div className='ui center aligned container'>
                 <Link className='ui primary large button' to='/projects'>Start</Link>

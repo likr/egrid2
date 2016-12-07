@@ -12,6 +12,11 @@
   cursor: pointer;
 }
 
+.share-button {
+  display: inline-block;
+  margin-right: 10px;
+}
+
 html, body {
   overflow: auto;
 }
