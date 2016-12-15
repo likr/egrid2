@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "A visual analytics system for the evaluation grid method",
   "scripts": {
-    "start": "webpack-dev-server --content-base public",
+    "start": "webpack-dev-server --content-base public --history-api-fallback",
     "build": "webpack",
-    "deploy": "NODE_ENV=production npm run build && gh-pages -d public",
+    "deploy": "NODE_ENV=production npm run build && firebase deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,7 +29,7 @@
     "babel-loader": "^6.2.5",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
-    "gh-pages": "^0.12.0",
+    "firebase-tools": "^3.2.0",
     "webpack": "^1.13.2",
     "webpack-dev-server": "^1.16.2"
   }

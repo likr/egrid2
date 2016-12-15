@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
-import { render } from 'react-dom'
-import { Router, Route, hashHistory } from 'react-router'
+import {render} from 'react-dom'
+import {Router, Route, browserHistory} from 'react-router'
 import Top from './pages/top/index'
 import About from './pages/about/index'
 import ProjectAnalysis from './pages/project-analysis/index'
@@ -11,7 +11,7 @@ import ProjectWords from './pages/project-words/index'
 import ParticipantInterview from './pages/participant-interview/index'
 
 render((
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path='/' component={Top} />
     <Route path='/about' component={About} />
     <Route path='/projects' component={ProjectList} />
