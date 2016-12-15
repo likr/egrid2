@@ -3,6 +3,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, hashHistory } from 'react-router'
 import Top from './pages/top/index'
+import About from './pages/about/index'
 import ProjectAnalysis from './pages/project-analysis/index'
 import ProjectDetail from './pages/project-detail/index'
 import ProjectList from './pages/project-list/index'
@@ -12,6 +13,7 @@ import ParticipantInterview from './pages/participant-interview/index'
 render((
   <Router history={hashHistory}>
     <Route path='/' component={Top} />
+    <Route path='/about' component={About} />
     <Route path='/projects' component={ProjectList} />
     <Route path='/projects/:projectId' component={ProjectDetail} />
     <Route path='/projects/:projectId/analysis' component={ProjectAnalysis} />

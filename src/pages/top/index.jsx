@@ -31,8 +31,10 @@ class Top extends React.Component {
               <h1 className='ui header' style={{marginTop: 0, marginBottom: 0}}>E-Grid</h1>
               <h2 className='ui header' style={{marginTop: 0, marginBottom: '20px'}}>—評価グリッド法ビジュアル分析システム—</h2>
               <p>
-                E-Gridは評価グリッド法やラダリングンタビューをサポートするWebアプリケーションです。
-                作業負担の軽減された効率的なインタビューと、先進的可視化技術による効果的な分析を可能とします。
+                E-Gridは評価グリッド法やラダリングンタビューをサポートするWebベースのソフトウェアです。
+                インタビュー支援機能によって効率的に評価構造図を描くことができます。
+                また、ビジュアル分析機能によって評価構造図を多面的に分析することができます。
+                E-Gridは人々な認知構造の効果的な可視化を手助けします。
               </p>
               <div className='ui center aligned container'>
                 <Link className='ui primary large button' to='/projects'>Start</Link>
@@ -54,6 +56,21 @@ class Top extends React.Component {
                 </li>
                 <li>
                   <a href='https://chrome.google.com/webstore/detail/e-grid/pehikclbemopiakglepnklhedocajidk?hl=ja'>Chrome Web Storeでの公開を開始しました。</a> (2016/04/05)
+                </li>
+              </ul>
+            </div>
+            <div className='ui vertical segment'>
+              <h3 className='ui header'>Requirements</h3>
+              <p>E-Gridの推奨動作環境は<a href='https://www.google.co.jp/chrome/browser/'>Google Chrome</a>の最新安定版です。インストール及び最新版への更新をお願いします。</p>
+            </div>
+            <div className='ui vertical segment'>
+              <h3 className='ui header'>Documents</h3>
+              <ul>
+                <li>
+                  <a href='https://docs.google.com/document/d/1QLEXZxyelxMzFAjWHpJkD4V74orxcbS80QYmQ8p9X8k/edit?usp=sharing'>E-Gridマニュアル</a>
+                </li>
+                <li>
+                  <Link to='/about'>E-Gridとは</Link>
                 </li>
               </ul>
             </div>
