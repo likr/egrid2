@@ -4,7 +4,7 @@ import {intentSubject} from '../intents/morph-worker'
 
 const morph = (data) => {
   return Rx.Observable.create((observer) => {
-    const worker = new window.Worker('morph-worker.js')
+    const worker = new window.Worker('/morph-worker.js')
     worker.onmessage = (result) => {
       observer.next(result)
       observer.complete()

@@ -19,7 +19,7 @@ const calcSize = (texts, size, family) => {
 
 const layout = (data) => {
   return Rx.Observable.create((observer) => {
-    const worker = new window.Worker('layout-worker.js')
+    const worker = new window.Worker('/layout-worker.js')
     worker.onmessage = (result) => {
       observer.next(result)
       observer.complete()
