@@ -34,7 +34,7 @@ class Top extends React.Component {
                 E-Gridは評価グリッド法やラダリングンタビューをサポートするWebベースのソフトウェアです。
                 インタビュー支援機能によって効率的に評価構造図を描くことができます。
                 また、ビジュアル分析機能によって評価構造図を多面的に分析することができます。
-                E-Gridは人々な認知構造の効果的な可視化を手助けします。
+                E-Gridは人々の知構造の効果的な可視化を手助けします。
               </p>
               <div className='ui center aligned container'>
                 <Link className='ui primary large button' to='/projects'>Start</Link>
