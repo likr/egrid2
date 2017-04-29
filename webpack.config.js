@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 
 const base = {
   module: {
@@ -31,6 +32,9 @@ const base = {
     extensions: ['', '.js', '.jsx']
   },
   plugins: [
+    new webpack.DefinePlugin({
+      PRODUCTION: process.env.NODE_ENV === 'production'
+    })
   ],
   externals: {
     'jquery': '$',
@@ -46,6 +50,20 @@ if (process.env.NODE_ENV === 'production') {
     compress: {
       warnings: false
     }
+  }))
+  base.plugins.push(new SWPrecacheWebpackPlugin({
+    maximumFileSizeToCacheInBytes: 10000000,
+    staticFileGlobs: [
+      'public/**/*.*'
+    ],
+    stripPrefix: 'public/',
+    navigateFallback: '/index.html',
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\//,
+        handler: 'networkFirst'
+      }
+    ]
   }))
 } else {
   Object.assign(base, {
