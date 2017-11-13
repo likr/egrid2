@@ -15,7 +15,7 @@ const createImage = (text) => {
   return {
     href: canvas.toDataURL('image/png'),
     width: canvas.width,
-    height: canvas.height,
+    height: canvas.height
   }
 }
 
@@ -23,15 +23,13 @@ class TextImage extends React.Component {
   render () {
     const {width, height, text} = this.props
     const img = createImage(text)
-    return (
-    <image
+    return <image
       xlinkHref={img.href}
       x={-width / 2}
       y={-height / 2}
       width={width}
       height={height}
-      preserveAspectRatio="none" />
-    )
+      preserveAspectRatio='none' />
   }
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import d3 from 'd3'
 import d3cloud from 'd3-cloud'
 import {Observable} from 'rxjs/Rx'
-import {initAnalysis} from '../../intents/analysis'
+import {initAnalysis, updateGraph} from '../../intents/analysis'
 import {listParticipants} from '../../intents/participant'
 import {getProject} from '../../intents/project'
 import Analysis from '../../models/analysis'
@@ -13,6 +13,7 @@ import Fullscreen from '../common/fullscreen'
 import Network from './network'
 import FilteringThreshold from './filtering-threshold'
 import ParticipantList from './participant-list'
+import ViewSettingModal from './view-setting-modal'
 import WordCloud from './wordcloud'
 
 const wordCloudWidth = 300
@@ -29,7 +30,7 @@ const cutoff = (s, length) => {
   return s.substr(0, length - 1) + '...'
 }
 
-const parseGraph = (str) => {
+const parseGraph = (str, textMaxLength) => {
   const graph = JSON.parse(str)
   if (graph.groups) {
     const vertices = {}
@@ -72,7 +73,7 @@ const parseGraph = (str) => {
     graph.edges = Object.values(visitedEdges)
   }
   for (const vertex of graph.vertices) {
-    vertex.d.text = cutoff(vertex.d.text, 10)
+    vertex.d.text = cutoff(vertex.d.text, textMaxLength)
   }
   return graph
 }
@@ -115,6 +116,7 @@ const count = (data) => {
 class ProjectAnalysis extends React.Component {
   constructor (props) {
     super(props)
+    this.textMaxLength = 20
     this.state = {
       participants: [],
       threshold: 0,
@@ -130,7 +132,9 @@ class ProjectAnalysis extends React.Component {
     this.initSubscription = Observable
       .zip(Projects.map(({data}) => data), Participants.map(({data}) => data))
       .subscribe(([project, participants]) => {
-        initAnalysis(parseGraph(project.graph), participants)
+        this.project = project
+        this.participants = participants
+        initAnalysis(parseGraph(project.graph, this.textMaxLength), participants)
       })
 
     this.analysisSubscription = Analysis.subscribe((state) => {
@@ -189,6 +193,9 @@ class ProjectAnalysis extends React.Component {
         <button className='ui massive circular icon button' onClick={this.handleClickBackButton.bind(this)}>
           <i className='icon arrow left' />
         </button>
+        <button className='ui massive circular icon button' onClick={this.handleClickOpenViewSettingButton.bind(this)}>
+          <i className='icon settings' />
+        </button>
       </div>
       <div style={{position: 'absolute', top: '40px', bottom: 0, right: 0, width: `${wordCloudWidth + 40}px`, padding: '10px', boxShadow: '0 0 10px'}}>
         <div style={{height: '100%', overflowY: 'scroll'}}>
@@ -203,12 +210,26 @@ class ProjectAnalysis extends React.Component {
           </div>
         </div>
       </div>
+      <ViewSettingModal ref='viewSettingModal' onApprove={this.handleApproveViewSettingModal.bind(this)} />
     </Fullscreen>
   }
 
   handleClickBackButton () {
     const {projectId} = this.props.params
     this.context.router.push(`/projects/${projectId}`)
+  }
+
+  handleClickOpenViewSettingButton () {
+    this.refs.viewSettingModal.show({
+      textMaxLength: this.textMaxLength
+    })
+  }
+
+  handleApproveViewSettingModal (data) {
+    if (data.textMaxLength) {
+      this.textMaxLength = data.textMaxLength
+      updateGraph(parseGraph(this.project.graph, this.textMaxLength))
+    }
   }
 }
 

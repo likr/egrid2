@@ -4,6 +4,7 @@ import {
   ANALYSIS_SELECT_VERTEX,
   ANALYSIS_SELECT_VERTICES_BY_WORD,
   ANALYSIS_SET_THRESHOLD,
+  ANALYSIS_UPDATE_GRAPH,
   ANALYSIS_UPDATE_PARTICIPANTS
 } from '../constants'
 
@@ -35,6 +36,13 @@ export const setThreshold = (threshold) => {
   intentSubject.next({
     type: ANALYSIS_SET_THRESHOLD,
     threshold
+  })
+}
+
+export const updateGraph = (graph) => {
+  intentSubject.next({
+    type: ANALYSIS_UPDATE_GRAPH,
+    graph
   })
 }
 

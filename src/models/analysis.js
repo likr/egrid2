@@ -12,6 +12,7 @@ import {
   ANALYSIS_SELECT_VERTEX,
   ANALYSIS_SELECT_VERTICES_BY_WORD,
   ANALYSIS_SET_THRESHOLD,
+  ANALYSIS_UPDATE_GRAPH,
   ANALYSIS_UPDATE_PARTICIPANTS
 } from '../constants'
 import {intentSubject} from '../intents/analysis'
@@ -134,6 +135,7 @@ const next = (type) => {
   switch (type) {
     case ANALYSIS_INIT:
     case ANALYSIS_SET_THRESHOLD:
+    case ANALYSIS_UPDATE_GRAPH:
     case ANALYSIS_UPDATE_PARTICIPANTS:
       const participantIds = new Set(Object.values(state.participants)
         .filter(({checked}) => checked)
@@ -183,6 +185,12 @@ const setThreshold = ({threshold}) => {
   next(ANALYSIS_SET_THRESHOLD)
 }
 
+const updateGraph = ({graph, participants}) => {
+  Object.assign(originalData, graph)
+  Object.assign(state.graphData, graph)
+  next(ANALYSIS_UPDATE_GRAPH)
+}
+
 const updateParticipants = ({participants}) => {
   for (const id in state.participants) {
     if (participants[id] === true) {
@@ -206,6 +214,9 @@ intentSubject.subscribe((payload) => {
       break
     case ANALYSIS_SET_THRESHOLD:
       setThreshold(payload)
+      break
+    case ANALYSIS_UPDATE_GRAPH:
+      updateGraph(payload)
       break
     case ANALYSIS_UPDATE_PARTICIPANTS:
       updateParticipants(payload)

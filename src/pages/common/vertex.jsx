@@ -12,7 +12,7 @@ class Vertex extends React.Component {
     this.state = {
       x0: x,
       y0: 0,
-      scale0: scale,
+      scale0: scale
     }
   }
 
@@ -21,7 +21,7 @@ class Vertex extends React.Component {
     this.setState({
       x0: x,
       y0: y,
-      scale0: scale,
+      scale0: scale
     })
   }
 
@@ -37,10 +37,9 @@ class Vertex extends React.Component {
     const r = 3
     const {width, height, color, strokeColor, text, children, onClick, selected} = this.props
     const {x0, y0, scale0} = this.state
-    return (
-    <g
-      ref="vertex"
-      className="cursor-pointer"
+    return <g
+      ref='vertex'
+      className='cursor-pointer'
       onClick={onClick || nop}
       transform={`translate(${x0},${y0})scale(${scale0})`}>
       <rect
@@ -55,7 +54,6 @@ class Vertex extends React.Component {
       <TextImage text={text} width={width} height={height} />
       {children}
     </g>
-    )
   }
 
   transition () {
