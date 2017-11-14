@@ -1,6 +1,7 @@
 public/bundle.js
 public/layout-worker.js
 public/morph-worker.js
+public/service-worker.js
 public/vendor
 public/dict
 node_modules
