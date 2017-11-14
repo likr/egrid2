@@ -16,10 +16,16 @@
   "author": "Yosuke Onoue <onoue@likr-lab.com>",
   "license": "MIT",
   "dependencies": {
+    "d3": "^3.5.17",
     "d3-cloud": "^1.2.1",
     "egraph": "^3.0.0",
     "kinto": "^1.2.0",
     "kuromoji": "0.0.5",
+    "prop-types": "^15.6.0",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-share": "^1.17.0",
     "rxjs": "^5.0.0-beta.12",
     "semantic-ui": "^2.2.13"

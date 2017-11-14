@@ -1,4 +1,6 @@
 import React from 'react'
+import {Prompt, withRouter} from 'react-router'
+import PropTypes from 'prop-types'
 import copy from 'egraph/graph/copy'
 import CycleRemovalTransformer from 'egraph/transformer/cycle-removal'
 import {graphToJson} from '../../utils/graph-to-json'
@@ -32,6 +34,12 @@ const layout = (inGraph, participantId) => {
 }
 
 class ParticipantInterview extends React.Component {
+  static get propTypes () {
+    return {
+      history: PropTypes.object.isRequired
+    }
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -49,13 +57,7 @@ class ParticipantInterview extends React.Component {
   }
 
   componentDidMount () {
-    const {projectId, participantId} = this.props.params
-
-    this.context.router.setRouteLeaveHook(this.props.route, () => {
-      if (!this.state.saved) {
-        return '保存せずに終了しますか？'
-      }
-    })
+    const {projectId, participantId} = this.props.match.params
 
     this.projectSubscription = Projects.subscribe(({type, data}) => {
       switch (type) {
@@ -69,7 +71,7 @@ class ParticipantInterview extends React.Component {
           this.setState({
             saved: true
           })
-          this.context.router.push(`/projects/${projectId}`)
+          this.props.history.push(`/projects/${projectId}`)
           break
       }
     })
@@ -113,7 +115,7 @@ class ParticipantInterview extends React.Component {
 
   render () {
     const {graph, vertices, edges, contentWidth, contentHeight, canUndo, canRedo} = this.state
-    const {participantId} = this.props.params
+    const {participantId} = this.props.match.params
     return <Fullscreen>
       <div style={{position: 'absolute', top: '40px', left: 0, right: 0, bottom: 0}}>
         <Network
@@ -146,12 +148,13 @@ class ParticipantInterview extends React.Component {
         </button>
       </div>
       <TextInputModal ref='textInputModal' onApprove={this.handleApproveTextInputModal.bind(this)} />
+      <Prompt message='保存せずに終了しますか？' when={!this.state.saved} />
     </Fullscreen>
   }
 
   handleClickBackButton () {
-    const {projectId} = this.props.params
-    this.context.router.push(`/projects/${projectId}`)
+    const {projectId} = this.props.match.params
+    this.props.history.push(`/projects/${projectId}`)
   }
 
   handleClickSaveButton () {
@@ -167,7 +170,7 @@ class ParticipantInterview extends React.Component {
 
   handleApproveTextInputModal (u) {
     const {graph} = this.state
-    const {participantId} = this.props.params
+    const {participantId} = this.props.match.params
     const ud = graph.vertex(u) || {text: u, participants: []}
     if (ud.participants.indexOf(participantId) < 0) {
       ud.participants = Array.from(ud.participants)
@@ -185,8 +188,4 @@ class ParticipantInterview extends React.Component {
   }
 }
 
-ParticipantInterview.contextTypes = {
-  router: React.PropTypes.object
-}
-
-export default ParticipantInterview
+export default withRouter(ParticipantInterview)

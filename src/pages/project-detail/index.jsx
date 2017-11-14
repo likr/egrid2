@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { PROJECT_GET } from '../../constants'
 import Projects from '../../models/project'
 import Participants from '../../models/participant'
@@ -33,7 +33,7 @@ class ProjectDetail extends React.Component {
       })
     })
 
-    const projectId = this.props.params.projectId
+    const projectId = this.props.match.params.projectId
     getProject(projectId)
     listParticipants(projectId)
   }
@@ -45,7 +45,7 @@ class ProjectDetail extends React.Component {
 
   render () {
     const {project, participants} = this.state
-    const projectId = this.props.params.projectId
+    const projectId = this.props.match.params.projectId
     if (project === null) {
       return <Page>
         loading
@@ -93,7 +93,7 @@ class ProjectDetail extends React.Component {
 
   handleApproveParticipantModal (data) {
     addParticipant(Object.assign(data, {
-      projectId: this.props.params.projectId
+      projectId: this.props.match.params.projectId
     }))
   }
 

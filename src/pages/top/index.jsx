@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from 'react-router'
+import {Link} from 'react-router-dom'
 import {ShareButtons, generateShareIcon} from 'react-share'
 import Page from '../common/page'
 
@@ -19,13 +19,13 @@ class Top extends React.Component {
                   url='https://egrid.jp/'
                   quote='E-Grid - 評価グリッド法ビジュアル分析システム'
                   className='share-button'>
-                  <FacebookIcon size='32' round className='cursor-pointer' />
+                  <FacebookIcon size={32} round className='cursor-pointer' />
                 </FacebookShareButton>
                 <TwitterShareButton
                   url='https://egrid.jp/'
                   title='E-Grid - 評価グリッド法ビジュアル分析システム'
                   className='share-button'>
-                  <TwitterIcon size='32' round className='cursor-pointer' />
+                  <TwitterIcon size={32} round className='cursor-pointer' />
                 </TwitterShareButton>
               </div>
               <h1 className='ui header' style={{marginTop: 0, marginBottom: 0}}>E-Grid</h1>

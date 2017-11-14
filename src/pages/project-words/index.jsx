@@ -1,5 +1,7 @@
 import React from 'react'
-import {Link} from 'react-router'
+import {Prompt, withRouter} from 'react-router'
+import {Link} from 'react-router-dom'
+import PropTypes from 'prop-types'
 import {PROJECT_GET, PROJECT_UPDATE} from '../../constants'
 import Projects from '../../models/project'
 import {getProject, updateProject} from '../../intents/project'
@@ -8,6 +10,12 @@ import Word from './word'
 import Group from './group'
 
 class ProjectWords extends React.Component {
+  static get propTypes () {
+    return {
+      history: PropTypes.object.isRequired
+    }
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -21,13 +29,7 @@ class ProjectWords extends React.Component {
   }
 
   componentDidMount () {
-    const {projectId} = this.props.params
-
-    this.context.router.setRouteLeaveHook(this.props.route, () => {
-      if (!this.state.saved) {
-        return '保存せずに終了しますか？'
-      }
-    })
+    const {projectId} = this.props.match.params
 
     this.projectSubscription = Projects.subscribe(({type, data}) => {
       switch (type) {
@@ -45,8 +47,10 @@ class ProjectWords extends React.Component {
           this.setState({project, words, groups})
           break
         case PROJECT_UPDATE:
-          this.state.saved = true
-          this.context.router.push(`/projects/${projectId}`)
+          this.setState({
+            saved: true
+          })
+          this.props.history.push(`/projects/${projectId}`)
           break
       }
     })
@@ -59,7 +63,7 @@ class ProjectWords extends React.Component {
   }
 
   render () {
-    const {projectId} = this.props.params
+    const {projectId} = this.props.match.params
     const {project, searchLeft, searchRight} = this.state
     const words = Object.values(this.state.words).filter(({d}) => {
       return d.parent === undefined && d.text.indexOf(searchLeft) >= 0
@@ -155,6 +159,7 @@ class ProjectWords extends React.Component {
           </div>
         </div>
       </div>
+      <Prompt message='保存せずに終了しますか？' when={!this.state.saved} />
     </Page>
   }
 
@@ -203,7 +208,10 @@ class ProjectWords extends React.Component {
       color: '#ffffff',
       items: []
     })
-    this.setState({groups})
+    this.setState({
+      saved: false,
+      groups
+    })
   }
 
   handleInputSearchLeft (event) {
@@ -241,8 +249,4 @@ class ProjectWords extends React.Component {
   }
 }
 
-ProjectWords.contextTypes = {
-  router: React.PropTypes.object
-}
-
-export default ProjectWords
+export default withRouter(ProjectWords)

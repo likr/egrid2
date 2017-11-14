@@ -1,6 +1,6 @@
 /* global FileReader */
 import React from 'react'
-import {Link} from 'react-router'
+import {Link} from 'react-router-dom'
 import Graph from 'egraph/graph'
 import {graphToJson} from '../../utils/graph-to-json'
 import {jsonToGraph} from '../../utils/json-to-graph'

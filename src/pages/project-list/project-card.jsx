@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { removeProject, updateProject } from '../../intents/project'
 import formatDate from '../utils/format-date'
 import ConfirmModal from '../common/confirm-modal'

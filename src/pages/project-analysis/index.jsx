@@ -1,4 +1,6 @@
 import React from 'react'
+import {withRouter} from 'react-router'
+import PropTypes from 'prop-types'
 import d3 from 'd3'
 import d3cloud from 'd3-cloud'
 import {Observable} from 'rxjs/Rx'
@@ -114,6 +116,12 @@ const count = (data) => {
 }
 
 class ProjectAnalysis extends React.Component {
+  static get propTypes () {
+    return {
+      history: PropTypes.object.isRequired
+    }
+  }
+
   constructor (props) {
     super(props)
     this.textMaxLength = 20
@@ -168,7 +176,7 @@ class ProjectAnalysis extends React.Component {
         .start()
     })
 
-    const {projectId} = this.props.params
+    const {projectId} = this.props.match.params
     getProject(projectId)
     listParticipants(projectId)
   }
@@ -215,8 +223,8 @@ class ProjectAnalysis extends React.Component {
   }
 
   handleClickBackButton () {
-    const {projectId} = this.props.params
-    this.context.router.push(`/projects/${projectId}`)
+    const {projectId} = this.props.match.params
+    this.props.history.push(`/projects/${projectId}`)
   }
 
   handleClickOpenViewSettingButton () {
@@ -233,8 +241,4 @@ class ProjectAnalysis extends React.Component {
   }
 }
 
-ProjectAnalysis.contextTypes = {
-  router: React.PropTypes.object
-}
-
-export default ProjectAnalysis
+export default withRouter(ProjectAnalysis)

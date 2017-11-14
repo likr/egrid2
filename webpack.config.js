@@ -37,11 +37,7 @@ const base = {
     })
   ],
   externals: {
-    'jquery': '$',
-    'd3': 'd3',
-    'react': 'React',
-    'react-dom': 'ReactDOM',
-    'react-router': 'ReactRouter'
+    'jquery': '$'
   }
 }
 
@@ -59,10 +55,6 @@ if (process.env.NODE_ENV === 'production') {
     stripPrefix: 'public/',
     navigateFallback: '/index.html',
     runtimeCaching: [
-      {
-        urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\//,
-        handler: 'networkFirst'
-      }
     ]
   }))
 } else {
