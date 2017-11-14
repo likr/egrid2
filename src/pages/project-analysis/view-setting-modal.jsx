@@ -32,7 +32,7 @@ class ViewSettingModal extends React.Component {
           Cancel
         </button>
         <button ref='approveButton' className='ui primary approve button'>
-          Create
+          Update
         </button>
       </div>
     </div>
