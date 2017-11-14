@@ -20,7 +20,7 @@
     "egraph": "^3.0.0",
     "kinto": "^1.2.0",
     "kuromoji": "0.0.5",
-    "react-share": "^1.13.2",
+    "react-share": "^1.17.0",
     "rxjs": "^5.0.0-beta.12",
     "semantic-ui": "^2.2.13"
   },

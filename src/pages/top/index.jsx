@@ -17,7 +17,7 @@ class Top extends React.Component {
               <div style={{marginBottom: '10px'}}>
                 <FacebookShareButton
                   url='https://egrid.jp/'
-                  title='E-Grid - 評価グリッド法ビジュアル分析システム'
+                  quote='E-Grid - 評価グリッド法ビジュアル分析システム'
                   className='share-button'>
                   <FacebookIcon size='32' round className='cursor-pointer' />
                 </FacebookShareButton>
