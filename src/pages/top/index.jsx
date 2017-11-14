@@ -67,7 +67,7 @@ class Top extends React.Component {
               <h3 className='ui header'>Documents</h3>
               <ul>
                 <li>
-                  <a href='https://docs.google.com/document/d/1QLEXZxyelxMzFAjWHpJkD4V74orxcbS80QYmQ8p9X8k/edit?usp=sharing'>E-Gridマニュアル</a>
+                  <Link to='/manual'>E-Gridマニュアル</Link>
                 </li>
                 <li>
                   <Link to='/about'>E-Gridとは</Link>

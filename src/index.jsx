@@ -5,6 +5,7 @@ import {render} from 'react-dom'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
 import Top from './pages/top/index'
 import About from './pages/about/index'
+import Manual from './pages/manual/index'
 import ProjectAnalysis from './pages/project-analysis/index'
 import ProjectDetail from './pages/project-detail/index'
 import ProjectList from './pages/project-list/index'
@@ -16,6 +17,7 @@ render((
     <div>
       <Route path='/' component={Top} exact />
       <Route path='/about' component={About} />
+      <Route path='/manual' component={Manual} />
       <Route path='/projects' component={ProjectList} exact />
       <Route path='/projects/:projectId' component={ProjectDetail} exact />
       <Route path='/projects/:projectId/analysis' component={ProjectAnalysis} />
