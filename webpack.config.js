@@ -4,7 +4,7 @@ const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 
 const base = {
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         include: [
@@ -13,8 +13,7 @@ const base = {
         ],
         loader: 'babel-loader',
         query: {
-          presets: ['latest'],
-          plugins: ['transform-react-jsx']
+          presets: ['env', 'react']
         }
       }
     ]
@@ -25,11 +24,11 @@ const base = {
     'morph-worker': './src/workers/morph-worker'
   },
   output: {
-    path: './public',
+    path: path.resolve(__dirname, 'public'),
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -38,6 +37,11 @@ const base = {
   ],
   externals: {
     'jquery': '$'
+  },
+  devServer: {
+    contentBase: path.join(__dirname, 'public'),
+    historyApiFallback: true,
+    port: 8080
   }
 }
 
