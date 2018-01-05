@@ -16,6 +16,10 @@ const subject = new Rx.Subject()
 const load = (type, projectId) => {
   participants.list({filters: {projectId}, order: '-updated'})
     .then(({data}) => {
+      for (const item of data) {
+        item.created = new Date(item.created)
+        item.updated = new Date(item.updated)
+      }
       subject.next({type, data})
     })
 }
@@ -32,6 +36,8 @@ const add = (data) => {
 const get = (id) => {
   participants.get(id)
     .then(({data}) => {
+      data.created = new Date(data.created)
+      data.updated = new Date(data.updated)
       subject.next({type: PARTICIPANT_GET, data})
     })
 }
