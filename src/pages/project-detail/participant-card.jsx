@@ -51,7 +51,9 @@ const merge = (graphData, inputData, participantId) => {
       }
     }
   }
-  return graphToJson(graph)
+  const obj = graphToJson(graph)
+  obj.groups = graphData.groups
+  return obj
 }
 
 class ParticipantCard extends React.Component {

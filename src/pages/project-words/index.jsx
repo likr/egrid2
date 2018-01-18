@@ -9,6 +9,36 @@ import Page from '../common/page'
 import Word from './word'
 import Group from './group'
 
+const restoreGroups = (vertices) => {
+  const groupsMap = new Map()
+  for (const v of vertices.filter(({d}) => d.parent != null)) {
+    if (!groupsMap.has(v.d.parent)) {
+      groupsMap.set(v.d.parent, {
+        color: '#ffffff',
+        id: v.d.parent,
+        items: [],
+        name: ''
+      })
+    }
+    groupsMap.get(v.d.parent).items.push(v.u)
+  }
+  const groups = []
+  const numGroups = Math.max(...groupsMap.keys()) + 1
+  for (let i = 0; i < numGroups; ++i) {
+    if (groupsMap.has(i)) {
+      groups.push(groupsMap.get(i))
+    } else {
+      groups.push({
+        color: '#ffffff',
+        id: i,
+        items: [],
+        name: ''
+      })
+    }
+  }
+  return groups
+}
+
 class ProjectWords extends React.Component {
   static get propTypes () {
     return {
@@ -39,6 +69,10 @@ class ProjectWords extends React.Component {
           const words = {}
           for (const vertex of graph.vertices) {
             words[vertex.u] = vertex
+          }
+          if (!graph.groups && graph.vertices.some(({d}) => d.parent != null)) {
+            console.info('restoring groups') // Migration for group deletion bug
+            graph.groups = restoreGroups(graph.vertices)
           }
           const groups = graph.groups || []
           for (const group of groups) {
