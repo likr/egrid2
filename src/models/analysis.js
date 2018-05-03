@@ -1,4 +1,4 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs'
 import Graph from 'egraph/graph'
 import katz from 'egraph/network/centrality/katz'
 import {
@@ -38,7 +38,7 @@ const connectedVertices = (graph, u, inverse = false) => {
   return visited
 }
 
-const subject = new Rx.Subject()
+const subject = new Subject()
 
 const state = {
   graph: new Graph(),

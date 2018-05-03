@@ -1,4 +1,5 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs'
+import {share} from 'rxjs/operators'
 import Graph from 'egraph/graph'
 import copy from '../utils/copy-graph'
 import {jsonToGraph} from '../utils/json-to-graph'
@@ -16,7 +17,7 @@ import {
 } from '../constants'
 import {intentSubject} from '../intents/graph'
 
-const subject = new Rx.Subject()
+const subject = new Subject()
 
 let graph = new Graph()
 let undoStack = []
@@ -152,4 +153,4 @@ intentSubject.subscribe((payload) => {
   }
 })
 
-export default subject.share()
+export default subject.pipe(share())

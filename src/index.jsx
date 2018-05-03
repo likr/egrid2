@@ -10,6 +10,7 @@ import ProjectAnalysis from './pages/project-analysis/index'
 import ProjectDetail from './pages/project-detail/index'
 import ProjectList from './pages/project-list/index'
 import ProjectWords from './pages/project-words/index'
+import ProjectQuestionnaire from './pages/project-questionnaire/index'
 import ParticipantInterview from './pages/participant-interview/index'
 
 render((
@@ -22,7 +23,8 @@ render((
       <Route path='/projects/:projectId' component={ProjectDetail} exact />
       <Route path='/projects/:projectId/analysis' component={ProjectAnalysis} />
       <Route path='/projects/:projectId/words' component={ProjectWords} />
+      <Route path='/projects/:projectId/questionnaire' component={ProjectQuestionnaire} />
       <Route path='/projects/:projectId/participants/:participantId' component={ParticipantInterview} />
     </div>
   </Router>
-  ), document.getElementById('content'))
+), document.getElementById('content'))

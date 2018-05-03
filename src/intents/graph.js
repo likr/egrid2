@@ -1,4 +1,4 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs'
 import {
   GRAPH_ADD_EDGE,
   GRAPH_ADD_VERTEX,
@@ -12,7 +12,7 @@ import {
   GRAPH_UPDATE_VERTEX
 } from '../constants'
 
-export const intentSubject = new Rx.Subject()
+export const intentSubject = new Subject()
 
 export const addEdge = (u, v, d) => {
   intentSubject.next({

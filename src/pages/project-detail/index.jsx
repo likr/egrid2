@@ -65,7 +65,8 @@ class ProjectDetail extends React.Component {
       <h3 className='ui horizontal divider header'>Analysis</h3>
       <div>
         <Link className='ui primary button' to={`/projects/${projectId}/analysis`}>Open</Link>
-        <Link className='ui secondary button' to={`/projects/${projectId}/words`}>Words</Link>
+        <Link className='ui button' to={`/projects/${projectId}/words`}>Words</Link>
+        <Link className='ui button' to={`/projects/${projectId}/questionnaire`}>Questionnaire</Link>
         <a ref='exportProjectButton' className='ui button' onClick={this.handleClickExportProjectButton.bind(this)}>
           <i className='icon download' />Export
         </a>

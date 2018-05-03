@@ -1,9 +1,10 @@
-import Rx from 'rxjs/Rx'
+import {Observable, Subject} from 'rxjs'
+import {share} from 'rxjs/operators'
 import {CALC_MORPH} from '../constants'
 import {intentSubject} from '../intents/morph-worker'
 
 const morph = (data) => {
-  return Rx.Observable.create((observer) => {
+  return Observable.create((observer) => {
     const worker = new window.Worker('/morph-worker.js')
     worker.onmessage = (result) => {
       observer.next(result)
@@ -16,7 +17,7 @@ const morph = (data) => {
   })
 }
 
-const subject = new Rx.Subject()
+const subject = new Subject()
 
 const calc = (texts) => {
   morph(texts).subscribe((result) => {
@@ -32,4 +33,4 @@ intentSubject.subscribe((payload) => {
   }
 })
 
-export default subject.share()
+export default subject.pipe(share())

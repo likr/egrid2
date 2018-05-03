@@ -1,5 +1,6 @@
 import d3 from 'd3'
-import Rx from 'rxjs/Rx'
+import {Observable, Subject} from 'rxjs'
+import {share} from 'rxjs/operators'
 import {CALC_LAYOUT} from '../constants'
 import {intentSubject} from '../intents/layout-worker'
 
@@ -18,7 +19,7 @@ const calcSize = (texts, size, family) => {
 }
 
 const layout = (data) => {
-  return Rx.Observable.create((observer) => {
+  return Observable.create((observer) => {
     const worker = new window.Worker('/layout-worker.js')
     worker.onmessage = (result) => {
       observer.next(result)
@@ -31,7 +32,7 @@ const layout = (data) => {
   })
 }
 
-const subject = new Rx.Subject()
+const subject = new Subject()
 
 const calc = (data, options) => {
   const {vertexScale, edgeScale, layerMargin, vertexMargin, edgeMargin} = options
@@ -63,4 +64,4 @@ intentSubject.subscribe((payload) => {
   }
 })
 
-export default subject.share()
+export default subject.pipe(share())

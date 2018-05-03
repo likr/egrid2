@@ -1,4 +1,4 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs'
 import {
   PROJECT_ADD,
   PROJECT_GET,
@@ -7,7 +7,7 @@ import {
   PROJECT_UPDATE
 } from '../constants'
 
-export const intentSubject = new Rx.Subject()
+export const intentSubject = new Subject()
 
 export const addProject = (data) => {
   intentSubject.next({

@@ -1,4 +1,5 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs'
+import {share} from 'rxjs/operators'
 import {
   PROJECT_ADD,
   PROJECT_GET,
@@ -11,7 +12,7 @@ import db from './db'
 
 const projects = db.collection('projects')
 
-const subject = new Rx.Subject()
+const subject = new Subject()
 
 const load = (type) => {
   projects.list({order: '-updated'})
@@ -82,4 +83,4 @@ intentSubject.subscribe((payload) => {
   }
 })
 
-export default subject.share()
+export default subject.pipe(share())

@@ -1,7 +1,7 @@
-import Rx from 'rxjs/Rx'
+import {Subject} from 'rxjs'
 import {CALC_MORPH} from '../constants'
 
-export const intentSubject = new Rx.Subject()
+export const intentSubject = new Subject()
 
 export const calcMorph = (texts) => {
   intentSubject.next({
