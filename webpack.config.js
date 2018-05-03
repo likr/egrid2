@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const {GenerateSW} = require('workbox-webpack-plugin')
 
 const base = {
   module: {
@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === 'production') {
       warnings: false
     }
   }))
-  base.plugins.push(new SWPrecacheWebpackPlugin({
+  base.plugins.push(new GenerateSW({
     maximumFileSizeToCacheInBytes: 10000000,
     staticFileGlobs: [
       'public/**/*.*'

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "A visual analytics system for the evaluation grid method",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --mode=development",
     "build": "webpack",
     "deploy": "NODE_ENV=production npm run build && firebase deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +21,7 @@
     "egraph": "^3.0.0",
     "kinto": "^1.2.0",
     "kuromoji": "0.0.5",
+    "npm": "^6.0.0",
     "prop-types": "^15.6.0",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
@@ -31,13 +32,14 @@
     "semantic-ui": "^2.2.13"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "firebase-tools": "^3.15.0",
-    "sw-precache-webpack-plugin": "^0.11.4",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.4"
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.4",
+    "workbox-webpack-plugin": "^3.2.0"
   }
 }
