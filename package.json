@@ -4,7 +4,7 @@
   "description": "A visual analytics system for the evaluation grid method",
   "scripts": {
     "start": "webpack-dev-server --mode=development",
-    "build": "webpack",
+    "build": "webpack --mode=production",
     "deploy": "NODE_ENV=production npm run build && firebase deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

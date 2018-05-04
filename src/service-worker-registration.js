@@ -1,6 +1,4 @@
-/* global PRODUCTION */
-
-if (PRODUCTION && 'serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('/service-worker.js')
     .then((reg) => {

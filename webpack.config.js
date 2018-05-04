@@ -1,5 +1,4 @@
 const path = require('path')
-const webpack = require('webpack')
 const {GenerateSW} = require('workbox-webpack-plugin')
 
 const base = {
@@ -31,8 +30,20 @@ const base = {
     extensions: ['.js', '.jsx']
   },
   plugins: [
-    new webpack.DefinePlugin({
-      PRODUCTION: process.env.NODE_ENV === 'production'
+    new GenerateSW({
+      maximumFileSizeToCacheInBytes: '10000000',
+      swDest: 'service-worker.js',
+      globDirectory: './public',
+      globPatterns: [
+        '**/*.*'
+      ],
+      globIgnores: [
+        'bundle.js',
+        'layout-worker.js',
+        'morph-worker.js',
+        'service-worker.js'
+      ],
+      navigateFallback: '/index.html'
     })
   ],
   externals: {
@@ -46,21 +57,8 @@ const base = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  base.plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false
-    }
-  }))
-  base.plugins.push(new GenerateSW({
-    maximumFileSizeToCacheInBytes: 10000000,
-    staticFileGlobs: [
-      'public/**/*.*'
-    ],
-    stripPrefix: 'public/',
-    navigateFallback: '/index.html',
-    runtimeCaching: [
-    ]
-  }))
+  base.plugins.push(
+  )
 } else {
   Object.assign(base, {
     devtool: 'inline-source-map'
