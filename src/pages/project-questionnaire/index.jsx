@@ -34,11 +34,16 @@ class ProjectQuestionnaire extends React.Component {
         case PROJECT_GET:
           const project = data
           const graph = JSON.parse(project.graph)
+          const counts = new Map(graph.vertices.map(({d}) => [d.text, d.participants.length]))
           const words = (graph.groups || []).map((group) => {
+            let sum = 0
+            for (const item of group.items) {
+              sum += counts.get(item) || 0
+            }
             return {
               key: group.id,
               text: group.name,
-              count: group.items.length
+              count: sum
             }
           })
           words.sort((w1, w2) => w2.count - w1.count)
