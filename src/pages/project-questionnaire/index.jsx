@@ -34,11 +34,11 @@ class ProjectQuestionnaire extends React.Component {
         case PROJECT_GET:
           const project = data
           const graph = JSON.parse(project.graph)
-          const words = graph.vertices.map((vertex, i) => {
+          const words = (graph.groups || []).map((group) => {
             return {
-              key: i,
-              text: vertex.d.text,
-              count: vertex.d.participants.length
+              key: group.id,
+              text: group.name,
+              count: group.items.length
             }
           })
           words.sort((w1, w2) => w2.count - w1.count)
@@ -98,9 +98,9 @@ class ProjectQuestionnaire extends React.Component {
                       return <tr key={i}>
                         <td>{questionnaire.title}</td>
                         <td>
-                          <a className='ui button' target='_blank' href={questionnaire.formUrl}>Show Form</a>
-                          <a className='ui button' target='_blank' href={questionnaire.formEditUrl}>Edit Form</a>
-                          <a className='ui button' target='_blank' href={questionnaire.sheetUrl}>Show Result</a>
+                          <a className='ui mini button' target='_blank' href={questionnaire.formUrl}>Show Form</a>
+                          <a className='ui mini button' target='_blank' href={questionnaire.formEditUrl}>Edit Form</a>
+                          <a className='ui mini button' target='_blank' href={questionnaire.sheetUrl}>Show Result</a>
                         </td>
                       </tr>
                     })
