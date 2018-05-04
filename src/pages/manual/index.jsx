@@ -159,23 +159,55 @@ const Manual = () => {
             <a className='ui big image' href='/images/manual/2-2-10.png'>
               <img src='/images/manual/2-2-10.png' />
             </a>
+            <h3>類似項目・表記揺れの統一</h3>
+            <p>
+              インタビューでは、同じ内容を違う言葉で言い換えた内容や、誤字・変換などによる表記揺れが発生します。
+              Analysisセクションの「Words」ボタンをクリックすると以下のような類似項目・表記揺れの統一画面に遷移します。
+            </p>
+            <a className='ui big image' href='/images/manual/2-3-1.png'>
+              <img src='/images/manual/2-3-1.png' />
+            </a>
+            <p>
+              はじめに、右側の「Add」ボタンを押して新しい項目グループを作成します。
+              次に、まとめたい評価項目を左側から右側のグループへドラッグアンドドロップします。
+              新しく作成した項目グループには、それらをまとめた名前をつけることができます。
+            </p>
+            <a className='ui big image' href='/images/manual/2-3-2.png'>
+              <img src='/images/manual/2-3-2.png' />
+            </a>
             <h3>インタビュー結果の分析</h3>
             <p>
               E-Gridはインタビューを支援するだけでなく、その結果の分析にも効果を発揮します。
               E-Grid上で、各被験者のインタビュー結果を統合することができるだけでなく、評価項目を重要度に基づいてフィルタリングすることができます。
               ここでは3人分の調査結果を例に挙げます。
             </p>
-            <a className='ui big image' href='/images/manual/2-3-1.png'>
-              <img src='/images/manual/2-3-1.png' />
+            <a className='ui big image' href='/images/manual/2-4-1.png'>
+              <img src='/images/manual/2-4-1.png' />
             </a>
             <p>
-              インタビュー後、Analysisセクションの「Open」ボタンをクリックすると右のような分析ビューが表示されます。
+              インタビュー後、Analysisセクションの「Open」ボタンをクリックすると以下のような分析ビューが表示されます。
               右のメニューでは、被験者のフィルタリングや、スライダーによる評価項目のフィルタリングができ、簡潔に評価構造を抽出することができます。
               また、右下のワードクラウドでは、回答に用いられた単語を俯瞰することができます。
               このワードクラウドを用いることで全体の回答からどのような単語が用いられているか知ることができます。
             </p>
-            <a className='ui big image' href='/images/manual/2-3-2.png'>
-              <img src='/images/manual/2-3-2.png' />
+            <a className='ui big image' href='/images/manual/2-4-2.png'>
+              <img src='/images/manual/2-4-2.png' />
+            </a>
+            <h3>アンケートの作成</h3>
+            <p>
+              E-Gridでは、Google Formと連携したアンケート作成が可能です。
+              Analysisセクションの「Questionnaire」ボタンからアンケート作成画面へ遷移します。
+            </p>
+            <a className='ui big image' href='/images/manual/2-5-1.png'>
+              <img src='/images/manual/2-5-1.png' />
+            </a>
+            <p>
+              「New」ボタンを押すと、アンケート作成ダイアログが開きます。
+              「タイトル」と「概要」を入力し、アンケートに用いる項目をチェックボックスで選択し、「Create」ボタンを押すとアンケートが作成されます。
+              項目の候補は、類似項目・表記揺れをグループ化した後の項目がリストされます。
+            </p>
+            <a className='ui big image' href='/images/manual/2-5-2.png'>
+              <img src='/images/manual/2-5-2.png' />
             </a>
           </div>
         </div>
