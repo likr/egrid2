@@ -3,7 +3,8 @@ import {withRouter} from 'react-router'
 import PropTypes from 'prop-types'
 import d3 from 'd3'
 import d3cloud from 'd3-cloud'
-import {Observable} from 'rxjs'
+import {zip} from 'rxjs'
+import {map} from 'rxjs/operators'
 import {initAnalysis, updateGraph} from '../../intents/analysis'
 import {listParticipants} from '../../intents/participant'
 import {getProject} from '../../intents/project'
@@ -137,8 +138,7 @@ class ProjectAnalysis extends React.Component {
   }
 
   componentDidMount () {
-    this.initSubscription = Observable
-      .zip(Projects.map(({data}) => data), Participants.map(({data}) => data))
+    this.initSubscription = zip(Projects.pipe(map(({data}) => data)), Participants.pipe(map(({data}) => data)))
       .subscribe(([project, participants]) => {
         this.project = project
         this.participants = participants
