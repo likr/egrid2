@@ -4,7 +4,8 @@ import {
   PROJECT_GET,
   PROJECT_LIST,
   PROJECT_REMOVE,
-  PROJECT_UPDATE
+  PROJECT_UPDATE,
+  PROJECT_SYNC
 } from '../constants'
 
 export const intentSubject = new Subject()
@@ -40,5 +41,11 @@ export const updateProject = (data) => {
   intentSubject.next({
     type: PROJECT_UPDATE,
     data
+  })
+}
+
+export const syncProjects = () => {
+  intentSubject.next({
+    type: PROJECT_SYNC
   })
 }

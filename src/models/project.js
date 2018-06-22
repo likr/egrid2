@@ -5,7 +5,8 @@ import {
   PROJECT_GET,
   PROJECT_LIST,
   PROJECT_REMOVE,
-  PROJECT_UPDATE
+  PROJECT_UPDATE,
+  PROJECT_SYNC
 } from '../constants'
 import {intentSubject} from '../intents/project'
 import db from './db'
@@ -63,6 +64,12 @@ const update = (data) => {
     .then(() => load(PROJECT_UPDATE))
 }
 
+const sync = () => {
+  projects.sync().then(() => {
+    load(PROJECT_SYNC)
+  })
+}
+
 intentSubject.subscribe((payload) => {
   switch (payload.type) {
     case PROJECT_ADD:
@@ -79,6 +86,9 @@ intentSubject.subscribe((payload) => {
       break
     case PROJECT_UPDATE:
       update(payload.data)
+      break
+    case PROJECT_SYNC:
+      sync()
       break
   }
 })

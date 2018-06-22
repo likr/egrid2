@@ -14,6 +14,7 @@ export const PROJECT_GET = Symbol('project-get')
 export const PROJECT_LOAD = Symbol('project-load')
 export const PROJECT_REMOVE = Symbol('project-remove')
 export const PROJECT_UPDATE = Symbol('project-update')
+export const PROJECT_SYNC = Symbol('project-sync')
 
 export const PARTICIPANT_ADD = Symbol('participant-add')
 export const PARTICIPANT_GET = Symbol('participant-get')

@@ -1,7 +1,8 @@
 import React from 'react'
 import {
   addProject,
-  loadProjects
+  loadProjects,
+  syncProjects
 } from '../../intents/project'
 import Project from '../../models/project'
 import Page from '../common/page'
@@ -42,6 +43,9 @@ class ProjectList extends React.Component {
         <button className='ui primary button' onClick={this.handleClickAddButton.bind(this)}>
           Add
         </button>
+        <button className='ui button' onClick={this.handleClickSyncButton.bind(this)}>
+          Sync
+        </button>
       </div>
       <div className='ui one cards'>
         {this.state.projects.map((project) => {
@@ -54,6 +58,10 @@ class ProjectList extends React.Component {
 
   handleClickAddButton () {
     this.refs.projectModal.show()
+  }
+
+  handleClickSyncButton () {
+    syncProjects()
   }
 
   handleApproveProjectModal (data) {
